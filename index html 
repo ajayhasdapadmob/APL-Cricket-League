@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>APL Cricket League</title>
+</head> 
+<body>
+
+    <h1>APL Premier League 2026</h1>
+    <p>Welcome to the official registration page</p>
+
+    <h2>Team Registration Form</h2>
+
+    <form>
+        <label>Team Name:</label><br>
+        <input type="text" name="team"><br><br>
+
+        <label>Captain Name:</label><br>
+        <input type="text" name="captain"><br><br>
+
+        <label>Phone Number:</label><br>
+        <input type="number" name="phone"><br><br>
+
+        <button type="submit">Register Team</button>
+    </form>
+
+</body>
+</html>
