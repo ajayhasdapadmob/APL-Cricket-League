@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APL 2026 Team Registration</title>
+
+<link rel="stylesheet" href="registration.css">
+</head>
+
+<body>
+
+<header>
+<img src="banner.jpg" alt="APL Banner" style="width:100%;max-height:250px;object-fit:cover;">
+<h1>🏆 AJAY PREMIER LEAGUE (APL) 2026</h1>
+<h3>Official Team Registration</h3>
+</header>
+
+<div class="container">
+
+<form id="registrationForm">
+
+<h2>Team Information</h2>
+
+<label>Team Name *</label>
+<input type="text" id="teamName" required>
+
+<label>Captain Name *</label>
+<input type="text" id="captainName" required>
+
+<label>Mobile Number *</label>
+<input type="tel" id="mobile" placeholder="+91XXXXXXXXXX" required>
+
+<button type="button" id="sendOtp">
+📱 Send OTP
+</button>
+
+<label>Enter OTP *</label>
+<input type="text" id="otp">
+
+<button type="button" id="verifyOtp">
+✅ Verify OTP
+</button>
+
+<label>WhatsApp Number *</label>
+<input type="tel" id="whatsapp">
+
+<label>Email</label>
+<input type="email" id="email">
+
+<label>Address</label>
+<textarea id="address"></textarea>
+
+<h2>Payment Details</h2>
+
+<label>UPI Transaction ID *</label>
+<input type="text" id="upi">
+
+<label>Upload Payment Screenshot *</label>
+<input type="file" id="payment">
+
+<label>
+<input type="checkbox" required>
+I accept all APL Tournament Rules.
+</label>
+
+<button type="submit">
+🏏 Submit Registration
+</button>
+
+</form>
+
+</div>
+
+<script type="module" src="firebase.js"></script>
+<script src="registration.js"></script>
+
+</body>
+</html>
