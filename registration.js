@@ -1,9 +1,11 @@
+
 import { auth } from "./firebase.js";
 import { 
   signInWithPhoneNumber,
   RecaptchaVerifier 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+alert("registration.js loaded");
 
 let confirmationResult = null;
 
