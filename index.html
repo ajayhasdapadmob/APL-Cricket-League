@@ -144,6 +144,22 @@ footer{background:#000;padding:15px;margin-top:30px}
 © 2026 AJAY PREMIER LEAGUE (APL)<br>
 All Rights Reserved.
 </footer>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyC5sHNe2gV3vJYA1F2-JQsNbZrU5DTLcPw",
+  authDomain: "ajay-premier-league-apl.firebaseapp.com",
+  projectId: "ajay-premier-league-apl",
+  storageBucket: "ajay-premier-league-apl.firebasestorage.app",
+  messagingSenderId: "514698419085",
+  appId: "1:514698419085:web:30264cdf0ee9629706bbc4",
+  measurementId: "G-8VMTN4PPQZ"
+};
+
+const app = initializeApp(firebaseConfig);
+
+console.log("Firebase Connected Successfully");
+</script>
 </body>
 </html>
