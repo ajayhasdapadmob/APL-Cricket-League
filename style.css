@@ -231,4 +231,28 @@ table{
     margin:10px;
 }
 
+.rules-section{
+    max-width:900px;
+    margin:40px auto;
+    padding:20px;
+    background:#fff;
+    border-radius:10px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+.notice-box{
+    background:#fff8e1;
+    border-left:5px solid #ff9800;
+    padding:15px;
+    margin:15px 0;
+}
+
+.rules-list{
+    list-style:none;
+    padding:0;
+}
+
+.rules-list li{
+    padding:8px 0;
+    font-size:16px;
 }
