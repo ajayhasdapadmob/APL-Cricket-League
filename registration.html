@@ -52,9 +52,44 @@
 <label>Mobile Number *</label>
 <input type="tel" id="mobile" placeholder="+91XXXXXXXXXX" required>
 
-<button type="button" id="sendOtp">
-📱 Send OTP
+<button type="button" id="otpBtn" onclick="sendOTP()">
+Send OTP
 </button>
+
+<p id="timer"></p>
+
+<script>
+let time = 300;
+
+function sendOTP(){
+
+// Yaha aapka OTP send karne wala code chalega
+
+let btn = document.getElementById("otpBtn");
+btn.disabled = true;
+
+let countdown = setInterval(function(){
+
+let minutes = Math.floor(time / 60);
+let seconds = time % 60;
+
+document.getElementById("timer").innerHTML =
+"Resend OTP after " + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+
+time--;
+
+if(time < 0){
+clearInterval(countdown);
+btn.disabled = false;
+btn.innerHTML = "Resend OTP";
+document.getElementById("timer").innerHTML = "";
+time = 300;
+}
+
+},1000);
+
+}
+</script>
 
 <label>Enter OTP *</label>
 <input type="text" id="otp">
