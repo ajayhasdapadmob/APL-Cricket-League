@@ -49,44 +49,38 @@
 <label>Captain Name *</label>
 <input type="text" id="captainName" required>
 
-<label>Mobile Number *</label>
-<input type="tel" id="mobile" placeholder="+91XXXXXXXXXX" required>
+<label>📞 Mobile Number *</label>
+<input type="tel" id="mobile" placeholder="Enter Mobile Number" required oninput="checkMobile()">
 
-<button type="button" id="otpBtn" onclick="sendOTP()">
+<br>
+
+<button type="button" id="otpBtn" disabled onclick="sendOTP()">
 Send OTP
 </button>
 
-<p id="timer"></p>
-
 <script>
-let time = 300;
+function checkMobile(){
+
+let mobile = document.getElementById("mobile").value;
+let btn = document.getElementById("otpBtn");
+
+if(mobile.length == 10){
+    btn.disabled = false;
+}
+else{
+    btn.disabled = true;
+}
+
+}
 
 function sendOTP(){
-
-// Yaha aapka OTP send karne wala code chalega
 
 let btn = document.getElementById("otpBtn");
 btn.disabled = true;
 
-let countdown = setInterval(function(){
+// Yaha OTP send code lagega
 
-let minutes = Math.floor(time / 60);
-let seconds = time % 60;
-
-document.getElementById("timer").innerHTML =
-"Resend OTP after " + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
-
-time--;
-
-if(time < 0){
-clearInterval(countdown);
-btn.disabled = false;
-btn.innerHTML = "Resend OTP";
-document.getElementById("timer").innerHTML = "";
-time = 300;
-}
-
-},1000);
+alert("OTP Sent Successfully");
 
 }
 </script>
