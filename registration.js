@@ -3,32 +3,92 @@ import { db } from "./firebase.js";
 import {
   collection,
   addDoc,
-  serverTimestamp
+  serverTimestamp,
+  getDocs
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+
+// Registration Submit
+
 document.getElementById("registrationForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
     try {
+
         await addDoc(collection(db, "registrations"), {
+
             teamName: document.getElementById("teamName").value,
             captainName: document.getElementById("captainName").value,
             mobile: document.getElementById("mobile").value,
             whatsapp: document.getElementById("whatsapp").value,
             email: document.getElementById("email").value,
             area: document.getElementById("area").value,
-            upi: document.getElementById("upi").value,
             address: document.getElementById("address").value,
-            
-playerType: document.getElementById("playerType").value,
+            upi: document.getElementById("upi").value,
+            playerType: document.getElementById("playerType").value,
+
             status: "Pending",
             createdAt: serverTimestamp()
         });
 
+
         alert("✅ Registration Submitted Successfully!");
+
         document.getElementById("registrationForm").reset();
 
-    } catch (error) {
+
+    } catch(error){
+
         console.error(error);
         alert("❌ Error: " + error.message);
+
     }
+
 });
+
+
+// Load Player Names Preview
+
+async function loadPlayers(){
+
+    const box = document.getElementById("playersData");
+
+    if(!box) return;
+
+
+    const snapshot = await getDocs(collection(db,"players"));
+
+    let players = "";
+
+
+    snapshot.forEach((doc)=>{
+
+        let p = doc.data();
+
+        players += `
+        Captain: ${p.captainName}<br>
+        Player 2: ${p.player2}<br>
+        Player 3: ${p.player3}<br>
+        Player 4: ${p.player4}<br>
+        Player 5: ${p.player5}<br>
+        Player 6: ${p.player6}<br>
+        Player 7: ${p.player7}<br>
+        Player 8: ${p.player8}<br>
+        Player 9: ${p.player9}<br>
+        Player 10: ${p.player10}<br>
+        Player 11: ${p.player11}<br>
+        Player 12: ${p.player12}<br>
+        Player 13: ${p.player13}<br>
+        Player 14: ${p.player14}<br>
+        Player 15: ${p.player15}
+        `;
+
+    });
+
+
+    box.innerHTML = players || "No Player Added";
+
+}
+
+
+loadPlayers();
