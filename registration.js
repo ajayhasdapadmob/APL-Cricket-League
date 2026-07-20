@@ -92,3 +92,25 @@ async function loadPlayers(){
 
 
 loadPlayers();
+window.saveRegistrationData = function(){
+
+    localStorage.setItem("teamName", document.getElementById("teamName").value);
+    localStorage.setItem("captainName", document.getElementById("captainName").value);
+    localStorage.setItem("mobile", document.getElementById("mobile").value);
+    localStorage.setItem("whatsapp", document.getElementById("whatsapp").value);
+    localStorage.setItem("email", document.getElementById("email").value);
+    localStorage.setItem("area", document.getElementById("area").value);
+    localStorage.setItem("address", document.getElementById("address").value);
+
+}
+window.onload = function(){
+
+    document.getElementById("teamName").value = localStorage.getItem("teamName") || "";
+    document.getElementById("captainName").value = localStorage.getItem("captainName") || "";
+    document.getElementById("mobile").value = localStorage.getItem("mobile") || "";
+    document.getElementById("whatsapp").value = localStorage.getItem("whatsapp") || "";
+    document.getElementById("email").value = localStorage.getItem("email") || "";
+    document.getElementById("area").value = localStorage.getItem("area") || "";
+    document.getElementById("address").value = localStorage.getItem("address") || "";
+
+}
