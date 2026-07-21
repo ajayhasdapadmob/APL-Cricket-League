@@ -10,9 +10,24 @@ import {
 document.getElementById("playerForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
+
     try {
 
+        let teamId = localStorage.getItem("teamId");
+
+
+        if(!teamId){
+
+            teamId = "APL-" + Date.now();
+
+            localStorage.setItem("teamId", teamId);
+
+        }
+
+
         await addDoc(collection(db, "players"), {
+
+            teamId: teamId,
 
             captainName: document.getElementById("captainName").value,
 
@@ -38,14 +53,15 @@ document.getElementById("playerForm").addEventListener("submit", async (e) => {
 
         alert("✅ Players Saved Successfully!");
 
-        window.location.href = "registration.html";
+        window.location.href="registration.html";
 
 
-    } catch(error) {
+    } catch(error){
 
         console.error(error);
 
         alert("❌ Error: " + error.message);
 
     }
+
 });
