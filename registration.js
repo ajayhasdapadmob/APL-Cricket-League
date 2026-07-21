@@ -1,5 +1,6 @@
 console.log("Registration JS Loaded");
-import { db, storage } from "./firebase.js";
+
+import { db } from "./firebase.js";
 
 import {
   collection,
@@ -10,6 +11,8 @@ import {
   where
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
+
+import { db, storage } from "./firebase.js";
 
 import {
   ref,
@@ -23,24 +26,21 @@ document.getElementById("registrationForm").addEventListener("submit", async (e)
     e.preventDefault();
 
     try {
+const file = document.getElementById("paymentScreenshot").files[0];
 
-    const file = document.getElementById("paymentScreenshot").files[0];
+let screenshotURL = "";
 
-    let screenshotURL = "";
+if (file) {
+  const storageRef = ref(
+    storage,
+    "paymentScreenshots/" + Date.now() + "_" + file.name
+  );
 
-    if(file){
+  await uploadBytes(storageRef, file);
 
-        const storageRef = ref(
-            storage,
-            "paymentScreenshots/" + Date.now() + "_" + file.name
-        );
-
-        await uploadBytes(storageRef, file);
-
-        screenshotURL = await getDownloadURL(storageRef);
-
-    }
-
+  screenshotURL = await getDownloadURL(storageRef);
+}
+    
 
     await addDoc(collection(db, "registrations"), {
 teamId: localStorage.getItem("teamId"),
