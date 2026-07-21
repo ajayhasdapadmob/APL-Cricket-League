@@ -1,3 +1,4 @@
+console.log("Registration JS Loaded");
 import { db, storage } from "./firebase.js";
 
 import {
