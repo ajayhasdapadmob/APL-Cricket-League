@@ -65,23 +65,23 @@ async function loadPlayers(){
 
         let p = doc.data();
 
-        players += `
-        Captain: ${p.captainName}<br>
-        Player 2: ${p.player2}<br>
-        Player 3: ${p.player3}<br>
-        Player 4: ${p.player4}<br>
-        Player 5: ${p.player5}<br>
-        Player 6: ${p.player6}<br>
-        Player 7: ${p.player7}<br>
-        Player 8: ${p.player8}<br>
-        Player 9: ${p.player9}<br>
-        Player 10: ${p.player10}<br>
-        Player 11: ${p.player11}<br>
-        Player 12: ${p.player12}<br>
-        Player 13: ${p.player13}<br>
-        Player 14: ${p.player14}<br>
-        Player 15: ${p.player15}
-        `;
+        players = `
+Captain: ${p.captainName}<br>
+Player 2: ${p.player2}<br>
+Player 3: ${p.player3}<br>
+Player 4: ${p.player4}<br>
+Player 5: ${p.player5}<br>
+Player 6: ${p.player6}<br>
+Player 7: ${p.player7}<br>
+Player 8: ${p.player8}<br>
+Player 9: ${p.player9}<br>
+Player 10: ${p.player10}<br>
+Player 11: ${p.player11}<br>
+Player 12: ${p.player12}<br>
+Player 13: ${p.player13}<br>
+Player 14: ${p.player14}<br>
+Player 15: ${p.player15}
+`;
 
     });
 
