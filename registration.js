@@ -36,7 +36,7 @@ teamId: localStorage.getItem("teamId"),
 localStorage.clear();
         document.getElementById("registrationForm").reset();
 
-
+window.location.href = "index.html";
     } catch(error){
 
         console.error(error);
