@@ -16,7 +16,7 @@ document.getElementById("registrationForm").addEventListener("submit", async (e)
     try {
 
         await addDoc(collection(db, "registrations"), {
-
+teamId: localStorage.getItem("teamId"),
             teamName: document.getElementById("teamName").value,
             captainName: document.getElementById("captainName").value,
             mobile: document.getElementById("mobile").value,
@@ -33,7 +33,7 @@ document.getElementById("registrationForm").addEventListener("submit", async (e)
 
 
         alert("✅ Registration Submitted Successfully!");
-
+localStorage.clear();
         document.getElementById("registrationForm").reset();
 
 
