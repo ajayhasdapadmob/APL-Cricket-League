@@ -1,6 +1,6 @@
 console.log("Registration JS Loaded");
 
-import { db } from "./firebase.js";
+import { db, storage } from "./firebase.js";
 
 import {
   collection,
@@ -11,15 +11,11 @@ import {
   where
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-
-import { db, storage } from "./firebase.js";
-
 import {
   ref,
   uploadBytes,
   getDownloadURL
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-storage.js";
-
 // Registration Submit
 
 document.getElementById("registrationForm").addEventListener("submit", async (e) => {
@@ -53,7 +49,9 @@ teamId: localStorage.getItem("teamId"),
             address: document.getElementById("address").value,
             upi: document.getElementById("upi").value,
             playerType: document.getElementById("playerType").value,
+            
 paymentScreenshot: screenshotURL,
+
             status: "Pending",
             createdAt: serverTimestamp()
         });
