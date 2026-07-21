@@ -4,7 +4,9 @@ import {
   collection,
   addDoc,
   serverTimestamp,
-  getDocs
+  getDocs,
+  query,
+  where
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 
@@ -33,8 +35,17 @@ teamId: localStorage.getItem("teamId"),
 
 
         alert("✅ Registration Submitted Successfully!");
-localStorage.clear();
-        document.getElementById("registrationForm").reset();
+
+localStorage.removeItem("teamName");
+localStorage.removeItem("captainName");
+localStorage.removeItem("mobile");
+localStorage.removeItem("whatsapp");
+localStorage.removeItem("email");
+localStorage.removeItem("area");
+localStorage.removeItem("address");
+localStorage.removeItem("playerType");
+localStorage.removeItem("teamId");
+document.getElementById("registrationForm").reset();
 
 window.location.href = "index.html";
     } catch(error){
@@ -56,7 +67,14 @@ async function loadPlayers(){
     if(!box) return;
 
 
-    const snapshot = await getDocs(collection(db,"players"));
+    const teamId = localStorage.getItem("teamId");
+
+const q = query(
+    collection(db, "players"),
+    where("teamId", "==", teamId)
+);
+
+const snapshot = await getDocs(q);
 
     let players = "";
 
@@ -101,8 +119,10 @@ window.saveRegistrationData = function(){
     localStorage.setItem("email", document.getElementById("email").value);
     localStorage.setItem("area", document.getElementById("area").value);
     localStorage.setItem("address", document.getElementById("address").value);
+    localStorage.setItem("playerType", document.getElementById("playerType").value);
 
 }
+
 window.onload = function(){
 
     document.getElementById("teamName").value = localStorage.getItem("teamName") || "";
@@ -112,5 +132,5 @@ window.onload = function(){
     document.getElementById("email").value = localStorage.getItem("email") || "";
     document.getElementById("area").value = localStorage.getItem("area") || "";
     document.getElementById("address").value = localStorage.getItem("address") || "";
-
+    document.getElementById("playerType").value = localStorage.getItem("playerType") || "";
 }
