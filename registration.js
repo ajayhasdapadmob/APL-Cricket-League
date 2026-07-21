@@ -1,4 +1,4 @@
-import { db } from "./firebase.js";
+import { db, storage } from "./firebase.js";
 
 import {
   collection,
@@ -10,6 +10,12 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-storage.js";
+
 // Registration Submit
 
 document.getElementById("registrationForm").addEventListener("submit", async (e) => {
@@ -17,7 +23,25 @@ document.getElementById("registrationForm").addEventListener("submit", async (e)
 
     try {
 
-        await addDoc(collection(db, "registrations"), {
+    const file = document.getElementById("paymentScreenshot").files[0];
+
+    let screenshotURL = "";
+
+    if(file){
+
+        const storageRef = ref(
+            storage,
+            "paymentScreenshots/" + Date.now() + "_" + file.name
+        );
+
+        await uploadBytes(storageRef, file);
+
+        screenshotURL = await getDownloadURL(storageRef);
+
+    }
+
+
+    await addDoc(collection(db, "registrations"), {
 teamId: localStorage.getItem("teamId"),
             teamName: document.getElementById("teamName").value,
             captainName: document.getElementById("captainName").value,
@@ -28,7 +52,7 @@ teamId: localStorage.getItem("teamId"),
             address: document.getElementById("address").value,
             upi: document.getElementById("upi").value,
             playerType: document.getElementById("playerType").value,
-
+paymentScreenshot: screenshotURL,
             status: "Pending",
             createdAt: serverTimestamp()
         });
