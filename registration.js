@@ -21,7 +21,7 @@ console.log("Registration JS Loaded");
 
 document.getElementById("registrationForm").addEventListener("submit", async (e) => {
     e.preventDefault();
-
+alert("Form Submit Clicked");
     try {
 const file = document.getElementById("paymentScreenshot").files[0];
 
