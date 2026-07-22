@@ -78,6 +78,13 @@ placeholder="Remark">
 </td>
 
 
+<td>
+${data.createdAt 
+? data.createdAt.toDate().toLocaleString("en-IN")
+: "Waiting..."}
+</td>
+
+
 </tr>
 
 `;
