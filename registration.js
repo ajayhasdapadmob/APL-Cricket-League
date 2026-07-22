@@ -1,4 +1,4 @@
-import { db, storage } from "./firebase.js";
+import { db } from "./firebase.js";
 
 import {
   collection,
@@ -9,77 +9,74 @@ import {
   where
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-storage.js";
 
 alert("registration.js loaded");
 console.log("Registration JS Loaded");
+
+
 // Registration Submit
 
 document.getElementById("registrationForm").addEventListener("submit", async (e) => {
+
     e.preventDefault();
-alert("Form Submit Clicked");
+
+    alert("Form Submit Clicked");
+
     try {
-const file = document.getElementById("paymentScreenshot").files[0];
 
-let screenshotURL = "";
+        alert("Starting Save");
 
-if (file) {
-  const storageRef = ref(
-    storage,
-    "paymentScreenshots/" + Date.now() + "_" + file.name
-  );
 
-  await uploadBytes(storageRef, file);
+        await addDoc(collection(db, "registrations"), {
 
-  screenshotURL = await getDownloadURL(storageRef);
-}
-    
+            teamId: localStorage.getItem("teamId"),
 
-    await addDoc(collection(db, "registrations"), {
-teamId: localStorage.getItem("teamId"),
             teamName: document.getElementById("teamName").value,
+
             captainName: document.getElementById("captainName").value,
+
             mobile: document.getElementById("mobile").value,
+
             whatsapp: document.getElementById("whatsapp").value,
+
             email: document.getElementById("email").value,
+
             area: document.getElementById("area").value,
+
             address: document.getElementById("address").value,
+
             upi: document.getElementById("upi").value,
+
             playerType: document.getElementById("playerType").value,
-            
-paymentScreenshot: screenshotURL,
+
+            paymentScreenshot: "WhatsApp Submitted",
 
             status: "Pending",
+
             createdAt: serverTimestamp()
+
         });
 
 
         alert("✅ Registration Submitted Successfully!");
 
-localStorage.removeItem("teamName");
-localStorage.removeItem("captainName");
-localStorage.removeItem("mobile");
-localStorage.removeItem("whatsapp");
-localStorage.removeItem("email");
-localStorage.removeItem("area");
-localStorage.removeItem("address");
-localStorage.removeItem("playerType");
-localStorage.removeItem("teamId");
-document.getElementById("registrationForm").reset();
 
-window.location.href = "index.html";
-    } catch(error){
+        document.getElementById("registrationForm").reset();
 
-        console.error(error);
+
+        window.location.href = "index.html";
+
+
+    } catch(error) {
+
+        console.error("Firestore Error:", error);
+
         alert("❌ Error: " + error.message);
 
     }
 
 });
+
 
 
 // Load Player Names Preview
@@ -93,12 +90,24 @@ async function loadPlayers(){
 
     const teamId = localStorage.getItem("teamId");
 
-const q = query(
-    collection(db, "players"),
-    where("teamId", "==", teamId)
-);
 
-const snapshot = await getDocs(q);
+    if(!teamId){
+
+        box.innerHTML = "No Player Added";
+
+        return;
+
+    }
+
+
+    const q = query(
+        collection(db, "players"),
+        where("teamId", "==", teamId)
+    );
+
+
+    const snapshot = await getDocs(q);
+
 
     let players = "";
 
@@ -106,6 +115,7 @@ const snapshot = await getDocs(q);
     snapshot.forEach((doc)=>{
 
         let p = doc.data();
+
 
         players = `
 Captain: ${p.captainName}<br>
@@ -134,27 +144,34 @@ Player 15: ${p.player15}
 
 
 loadPlayers();
+
+
+// Save registration before going to player page
+
 window.saveRegistrationData = function(){
 
-    localStorage.setItem("teamName", document.getElementById("teamName").value);
-    localStorage.setItem("captainName", document.getElementById("captainName").value);
-    localStorage.setItem("mobile", document.getElementById("mobile").value);
-    localStorage.setItem("whatsapp", document.getElementById("whatsapp").value);
-    localStorage.setItem("email", document.getElementById("email").value);
-    localStorage.setItem("area", document.getElementById("area").value);
-    localStorage.setItem("address", document.getElementById("address").value);
-    localStorage.setItem("playerType", document.getElementById("playerType").value);
+    localStorage.setItem("teamName",
+    document.getElementById("teamName").value);
 
-}
+    localStorage.setItem("captainName",
+    document.getElementById("captainName").value);
 
-window.onload = function(){
+    localStorage.setItem("mobile",
+    document.getElementById("mobile").value);
 
-    document.getElementById("teamName").value = localStorage.getItem("teamName") || "";
-    document.getElementById("captainName").value = localStorage.getItem("captainName") || "";
-    document.getElementById("mobile").value = localStorage.getItem("mobile") || "";
-    document.getElementById("whatsapp").value = localStorage.getItem("whatsapp") || "";
-    document.getElementById("email").value = localStorage.getItem("email") || "";
-    document.getElementById("area").value = localStorage.getItem("area") || "";
-    document.getElementById("address").value = localStorage.getItem("address") || "";
-    document.getElementById("playerType").value = localStorage.getItem("playerType") || "";
+    localStorage.setItem("whatsapp",
+    document.getElementById("whatsapp").value);
+
+    localStorage.setItem("email",
+    document.getElementById("email").value);
+
+    localStorage.setItem("area",
+    document.getElementById("area").value);
+
+    localStorage.setItem("address",
+    document.getElementById("address").value);
+
+    localStorage.setItem("playerType",
+    document.getElementById("playerType").value);
+
 }
