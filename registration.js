@@ -13,6 +13,19 @@ import {
 console.log("Registration JS Loaded");
 
 
+// Create New Team ID
+
+let teamId = localStorage.getItem("teamId");
+
+if(!teamId){
+
+    teamId = "TEAM-" + Date.now();
+
+    localStorage.setItem("teamId", teamId);
+
+}
+
+
 // Registration Submit
 
 document.getElementById("registrationForm").addEventListener("submit", async (e) => {
@@ -115,8 +128,9 @@ document.getElementById("registrationForm").addEventListener("submit", async (e)
 
         document.getElementById("registrationForm").reset();
 
+localStorage.removeItem("teamId");
 
-        window.location.href = "index.html";
+window.location.href = "index.html";
 
 
 
