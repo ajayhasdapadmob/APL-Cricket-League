@@ -29,7 +29,6 @@ document.getElementById("registrationForm").addEventListener("submit", async (e)
 
         let regId = "APL2026-" + Date.now();
 
-
 await addDoc(collection(db, "registrations"), {
 
     registrationId: regId,
