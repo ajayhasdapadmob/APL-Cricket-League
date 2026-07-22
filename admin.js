@@ -28,6 +28,7 @@ const data = item.data();
 table.innerHTML += `
 
 <tr>
+<td>${data.registrationId || ""}</td>
 
 <td>${data.teamName || ""}</td>
 
