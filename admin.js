@@ -28,6 +28,13 @@ const data = item.data();
 table.innerHTML += `
 
 <tr>
+
+<td>
+${data.createdAt 
+? data.createdAt.toDate().toLocaleString("en-IN")
+: "No Date"}
+</td>
+
 <td>${data.registrationId || ""}</td>
 
 <td>${data.teamName || ""}</td>
@@ -78,12 +85,6 @@ placeholder="Remark">
 
 </td>
 
-
-<td>
-${data.createdAt 
-? data.createdAt.toDate().toLocaleString("en-IN")
-: "No Date"}
-</td>
 
 </tr>
 
