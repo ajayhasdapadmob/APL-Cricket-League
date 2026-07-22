@@ -1,3 +1,5 @@
+console.log("Player JS Loaded");
+alert("Player JS Loaded");
 import { db } from "./firebase.js";
 
 import {
@@ -52,9 +54,7 @@ document.getElementById("playerForm").addEventListener("submit", async (e) => {
 
 
         alert("✅ Players Saved Successfully!");
-
-        window.location.href="registration.html";
-
+window.location.replace("./index.html");
 
     } catch(error){
 
