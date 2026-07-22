@@ -27,35 +27,40 @@ document.getElementById("registrationForm").addEventListener("submit", async (e)
         alert("Starting Save");
 
 
-        await addDoc(collection(db, "registrations"), {
+        let regId = "APL2026-" + Date.now();
 
-            teamId: localStorage.getItem("teamId"),
 
-            teamName: document.getElementById("teamName").value,
+await addDoc(collection(db, "registrations"), {
 
-            captainName: document.getElementById("captainName").value,
+    registrationId: regId,
 
-            mobile: document.getElementById("mobile").value,
+    teamId: localStorage.getItem("teamId"),
 
-            whatsapp: document.getElementById("whatsapp").value,
+    teamName: document.getElementById("teamName").value,
 
-            email: document.getElementById("email").value,
+    captainName: document.getElementById("captainName").value,
 
-            area: document.getElementById("area").value,
+    mobile: document.getElementById("mobile").value,
 
-            address: document.getElementById("address").value,
+    whatsapp: document.getElementById("whatsapp").value,
 
-            upi: document.getElementById("upi").value,
+    email: document.getElementById("email").value,
 
-            playerType: document.getElementById("playerType").value,
+    area: document.getElementById("area").value,
 
-            paymentScreenshot: "WhatsApp Submitted",
+    address: document.getElementById("address").value,
 
-            status: "Pending",
+    upi: document.getElementById("upi").value,
 
-            createdAt: serverTimestamp()
+    playerType: document.getElementById("playerType").value,
 
-        });
+    paymentScreenshot: "WhatsApp Submitted",
+
+    status: "Pending",
+
+    createdAt: serverTimestamp()
+
+});
 
 
         alert("✅ Registration Submitted Successfully!");
