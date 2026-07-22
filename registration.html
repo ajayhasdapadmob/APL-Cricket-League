@@ -135,31 +135,29 @@ No Player Added
 </a>
 
 </div>
-<label>UPI Transaction ID *</label>
-<input type="text" id="upi" required>
+<label>UPI QR Code</label>
 
-<label>Payment Screenshot</label>
+<div style="text-align:center;padding:15px;background:#222;border-radius:10px;">
 
-<div style="
-background:#222;
-color:white;
-padding:15px;
-border-radius:10px;
-margin-top:10px;
-">
-
-<p>📸 Payment Screenshot WhatsApp par bheje:</p>
-
-<p>
-📞 +91 9663116089<br>
-📞 +91 9353689775
-</p>
+<img src="upi-qr.jpg"
+width="250"
+alt="UPI QR">
 
 <p style="color:#00ff00;">
-Screenshot bhejne ke baad hi registration submit kare.
+Scan QR & Pay ₹2000
 </p>
 
 </div>
+
+<label>UPI Transaction ID *</label>
+<input type="text" id="upi" required>
+
+<label>Payment Screenshot *</label>
+<input
+type="file"
+id="paymentScreenshot"
+accept="image/*"
+required>
 
 <label>
 <input type="checkbox" required>

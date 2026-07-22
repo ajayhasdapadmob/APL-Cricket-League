@@ -1,36 +1,39 @@
 console.log("ADMIN JS RUNNING");
+
 import { db } from "./firebase.js";
 
 import {
   collection,
   getDocs,
   doc,
-  updateDoc
+  updateDoc,
+  query,
+  orderBy
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-
 
 const table = document.getElementById("registrationTable");
 
+async function loadRegistrations() {
 
-async function loadRegistrations(){
+  table.innerHTML = "";
 
-table.innerHTML = "";
+  const q = query(
+    collection(db, "registrations"),
+    orderBy("createdAt", "desc")
+  );
 
+  const querySnapshot = await getDocs(q);
 
-const querySnapshot = await getDocs(collection(db,"registrations"));
+  querySnapshot.forEach((item) => {
 
+    const data = item.data();
 
-querySnapshot.forEach((item)=>{
-
-const data = item.data();
-
-
-table.innerHTML += `
+    table.innerHTML += `
 
 <tr>
 
 <td>
-${data.createdAt 
+${data.createdAt
 ? data.createdAt.toDate().toLocaleString("en-IN")
 : "No Date"}
 </td>
@@ -43,18 +46,13 @@ ${data.createdAt
 
 <td>${data.mobile || ""}</td>
 
-
 <td>
-${data.paymentScreenshot 
+${data.paymentScreenshot
 ? `<a href="${data.paymentScreenshot}" target="_blank">View Payment</a>`
 : "No Payment"}
 </td>
 
-
-<td>
-${data.status || "Pending"}
-</td>
-
+<td>${data.status || "Pending"}</td>
 
 <td>
 
@@ -72,11 +70,11 @@ ${data.status || "Pending"}
 
 </td>
 
-
 <td>
 
-<input id="remark-${item.id}" 
-value="${data.remarks || ""}" 
+<input
+id="remark-${item.id}"
+value="${data.remarks || ""}"
 placeholder="Remark">
 
 <button onclick="saveRemarks('${item.id}')">
@@ -85,53 +83,38 @@ placeholder="Remark">
 
 </td>
 
-
 </tr>
 
 `;
 
-});
+  });
 
 }
 
+window.updateStatus = async function(id, status) {
 
+  await updateDoc(doc(db, "registrations", id), {
+    status: status
+  });
 
-window.updateStatus = async function(id,status){
+  alert("Status Updated: " + status);
 
-await updateDoc(doc(db,"registrations",id),{
+  loadRegistrations();
 
-status: status
+};
 
-});
+window.saveRemarks = async function(id) {
 
+  const remark = document.getElementById("remark-" + id).value;
 
-alert("Status Updated: "+status);
+  await updateDoc(doc(db, "registrations", id), {
+    remarks: remark
+  });
 
-loadRegistrations();
+  alert("Remarks Saved");
 
-}
+  loadRegistrations();
 
-
-
-window.saveRemarks = async function(id){
-
-
-const remark = document.getElementById("remark-"+id).value;
-
-
-await updateDoc(doc(db,"registrations",id),{
-
-remarks: remark
-
-});
-
-
-alert("Remarks Saved");
-
-loadRegistrations();
-
-}
-
-
+};
 
 loadRegistrations();
