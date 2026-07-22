@@ -1,5 +1,3 @@
-console.log("Player JS Loaded");
-alert("Player JS Loaded");
 import { db } from "./firebase.js";
 
 import {
@@ -8,10 +6,11 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
+alert("player.js loaded");
+console.log("Player JS Loaded");
 
 document.getElementById("playerForm").addEventListener("submit", async (e) => {
     e.preventDefault();
-
 
     try {
 
@@ -54,7 +53,9 @@ document.getElementById("playerForm").addEventListener("submit", async (e) => {
 
 
         alert("✅ Players Saved Successfully!");
-window.location.replace("./index.html");
+
+console.log("Redirecting...");
+window.location.replace("registration.html");
 
     } catch(error){
 
