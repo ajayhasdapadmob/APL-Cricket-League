@@ -8,136 +8,193 @@ import {
   doc,
   updateDoc,
   query,
-  orderBy
+  orderBy,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
+
 const table = document.getElementById("registrationTable");
+const searchInput = document.getElementById("searchInput");
 
-async function loadRegistrations() {
+const totalTeams = document.getElementById("totalTeams");
+const pendingTeams = document.getElementById("pendingTeams");
+const approvedTeams = document.getElementById("approvedTeams");
+const rejectedTeams = document.getElementById("rejectedTeams");
 
-  table.innerHTML = "";
 
-  let total = 0;
-  let pending = 0;
-  let approved = 0;
-  let rejected = 0;
+let allRegistrations = [];
 
-  const q = query(
-    collection(db, "registrations"),
-    orderBy("createdAt", "desc")
-  );
 
-  const querySnapshot = await getDocs(q);
+async function loadRegistrations(){
 
-  querySnapshot.forEach((item) => {
+try{
 
-    const data = item.data();
+table.innerHTML = "";
 
-    total++;
+let total = 0;
+let pending = 0;
+let approved = 0;
+let rejected = 0;
 
-    if (data.status === "Approved") {
-      approved++;
-    } else if (data.status === "Rejected") {
-      rejected++;
-    } else {
-      pending++;
-    }
 
-    table.innerHTML += `
+const q = query(
+ collection(db,"registrations"),
+ orderBy("createdAt","desc")
+);
+
+
+const snapshot = await getDocs(q);
+
+
+allRegistrations = [];
+
+
+snapshot.forEach((docSnap)=>{
+
+let data = {
+ id: docSnap.id,
+ ...docSnap.data()
+};
+
+
+allRegistrations.push(data);
+
+
+total++;
+
+
+if(data.status === "Approved"){
+ approved++;
+}
+else if(data.status === "Rejected"){
+ rejected++;
+}
+else{
+ pending++;
+}
+
+
+});
+
+
+totalTeams.innerText = total;
+pendingTeams.innerText = pending;
+approvedTeams.innerText = approved;
+rejectedTeams.innerText = rejected;
+
+
+displayRegistrations(allRegistrations);
+
+
+}catch(error){
+
+console.log(error);
+alert(error.message);
+
+}
+
+}
+
+
+
+function displayRegistrations(data){
+
+table.innerHTML="";
+
+
+if(data.length===0){
+
+table.innerHTML=`
+<tr>
+<td colspan="11" align="center">
+No Data Found
+</td>
+</tr>`;
+
+return;
+
+}
+
+
+
+data.forEach(item=>{
+
+
+table.innerHTML += `
 
 <tr>
 
 <td>
-${data.createdAt
-? data.createdAt.toDate().toLocaleString("en-IN")
-: "No Date"}
+${item.createdAt ? 
+new Date(item.createdAt.seconds*1000).toLocaleString()
+:
+""}
 </td>
 
-<td>${data.registrationId || ""}</td>
+<td>${item.applyId || ""}</td>
 
-<td>${data.teamName || ""}</td>
+<td>${item.teamName || ""}</td>
 
-<td>${data.captainName || ""}</td>
+<td>${item.captain || ""}</td>
 
-<td>${data.mobile || ""}</td>
+<td>${item.mobile || ""}</td>
 
-<td>${data.area || ""}</td>
+<td>${item.area || ""}</td>
 
-<td>${data.address || ""}</td>
+<td>${item.address || ""}</td>
+
+<td>${item.payment || ""}</td>
+
 
 <td>
-${data.paymentScreenshot === "WhatsApp Submitted"
-? "WhatsApp Submitted"
-: `<a href="${data.paymentScreenshot}" target="_blank">View Payment</a>`}
+${item.status || "Pending"}
 </td>
 
-<td>${data.status || "Pending"}</td>
 
 <td>
 
 <button onclick="updateStatus('${item.id}','Approved')">
-✅ Approve
+Approve
 </button>
 
 <button onclick="updateStatus('${item.id}','Rejected')">
-❌ Reject
+Reject
 </button>
 
 <button onclick="updateStatus('${item.id}','Pending')">
-🔄 Cancel
+Cancel
 </button>
 
+
 </td>
+
 
 <td>
 
-<input
-id="remark-${item.id}"
-value="${data.remarks || ""}"
-placeholder="Remark">
+<input 
+id="remark-${item.id}" 
+value="${item.remarks || ""}"
+placeholder="Remarks">
 
-<button onclick="saveRemarks('${item.id}')">
-💾 Save Remark
+
+<button onclick="saveRemark('${item.id}')">
+Save
 </button>
 
+
 </td>
+
 
 </tr>
 
 `;
 
-  });
+});
 
-  document.getElementById("totalTeams").innerText = total;
-  document.getElementById("pendingTeams").innerText = pending;
-  document.getElementById("approvedTeams").innerText = approved;
-  document.getElementById("rejectedTeams").innerText = rejected;
 
 }
-window.updateStatus = async function(id, status) {
 
-  await updateDoc(doc(db, "registrations", id), {
-    status: status
-  });
 
-  alert("Status Updated: " + status);
 
-  loadRegistrations();
 
-};
-
-window.saveRemarks = async function(id) {
-
-  const remark = document.getElementById("remark-" + id).value;
-
-  await updateDoc(doc(db, "registrations", id), {
-    remarks: remark
-  });
-
-  alert("Remarks Saved");
-
-  loadRegistrations();
-
-};
-
-loadRegistrations();
+window.update
