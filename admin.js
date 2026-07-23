@@ -46,10 +46,14 @@ ${data.createdAt
 
 <td>${data.mobile || ""}</td>
 
+<td>${data.area || ""}</td>
+
+<td>${data.address || ""}</td>
+
 <td>
-${data.paymentScreenshot
-? `<a href="${data.paymentScreenshot}" target="_blank">View Payment</a>`
-: "No Payment"}
+${data.paymentScreenshot === "WhatsApp Submitted"
+? "WhatsApp Submitted"
+: `<a href="${data.paymentScreenshot}" target="_blank">View Payment</a>`}
 </td>
 
 <td>${data.status || "Pending"}</td>
