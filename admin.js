@@ -17,6 +17,11 @@ async function loadRegistrations() {
 
   table.innerHTML = "";
 
+  let total = 0;
+  let pending = 0;
+  let approved = 0;
+  let rejected = 0;
+
   const q = query(
     collection(db, "registrations"),
     orderBy("createdAt", "desc")
@@ -27,6 +32,16 @@ async function loadRegistrations() {
   querySnapshot.forEach((item) => {
 
     const data = item.data();
+
+    total++;
+
+    if (data.status === "Approved") {
+      approved++;
+    } else if (data.status === "Rejected") {
+      rejected++;
+    } else {
+      pending++;
+    }
 
     table.innerHTML += `
 
@@ -93,8 +108,12 @@ placeholder="Remark">
 
   });
 
-}
+  document.getElementById("totalTeams").innerText = total;
+  document.getElementById("pendingTeams").innerText = pending;
+  document.getElementById("approvedTeams").innerText = approved;
+  document.getElementById("rejectedTeams").innerText = rejected;
 
+}
 window.updateStatus = async function(id, status) {
 
   await updateDoc(doc(db, "registrations", id), {
