@@ -1,7 +1,12 @@
+import emailjs from "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/+esm";
+
+emailjs.init({
+    publicKey: "AsUiMVkBY3DFQ-DOJ"
+});
 console.log("APL Admin JS Loaded");
 
 import { db } from "./firebase.js";
-import emailjs from "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/+esm";
+
 import {
 collection,
 getDocs,
@@ -11,9 +16,6 @@ orderBy,
 query
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-emailjs.init({
-    publicKey: "AsUiMVkBY3DFQ-DOJ",
-});
 const table = document.getElementById("registrationTable");
 
 const totalTeams = document.getElementById("totalTeams");
@@ -175,7 +177,7 @@ table.innerHTML += `
 
 <td>${item.address || ""}</td>
 
-
+<td>${item.remarks || "-"}</td>
 
 <td>
 
@@ -260,61 +262,45 @@ Save
 
 window.changeStatus = async function(id, status){
 
-    try {
-
+    try{
+let remark = prompt("Enter remark");
         await updateDoc(
-            doc(db, "registrations", id),
-            { status: status }
-        );
+    doc(db,"registrations",id),
+    {
+        status: status,
+        remarks: remark
+    }
+);
 
         const team = registrations.find(r => r.id === id);
 
-        await emailjs.send(
-            "service_ipztz05",
-            "template_f19a8gg",
-            {
-                name: team.captainName,
-                team_name: team.teamName,
-                registration_id: team.registrationId,
-                status: status,
-                to_email: team.email
-            }
-        );
+        if(team && team.email){
 
-        alert("✅ Status Updated & Email Sent");
+            await emailjs.send(
+                "service_ipztz05",
+                "template_f19a8gg",
+                {
+    name: team.captainName,
+    team_name: team.teamName,
+    registration_id: team.registrationId,
+    status: status,
+    remarks: remark,
+    to_email: team.email
+}
+            );
+
+        }
+
+        alert("✅ Status Updated");
         loadRegistrations();
 
-    } catch (error) {
+    }catch(error){
+
         console.error(error);
-        alert("❌ " + (error.text || error.message));
+        alert(error.message);
+
     }
 
-}
-
-    await updateDoc(
-        doc(db, "registrations", id),
-        {
-            status: status
-        }
-    );
-
-    const team = registrations.find(r => r.id === id);
-
-    await emailjs.send(
-        "service_ipztz05",
-        "template_f19a8gg",
-        {
-            name: team.captainName,
-            team_name: team.teamName,
-            registration_id: team.registrationId,
-            status: status,
-            to_email: team.email
-        }
-    );
-
-    alert("Status Updated & Email Sent");
-
-    loadRegistrations();
 }
 
 
