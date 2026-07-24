@@ -7,7 +7,11 @@
 
 <title>AJAY PREMIER LEAGUE (APL) 2026 | Official Website</title>
 <meta name="description" content="Official Website of AJAY PREMIER LEAGUE (APL) 2026.">
+<link rel="manifest" href="manifest.json">
 
+<meta name="theme-color" content="#0b8f3a">
+
+<link rel="apple-touch-icon" href="images/icon-192.png">
 <style>
 body{
   margin:0;
@@ -61,6 +65,9 @@ footer{background:#000;padding:15px;margin-top:30px}
 📝 Register Now
 </a>
 
+<button id="installBtn" class="btn register" style="display:none;">
+📲 Install APL App
+</button>
 
 <div class="card">
 <h2>🔗 APL 2026 Menu</h2>
@@ -156,5 +163,39 @@ footer{background:#000;padding:15px;margin-top:30px}
 All Rights Reserved.
 </footer>
 
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js");
+  });
+}
+</script>
+<script>
+let deferredPrompt;
+
+const installBtn = document.getElementById("installBtn");
+
+window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = "inline-block";
+});
+
+installBtn.addEventListener("click", async () => {
+
+    installBtn.style.display = "none";
+
+    deferredPrompt.prompt();
+
+    const { outcome } = await deferredPrompt.userChoice;
+
+    if (outcome === "accepted") {
+        console.log("APL App Installed");
+    }
+
+    deferredPrompt = null;
+
+});
+</script>
 </body>
 </html>

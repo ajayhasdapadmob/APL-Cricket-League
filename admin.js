@@ -3,9 +3,15 @@ import emailjs from "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/+esm";
 emailjs.init({
     publicKey: "AsUiMVkBY3DFQ-DOJ"
 });
+
 console.log("APL Admin JS Loaded");
 
-import { db } from "./firebase.js";
+
+import { db, auth } from "./firebase.js";
+import {
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
 import {
 collection,
@@ -15,6 +21,7 @@ updateDoc,
 orderBy,
 query
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
 
 const table = document.getElementById("registrationTable");
 
@@ -29,7 +36,7 @@ const searchInput = document.getElementById("searchInput");
 let registrations = [];
 
 
-// Load Data
+// LOAD DATA
 
 async function loadRegistrations(){
 
@@ -65,7 +72,6 @@ displayTable(registrations);
 
 
 }
-
 catch(error){
 
 console.log(error);
@@ -73,16 +79,13 @@ alert(error.message);
 
 }
 
-
 }
 
 
 
-
-// Dashboard Count
+// DASHBOARD
 
 function updateDashboard(){
-
 
 let pending=0;
 let approved=0;
@@ -96,9 +99,11 @@ if(data.status==="Pending"){
 pending++;
 }
 
+
 if(data.status==="Approved"){
 approved++;
 }
+
 
 if(data.status==="Rejected"){
 rejected++;
@@ -108,21 +113,20 @@ rejected++;
 });
 
 
-totalTeams.innerHTML=registrations.length;
+totalTeams.innerHTML = registrations.length;
 
-pendingTeams.innerHTML=pending;
+pendingTeams.innerHTML = pending;
 
-approvedTeams.innerHTML=approved;
+approvedTeams.innerHTML = approved;
 
-rejectedTeams.innerHTML=rejected;
+rejectedTeams.innerHTML = rejected;
 
 
 }
 
 
 
-
-// Display Table
+// DISPLAY TABLE
 
 function displayTable(data){
 
@@ -138,6 +142,7 @@ data.forEach(item=>{
 
 let date="";
 
+
 if(item.createdAt){
 
 date=new Date(
@@ -150,57 +155,55 @@ item.createdAt.seconds*1000
 
 table.innerHTML += `
 
-
 <tr>
-
 
 <td>${sl++}</td>
 
-
 <td>${date}</td>
-
 
 <td>${item.registrationId || ""}</td>
 
-
 <td>${item.teamName || ""}</td>
-
 
 <td>${item.captainName || ""}</td>
 
-
 <td>${item.mobile || ""}</td>
-
 
 <td>${item.area || ""}</td>
 
-
 <td>${item.address || ""}</td>
 
-<td>${item.remarks || "-"}</td>
 
 <td>
-
 <a href="${item.paymentScreenshot}" target="_blank">
-
 View
-
 </a>
-
 </td>
 
 
+<td class="${
+item.paymentStatus==="Paid"
+?"status-approved"
+:"status-pending"
+}">
+${item.paymentStatus || "Unpaid"}
+</td>
+
 
 <td class="${
-item.status === "Approved" ? "status-approved" :
-item.status === "Rejected" ? "status-rejected" :
-item.status === "Cancelled" ? "status-cancelled" :
+item.status==="Approved"
+?"status-approved"
+:
+item.status==="Rejected"
+?"status-rejected"
+:
+item.status==="Cancelled"
+?"status-cancelled"
+:
 "status-pending"
 }">
 ${item.status || "Pending"}
 </td>
-
-
 
 <td>
 
@@ -224,94 +227,127 @@ onclick="changeStatus('${item.id}','Pending')">
 ⏳ Pending
 </button>
 
+<button class="approve"
+onclick="changePaymentStatus('${item.id}','Paid')">
+💰 Mark Paid
+</button>
+
 </td>
 
 
 <td>
 
+<input
+type="text"
+id="remark-${item.id}"
+value="${item.remarks || ""}"
+placeholder="Enter Remark">
 
-<input id="remark-${item.id}" value="${item.remarks || ""}">
-
+<br><br>
 
 <button onclick="saveRemark('${item.id}')">
-
-Save
-
+💾 Save
 </button>
-
 
 </td>
 
 
-
 </tr>
-
-
 `;
-
-
 });
-
 
 }
 
 
 
 
-// Status Update
+// PAYMENT STATUS UPDATE
+
+window.changePaymentStatus = async function(id,status){
+
+try{
+
+await updateDoc(
+doc(db,"registrations",id),
+{
+paymentStatus: status
+}
+);
+
+
+alert("✅ Payment Status Updated");
+
+loadRegistrations();
+
+
+}
+catch(error){
+
+console.error(error);
+alert(error.message);
+
+}
+
+}
+
+
+
+// STATUS UPDATE
 
 window.changeStatus = async function(id, status){
 
-    try{
-let remark = prompt("Enter remark");
-        await updateDoc(
-    doc(db,"registrations",id),
-    {
-        status: status,
-        remarks: remark
-    }
+try{
+
+const remark = document.getElementById("remark-" + id).value;
+
+await updateDoc(
+doc(db,"registrations",id),
+{
+status: status,
+remarks: remark
+}
 );
 
-        const team = registrations.find(r => r.id === id);
+const team = registrations.find(r => r.id === id);
 
-        if(team && team.email){
+if(team && team.email){
 
-            await emailjs.send(
-                "service_ipztz05",
-                "template_f19a8gg",
-                {
-    name: team.captainName,
-    team_name: team.teamName,
-    registration_id: team.registrationId,
-    status: status,
-    remarks: remark,
-    to_email: team.email
+await emailjs.send(
+"service_ipztz05",
+"template_05udsk4",
+{
+name: team.captainName,
+team_name: team.teamName,
+registration_id: team.registrationId,
+status: status,
+remarks: remark,
+to_email: team.email
 }
-            );
-
-        }
-
-        alert("✅ Status Updated");
-        loadRegistrations();
-
-    }catch(error){
-
-        console.error(error);
-        alert(error.message);
-
-    }
+);
 
 }
 
+alert("✅ Status Updated");
+
+loadRegistrations();
+
+}catch(error){
+
+console.error(error);
+alert(error.message);
+
+}
+
+}
 
 
 
-// Save Remark
+// SAVE REMARK
 
 window.saveRemark = async function(id){
 
 
-let remark = 
+let remark =
 document.getElementById("remark-"+id).value;
 
 
@@ -321,16 +357,17 @@ await updateDoc(
 doc(db,"registrations",id),
 
 {
-
 remarks:remark
-
 }
 
 );
 
 
 
-alert("Remark Saved");
+alert("✅ Remark Saved");
+
+
+loadRegistrations();
 
 
 }
@@ -338,13 +375,17 @@ alert("Remark Saved");
 
 
 
-// Search
 
-searchInput.addEventListener("input",()=>{
+// SEARCH
+
+searchInput.addEventListener(
+"input",
+()=>{
 
 
 let value =
 searchInput.value.toLowerCase();
+
 
 
 let result =
@@ -358,18 +399,15 @@ registrations.filter(item=>
 
 ||
 
-
 (item.mobile || "")
 .includes(value)
 
 
 ||
 
-
 (item.registrationId || "")
 .toLowerCase()
 .includes(value)
-
 
 
 );
@@ -379,11 +417,39 @@ registrations.filter(item=>
 displayTable(result);
 
 
+}
+
+);
+
+
+
+
+
+// Login Check
+
+onAuthStateChanged(auth, (user) => {
+
+    if (!user) {
+        window.location.href = "admin-login.html";
+        return;
+    }
+
+    loadRegistrations();
 
 });
 
+// Logout
 
+const logoutBtn = document.getElementById("logoutBtn");
 
+if (logoutBtn) {
 
+    logoutBtn.addEventListener("click", async () => {
 
-loadRegistrations();
+        await signOut(auth);
+
+        window.location.href = "admin-login.html";
+
+    });
+
+}
