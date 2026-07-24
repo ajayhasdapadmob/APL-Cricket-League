@@ -1,81 +1,65 @@
-console.log("ADMIN JS RUNNING");
+console.log("APL Admin JS Loaded");
 
 import { db } from "./firebase.js";
-
+import emailjs from "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/+esm";
 import {
-  collection,
-  getDocs,
-  doc,
-  updateDoc,
-  serverTimestamp
+collection,
+getDocs,
+doc,
+updateDoc,
+orderBy,
+query
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-
+emailjs.init({
+    publicKey: "AsUiMVkBY3DFQ-DOJ",
+});
 const table = document.getElementById("registrationTable");
-const searchInput = document.getElementById("searchInput");
 
 const totalTeams = document.getElementById("totalTeams");
 const pendingTeams = document.getElementById("pendingTeams");
 const approvedTeams = document.getElementById("approvedTeams");
 const rejectedTeams = document.getElementById("rejectedTeams");
 
+const searchInput = document.getElementById("searchInput");
 
-let allRegistrations = [];
+
+let registrations = [];
 
 
-// Load Registration Data
+// Load Data
 
 async function loadRegistrations(){
 
 try{
 
-const snapshot = await getDocs(
-collection(db,"registrations")
+const q = query(
+collection(db,"registrations"),
+orderBy("createdAt","desc")
 );
 
 
-allRegistrations = [];
-
-let total = 0;
-let pending = 0;
-let approved = 0;
-let rejected = 0;
+const snapshot = await getDocs(q);
 
 
-snapshot.forEach((docSnap)=>{
-
-let data = {
-id: docSnap.id,
-...docSnap.data()
-};
+registrations=[];
 
 
-allRegistrations.push(data);
+snapshot.forEach((item)=>{
 
-total++;
+registrations.push({
 
+id:item.id,
+...item.data()
 
-if(data.status === "Approved"){
-approved++;
-}
-else if(data.status === "Rejected"){
-rejected++;
-}
-else{
-pending++;
-}
-
+});
 
 });
 
 
-totalTeams.innerText = total;
-pendingTeams.innerText = pending;
-approvedTeams.innerText = approved;
-rejectedTeams.innerText = rejected;
+updateDashboard();
 
-
-displayRegistrations(allRegistrations);
+displayTable(registrations);
 
 
 }
@@ -87,81 +71,155 @@ alert(error.message);
 
 }
 
+
 }
+
+
+
+
+// Dashboard Count
+
+function updateDashboard(){
+
+
+let pending=0;
+let approved=0;
+let rejected=0;
+
+
+registrations.forEach(data=>{
+
+
+if(data.status==="Pending"){
+pending++;
+}
+
+if(data.status==="Approved"){
+approved++;
+}
+
+if(data.status==="Rejected"){
+rejected++;
+}
+
+
+});
+
+
+totalTeams.innerHTML=registrations.length;
+
+pendingTeams.innerHTML=pending;
+
+approvedTeams.innerHTML=approved;
+
+rejectedTeams.innerHTML=rejected;
+
+
+}
+
 
 
 
 // Display Table
 
-function displayRegistrations(data){
+function displayTable(data){
+
 
 table.innerHTML="";
 
 
-if(data.length === 0){
-
-table.innerHTML=`
-<tr>
-<td colspan="11" align="center">
-No Data Found
-</td>
-</tr>`;
-
-return;
-
-}
-
+let sl=1;
 
 
 data.forEach(item=>{
 
 
+let date="";
+
+if(item.createdAt){
+
+date=new Date(
+item.createdAt.seconds*1000
+).toLocaleString();
+
+}
+
+
+
 table.innerHTML += `
+
 
 <tr>
 
-<td>
-${
-item.createdAt 
-? new Date(item.createdAt.seconds*1000).toLocaleString()
-: ""
-}
-</td>
 
-<td>${item.applyId || ""}</td>
+<td>${sl++}</td>
+
+
+<td>${date}</td>
+
+
+<td>${item.registrationId || ""}</td>
+
 
 <td>${item.teamName || ""}</td>
 
-<td>${item.captain || ""}</td>
+
+<td>${item.captainName || ""}</td>
+
 
 <td>${item.mobile || ""}</td>
 
+
 <td>${item.area || ""}</td>
+
 
 <td>${item.address || ""}</td>
 
-<td>${item.payment || ""}</td>
 
 
 <td>
+
+<a href="${item.paymentScreenshot}" target="_blank">
+
+View
+
+</a>
+
+</td>
+
+
+
+<td class="${
+item.status === "Approved" ? "status-approved" :
+item.status === "Rejected" ? "status-rejected" :
+item.status === "Cancelled" ? "status-cancelled" :
+"status-pending"
+}">
 ${item.status || "Pending"}
 </td>
 
 
+
 <td>
 
-<button onclick="updateStatus('${item.id}','Approved')">
-Approve
+<button class="approve"
+onclick="changeStatus('${item.id}','Approved')">
+✅ Approve
 </button>
 
-
-<button onclick="updateStatus('${item.id}','Rejected')">
-Reject
+<button class="reject"
+onclick="changeStatus('${item.id}','Rejected')">
+❌ Reject
 </button>
 
+<button class="cancel"
+onclick="changeStatus('${item.id}','Cancelled')">
+🚫 Cancel
+</button>
 
-<button onclick="updateStatus('${item.id}','Pending')">
-Cancel
+<button class="pending-btn"
+onclick="changeStatus('${item.id}','Pending')">
+⏳ Pending
 </button>
 
 </td>
@@ -169,22 +227,26 @@ Cancel
 
 <td>
 
-<input 
-id="remark-${item.id}"
-value="${item.remarks || ""}"
-placeholder="Remarks">
+
+<input id="remark-${item.id}" value="${item.remarks || ""}">
 
 
 <button onclick="saveRemark('${item.id}')">
+
 Save
+
 </button>
 
+
 </td>
+
 
 
 </tr>
 
+
 `;
+
 
 });
 
@@ -194,35 +256,66 @@ Save
 
 
 
-// Update Status
+// Status Update
 
-window.updateStatus = async function(id,status){
+window.changeStatus = async function(id, status){
 
-try{
+    try {
 
-await updateDoc(
-doc(db,"registrations",id),
-{
-status:status,
-updatedAt:serverTimestamp()
+        await updateDoc(
+            doc(db, "registrations", id),
+            { status: status }
+        );
+
+        const team = registrations.find(r => r.id === id);
+
+        await emailjs.send(
+            "service_ipztz05",
+            "template_f19a8gg",
+            {
+                name: team.captainName,
+                team_name: team.teamName,
+                registration_id: team.registrationId,
+                status: status,
+                to_email: team.email
+            }
+        );
+
+        alert("✅ Status Updated & Email Sent");
+        loadRegistrations();
+
+    } catch (error) {
+        console.error(error);
+        alert("❌ " + (error.text || error.message));
+    }
+
 }
-);
 
+    await updateDoc(
+        doc(db, "registrations", id),
+        {
+            status: status
+        }
+    );
 
-alert("Status Updated");
+    const team = registrations.find(r => r.id === id);
 
-loadRegistrations();
+    await emailjs.send(
+        "service_ipztz05",
+        "template_f19a8gg",
+        {
+            name: team.captainName,
+            team_name: team.teamName,
+            registration_id: team.registrationId,
+            status: status,
+            to_email: team.email
+        }
+    );
 
+    alert("Status Updated & Email Sent");
 
+    loadRegistrations();
 }
-
-catch(error){
-
-alert(error.message);
-
-}
-
-};
 
 
 
@@ -231,33 +324,30 @@ alert(error.message);
 
 window.saveRemark = async function(id){
 
-try{
 
-
-let remark =
+let remark = 
 document.getElementById("remark-"+id).value;
 
 
+
 await updateDoc(
+
 doc(db,"registrations",id),
+
 {
+
 remarks:remark
+
 }
+
 );
+
 
 
 alert("Remark Saved");
 
 
 }
-
-catch(error){
-
-alert(error.message);
-
-}
-
-};
 
 
 
@@ -271,12 +361,9 @@ let value =
 searchInput.value.toLowerCase();
 
 
+let result =
+registrations.filter(item=>
 
-let filtered =
-allRegistrations.filter(item=>{
-
-
-return (
 
 (item.teamName || "")
 .toLowerCase()
@@ -285,31 +372,32 @@ return (
 
 ||
 
-(item.applyId || "")
-.toLowerCase()
+
+(item.mobile || "")
 .includes(value)
 
 
 ||
 
-(item.mobile || "")
+
+(item.registrationId || "")
+.toLowerCase()
 .includes(value)
+
+
 
 );
 
 
+
+displayTable(result);
+
+
+
 });
 
 
 
-displayRegistrations(filtered);
 
-
-});
-
-
-
-
-// Start
 
 loadRegistrations();

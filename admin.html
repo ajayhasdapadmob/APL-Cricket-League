@@ -1,82 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>APL Admin Dashboard</title>
-  <link rel="stylesheet" href="admin.css">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>APL Admin Dashboard</title>
+
+<link rel="stylesheet" href="admin.css">
+
 </head>
+
 
 <body>
 
+
 <h1>🏏 APL Admin Dashboard</h1>
+
+
 
 <div class="summary">
 
-  <div class="card total">
-    <h3>Total Teams</h3>
-    <h2 id="totalTeams">0</h2>
-  </div>
 
-  <div class="card pending">
-    <h3>Pending</h3>
-    <h2 id="pendingTeams">0</h2>
-  </div>
+<div class="card total">
+<h3>Total Teams</h3>
+<h2 id="totalTeams">0</h2>
+</div>
 
-  <div class="card approved">
-    <h3>Approved</h3>
-    <h2 id="approvedTeams">0</h2>
-  </div>
 
-  <div class="card rejected">
-    <h3>Rejected</h3>
-    <h2 id="rejectedTeams">0</h2>
-  </div>
+<div class="card pending">
+<h3>Pending</h3>
+<h2 id="pendingTeams">0</h2>
+</div>
+
+
+<div class="card approved">
+<h3>Approved</h3>
+<h2 id="approvedTeams">0</h2>
+</div>
+
+
+<div class="card rejected">
+<h3>Rejected</h3>
+<h2 id="rejectedTeams">0</h2>
+</div>
+
 
 </div>
+
+
 
 
 <div class="search-box">
-  <input 
-    type="text" 
-    id="searchInput" 
-    placeholder="Search Team Name / Apply ID / Mobile Number">
+
+<input 
+type="text"
+id="searchInput"
+placeholder="Search Team Name / Apply ID / Mobile Number">
+
 </div>
 
 
-<table border="1" width="100%" cellspacing="0" cellpadding="10">
+
+
+
+<table>
+
 
 <thead>
+
 <tr>
-  <th>Date & Time</th>
-  <th>Apply ID</th>
-  <th>Team Name</th>
-  <th>Captain</th>
-  <th>Mobile</th>
-  <th>Area</th>
-  <th>Address</th>
-  <th>Payment</th>
-  <th>Status</th>
-  <th>Action</th>
-  <th>Remarks</th>
+
+<th>Sl No</th>
+
+<th>Date & Time</th>
+
+<th>Apply ID</th>
+
+<th>Team Name</th>
+
+<th>Captain</th>
+
+<th>Mobile</th>
+
+<th>Area</th>
+
+<th>Address</th>
+
+<th>Payment</th>
+
+<th>Status</th>
+
+<th>Action</th>
+
+<th>Remarks</th>
+
+
 </tr>
+
 </thead>
+
 
 
 <tbody id="registrationTable">
 
+
 <tr>
-  <td colspan="11" align="center">
-    Loading...
-  </td>
+
+<td colspan="12">
+
+Loading...
+
+</td>
+
 </tr>
 
+
 </tbody>
+
 
 </table>
 
 
+
+
 <script type="module" src="admin.js"></script>
 
+
 </body>
+
 </html>
