@@ -164,51 +164,6 @@ Thank You For Registering
 AJAY PREMIER LEAGUE (APL) 2026
 `;
 
-Registration ID:
-${d.registrationId}
-
-
-Team Name:
-${d.teamName}
-
-
-Captain Name:
-${d.captainName}
-
-
-Mobile:
-${d.mobile}
-
-
-Email:
-${d.email || ""}
-
-
-Address:
-${d.address}
-
-
-Player Type:
-${d.playerType}
-
-
-Payment Status:
-${d.paymentStatus}
-
-
-Registration Status:
-${d.status}
-
-
-==============================
-
-Organized By:
-AJAY HASDA
-
-
-Thank You For Registering
-
-`;
 
 
 let blob = new Blob(
