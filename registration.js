@@ -9,404 +9,294 @@ import {
   where
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-
 import {
   ref,
   uploadBytes,
   getDownloadURL
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-storage.js";
-
-
-console.log("Registration JS Loaded");
-
-
+// =========================
 // TEAM ID
+// =========================
 
 let teamId = localStorage.getItem("teamId");
 
-if(!teamId){
-
+if (!teamId) {
   teamId = "TEAM-" + Date.now();
-
-  localStorage.setItem(
-    "teamId",
-    teamId
-  );
-
+  localStorage.setItem("teamId", teamId);
 }
 
+// =========================
+// AUTO RESTORE FORM
+// =========================
 
+window.addEventListener("DOMContentLoaded", () => {
 
+  const fields = [
+    "teamName",
+    "captainName",
+    "mobile",
+    "whatsapp",
+    "email",
+    "area",
+    "address",
+    "upi",
+    "playerType"
+  ];
+
+  fields.forEach(id => {
+
+    const el = document.getElementById(id);
+
+    if (el && localStorage.getItem(id)) {
+      el.value = localStorage.getItem(id);
+    }
+
+  });
+const otherArea = document.getElementById("otherArea");
+
+if (otherArea) {
+  otherArea.value = localStorage.getItem("otherArea") || "";
+}
+if (typeof showOther === "function") {
+  showOther();
+}
+});
+// =========================
+// SAVE FORM
+// =========================
+
+window.saveRegistrationData = function () {
+
+  const fields = [
+    "teamName",
+    "captainName",
+    "mobile",
+    "whatsapp",
+    "email",
+    "area",
+    "address",
+    "upi",
+    "playerType"
+  ];
+
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      localStorage.setItem(id, el.value);
+    }
+  });
+
+  const otherArea = document.getElementById("otherArea");
+
+if (otherArea) {
+  localStorage.setItem("otherArea", otherArea.value);
+}
+
+};
+// =========================
 // REGISTRATION SUBMIT
+// =========================
 
 document
 .getElementById("registrationForm")
-.addEventListener("submit", async(e)=>{
+.addEventListener("submit", async (e) => {
 
-e.preventDefault();
+  e.preventDefault();
 
+  try {
 
-try{
+    saveRegistrationData();
 
+    const requiredFields = [
+      "teamName",
+      "captainName",
+      "mobile",
+      "whatsapp",
+      "email",
+      "area",
+      "address",
+      "upi",
+      "playerType"
+    ];
 
-let requiredFields=[
+    for (const id of requiredFields) {
 
-"teamName",
-"captainName",
-"mobile",
-"whatsapp",
-"email",
-"area",
-"address",
-"upi",
-"playerType"
+      const field = document.getElementById(id);
 
-];
+      if (!field || field.value.trim() === "") {
+        alert("Please fill all required fields");
+        field.focus();
+        return;
+      }
 
+    }
 
-for(let id of requiredFields){
+    let screenshotURL = "";
 
-let field=document.getElementById(id);
+    const file =
+      document.getElementById("paymentScreenshot").files[0];
 
+    if (file) {
 
-if(!field || field.value.trim()==""){
+      const storageRef = ref(
+        storage,
+        "paymentScreenshots/" +
+        Date.now() + "_" + file.name
+      );
 
-alert("Please fill all required fields");
+      await uploadBytes(storageRef, file);
 
-field.focus();
+      screenshotURL =
+        await getDownloadURL(storageRef);
 
-return;
+    }
 
-}
+    const regId = "APL2026-" + Date.now();
 
-}
+    await addDoc(
+      collection(db, "registrations"),
+      {
 
+        registrationId: regId,
+        teamId: teamId,
 
+        teamName:
+          document.getElementById("teamName").value,
 
-// PAYMENT SCREENSHOT UPLOAD
+        captainName:
+          document.getElementById("captainName").value,
 
+        mobile:
+          document.getElementById("mobile").value,
 
-let screenshotURL="";
+        whatsapp:
+          document.getElementById("whatsapp").value,
 
+        email:
+          document.getElementById("email").value,
 
-let file =
-document.getElementById("paymentScreenshot")
-.files[0];
+        area:
+          document.getElementById("area").value,
 
+otherArea: document.getElementById("otherArea")?.value || "",
 
-if(file){
+        address:
+          document.getElementById("address").value,
 
+        upi:
+          document.getElementById("upi").value,
 
-const storageRef = ref(
+        playerType:
+          document.getElementById("playerType").value,
 
-storage,
+        paymentScreenshot:
+          screenshotURL,
 
-"paymentScreenshots/" +
-Date.now() +
-"_" +
-file.name
+        paymentStatus: "Unpaid",
+        status: "Pending",
 
-);
+        createdAt: serverTimestamp()
 
+      }
+    );
 
+    alert("✅ Registration Submitted Successfully");
 
-await uploadBytes(
-storageRef,
-file
-);
+    document.getElementById("registrationForm").reset();
 
+    clearRegistrationData();
 
+    window.location.href = "index.html";
 
-screenshotURL =
-await getDownloadURL(storageRef);
+  } catch (error) {
 
+    console.error(error);
+    alert(error.message);
 
-}
-
-
-
-let regId =
-"APL2026-" + Date.now();
-
-
-// SAVE FIRESTORE
-
-
-await addDoc(
-
-collection(db,"registrations"),
-
-{
-
-
-registrationId:regId,
-
-
-teamId:teamId,
-
-
-teamName:
-document.getElementById("teamName").value,
-
-
-captainName:
-document.getElementById("captainName").value,
-
-
-mobile:
-document.getElementById("mobile").value,
-
-
-whatsapp:
-document.getElementById("whatsapp").value,
-
-
-email:
-document.getElementById("email").value,
-
-
-area:
-document.getElementById("area").value,
-
-
-address:
-document.getElementById("address").value,
-
-
-upi:
-document.getElementById("upi").value,
-
-
-playerType:
-document.getElementById("playerType").value,
-
-
-paymentScreenshot:
-screenshotURL,
-
-
-paymentStatus:"Unpaid",
-
-
-status:"Pending",
-
-
-createdAt:
-serverTimestamp()
-
+  }
 
 });
-
-
-alert("✅ Registration Submitted Successfully");
-
-
-document
-.getElementById("registrationForm")
-.reset();
-
-
-localStorage.removeItem("teamId");
-
-
-window.location.href="index.html";
-
-
-}
-
-
-catch(error){
-
-
-console.error(error);
-
-alert(error.message);
-
-
-}
-
-
-});
+// =========================
 // PLAYER PREVIEW
+// =========================
 
+async function loadPlayers() {
 
-async function loadPlayers(){
+  const box = document.getElementById("playersData");
 
+  if (!box) return;
 
-let box = document.getElementById("playersData");
+  const id = localStorage.getItem("teamId");
 
+  if (!id) {
+    box.innerHTML = "No Player Added";
+    return;
+  }
 
-if(!box) return;
+  try {
 
+    const q = query(
+      collection(db, "players"),
+      where("teamId", "==", id)
+    );
 
+    const snapshot = await getDocs(q);
 
-let id = localStorage.getItem("teamId");
+    let players = "";
 
+    snapshot.forEach((doc) => {
 
-if(!id){
+      const p = doc.data();
 
-box.innerHTML="No Player Added";
+      players += `
+        <b>Captain:</b> ${p.captainName || ""}<br>
+        <b>Player 2:</b> ${p.player2 || ""}<br>
+        <b>Player 3:</b> ${p.player3 || ""}<br>
+        <b>Player 4:</b> ${p.player4 || ""}<br>
+        <b>Player 5:</b> ${p.player5 || ""}<br>
+        <b>Player 6:</b> ${p.player6 || ""}<br>
+        <b>Player 7:</b> ${p.player7 || ""}<br>
+        <b>Player 8:</b> ${p.player8 || ""}<br>
+        <b>Player 9:</b> ${p.player9 || ""}<br>
+        <b>Player 10:</b> ${p.player10 || ""}<br>
+        <b>Player 11:</b> ${p.player11 || ""}<br>
+        <hr>
+      `;
 
-return;
+    });
 
-}
+    box.innerHTML = players || "No Player Added";
 
+  } catch (err) {
 
+    console.error(err);
+    box.innerHTML = "Unable to load players";
 
-let q = query(
-
-collection(db,"players"),
-
-where("teamId","==",id)
-
-);
-
-
-
-let snapshot = await getDocs(q);
-
-
-let players="";
-
-
-
-snapshot.forEach((doc)=>{
-
-
-let p = doc.data();
-
-
-
-players += `
-
-Captain: ${p.captainName || ""}<br>
-
-Player 2: ${p.player2 || ""}<br>
-
-Player 3: ${p.player3 || ""}<br>
-
-Player 4: ${p.player4 || ""}<br>
-
-Player 5: ${p.player5 || ""}<br>
-
-Player 6: ${p.player6 || ""}<br>
-
-Player 7: ${p.player7 || ""}<br>
-
-Player 8: ${p.player8 || ""}<br>
-
-Player 9: ${p.player9 || ""}<br>
-
-Player 10: ${p.player10 || ""}<br>
-
-Player 11: ${p.player11 || ""}<br>
-
-`;
-
-
-
-});
-
-
-
-box.innerHTML =
-players || "No Player Added";
-
+  }
 
 }
-
-
 
 loadPlayers();
 
 
+// =========================
+// CLEAR FORM AFTER SUCCESS
+// =========================
 
+function clearRegistrationData() {
 
-// SAVE DATA BEFORE PLAYER PAGE
+  [
+    "teamId",
+    "teamName",
+    "captainName",
+    "mobile",
+    "whatsapp",
+    "email",
+    "area",
+    "otherArea",
+    "address",
+    "upi",
+    "playerType"
+  ].forEach(key => localStorage.removeItem(key));
 
-
-window.saveRegistrationData=function(){
-
-
-localStorage.setItem(
-
-"teamName",
-
-document.getElementById("teamName").value
-
-);
-
-
-
-localStorage.setItem(
-
-"captainName",
-
-document.getElementById("captainName").value
-
-);
-
-
-
-localStorage.setItem(
-
-"mobile",
-
-document.getElementById("mobile").value
-
-);
-
-
-
-localStorage.setItem(
-
-"area",
-
-document.getElementById("area").value
-
-);
-
-
-
-localStorage.setItem(
-
-"address",
-
-document.getElementById("address").value
-
-);
-
-
-
-};
-// Restore saved registration data
-window.addEventListener("load", () => {
-
-  document.getElementById("teamName").value =
-    localStorage.getItem("teamName") || "";
-
-  document.getElementById("captainName").value =
-    localStorage.getItem("captainName") || "";
-
-  document.getElementById("mobile").value =
-    localStorage.getItem("mobile") || "";
-
-  document.getElementById("whatsapp").value =
-    localStorage.getItem("whatsapp") || "";
-
-  document.getElementById("email").value =
-    localStorage.getItem("email") || "";
-
-  document.getElementById("area").value =
-    localStorage.getItem("area") || "";
-
-  document.getElementById("address").value =
-    localStorage.getItem("address") || "";
-
-  document.getElementById("upi").value =
-    localStorage.getItem("upi") || "";
-
-  document.getElementById("playerType").value =
-    localStorage.getItem("playerType") || "";
-
-});
+}
