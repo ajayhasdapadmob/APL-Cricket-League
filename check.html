@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>APL 2026 Registration Status</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#111;
+color:white;
+text-align:center;
+padding:20px;
+}
+
+.container{
+background:#222;
+padding:20px;
+border-radius:15px;
+max-width:400px;
+margin:auto;
+}
+
+input{
+width:90%;
+padding:12px;
+margin:10px;
+border-radius:8px;
+border:none;
+}
+
+button{
+padding:12px 25px;
+background:green;
+color:white;
+border:none;
+border-radius:8px;
+font-size:16px;
+}
+
+#result{
+margin-top:20px;
+background:#333;
+padding:15px;
+border-radius:10px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+<h2>🏏 APL 2026</h2>
+
+<h3>Registration Status Check</h3>
+
+
+<input 
+type="text" 
+id="regId"
+placeholder="Enter Registration ID">
+
+
+<br>
+
+<button onclick="checkRegistration()">
+Check Status
+</button>
+
+
+<div id="result">
+</div>
+
+
+</div>
+
+
+<script type="module" src="check.js"></script>
+
+</body>
+
+</html>

@@ -24,31 +24,7 @@ if (!teamId) {
   teamId = "TEAM-" + Date.now();
   localStorage.setItem("teamId", teamId);
 }
-window.addEventListener("DOMContentLoaded", () => {
 
-  const fields = [
-    "teamName",
-    "captainName",
-    "mobile",
-    "whatsapp",
-    "email",
-    "area",
-    "address",
-    "upi",
-    "playerType"
-  ];
-
-  fields.forEach(id => {
-
-    const el = document.getElementById(id);
-
-    if (el && localStorage.getItem(id)) {
-      el.value = localStorage.getItem(id);
-    }
-
-  });
-
-});
 
 const otherArea = document.getElementById("otherArea");
 
