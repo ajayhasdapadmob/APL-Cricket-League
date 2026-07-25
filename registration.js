@@ -379,3 +379,34 @@ document.getElementById("address").value
 
 
 };
+// Restore saved registration data
+window.addEventListener("load", () => {
+
+  document.getElementById("teamName").value =
+    localStorage.getItem("teamName") || "";
+
+  document.getElementById("captainName").value =
+    localStorage.getItem("captainName") || "";
+
+  document.getElementById("mobile").value =
+    localStorage.getItem("mobile") || "";
+
+  document.getElementById("whatsapp").value =
+    localStorage.getItem("whatsapp") || "";
+
+  document.getElementById("email").value =
+    localStorage.getItem("email") || "";
+
+  document.getElementById("area").value =
+    localStorage.getItem("area") || "";
+
+  document.getElementById("address").value =
+    localStorage.getItem("address") || "";
+
+  document.getElementById("upi").value =
+    localStorage.getItem("upi") || "";
+
+  document.getElementById("playerType").value =
+    localStorage.getItem("playerType") || "";
+
+});
