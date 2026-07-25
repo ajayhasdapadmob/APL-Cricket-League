@@ -24,11 +24,6 @@ if (!teamId) {
   teamId = "TEAM-" + Date.now();
   localStorage.setItem("teamId", teamId);
 }
-
-// =========================
-// AUTO RESTORE FORM
-// =========================
-
 window.addEventListener("DOMContentLoaded", () => {
 
   const fields = [
@@ -52,6 +47,9 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
   });
+
+});
+
 const otherArea = document.getElementById("otherArea");
 
 if (otherArea) {
@@ -60,7 +58,6 @@ if (otherArea) {
 if (typeof showOther === "function") {
   showOther();
 }
-});
 // =========================
 // SAVE FORM
 // =========================
@@ -105,7 +102,7 @@ document
 
   try {
 
-    saveRegistrationData();
+    
 
     const requiredFields = [
       "teamName",
