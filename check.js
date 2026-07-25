@@ -1,6 +1,5 @@
 import { db } from "./firebase.js";
 
-
 import {
 collection,
 query,
@@ -12,50 +11,33 @@ from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 window.checkRegistration = async function(){
 
-
 let regId =
 document.getElementById("regId").value.trim();
 
 
 if(regId===""){
-
 alert("Please Enter Registration ID");
 return;
-
 }
 
 
-
 const q = query(
-
 collection(db,"registrations"),
-
-where(
-"registrationId",
-"==",
-regId
-)
-
+where("registrationId","==",regId)
 );
-
 
 
 const snapshot = await getDocs(q);
 
 
-
 if(snapshot.empty){
 
-
-document.getElementById("result").innerHTML=
-
+document.getElementById("result").innerHTML =
 "❌ Registration ID Not Found";
-
 
 return;
 
 }
-
 
 
 snapshot.forEach((doc)=>{
@@ -64,8 +46,10 @@ snapshot.forEach((doc)=>{
 let data = doc.data();
 
 
+window.receiptData = data;
 
-document.getElementById("result").innerHTML=
+
+document.getElementById("result").innerHTML =
 
 `
 <h3>✅ Registration Found</h3>
@@ -95,12 +79,108 @@ ${data.paymentStatus}
 
 <br>
 
-<b>Registration Status:</b>
+<b>Status:</b>
 ${data.status}
+
+<br><br>
+
+<button onclick="downloadReceipt()">
+📄 Download Receipt
+</button>
 
 `;
 
 });
+
+
+}
+
+
+// Download Receipt
+
+window.downloadReceipt = function(){
+
+
+let d = window.receiptData;
+
+
+let receipt =
+
+`
+AJAY PREMIER LEAGUE (APL) 2026
+
+==============================
+
+Registration Receipt
+
+Registration ID:
+${d.registrationId}
+
+
+Team Name:
+${d.teamName}
+
+
+Captain Name:
+${d.captainName}
+
+
+Mobile:
+${d.mobile}
+
+
+Email:
+${d.email || ""}
+
+
+Address:
+${d.address}
+
+
+Player Type:
+${d.playerType}
+
+
+Payment Status:
+${d.paymentStatus}
+
+
+Registration Status:
+${d.status}
+
+
+==============================
+
+Organized By:
+AJAY HASDA
+
+
+Thank You For Registering
+
+`;
+
+
+let blob = new Blob(
+[receipt],
+{type:"text/plain"}
+);
+
+
+let url = URL.createObjectURL(blob);
+
+
+let a = document.createElement("a");
+
+a.href = url;
+
+a.download =
+d.registrationId + "_APL2026_Receipt.txt";
+
+
+a.click();
+
+
+URL.revokeObjectURL(url);
 
 
 }
