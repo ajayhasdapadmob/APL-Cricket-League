@@ -1,5 +1,5 @@
 import { db } from "./firebase.js";
-
+console.log("CHECK JS LOADED");
 import {
   collection,
   query,
@@ -101,102 +101,79 @@ window.downloadReceipt = function(){
 
   const d = window.receiptData;
 
-
   if(!d){
     alert("Please Check Registration First");
     return;
   }
 
-
   const receipt = `
-
 🏆 AJAY PREMIER LEAGUE (APL) 2026
 
 Official Registration Receipt
 
-==============================
+------------------------------
 
 Registration ID:
 ${d.registrationId}
 
-
 Team Name:
 ${d.teamName}
-
 
 Captain Name:
 ${d.captainName}
 
-
 Mobile:
 ${d.mobile}
-
 
 Email:
 ${d.email || ""}
 
-
 Address:
 ${d.address || ""}
-
-
-Player Type:
-${d.playerType || ""}
-
 
 Payment Status:
 ${d.paymentStatus}
 
-
 Registration Status:
 ${d.status}
 
-
-==============================
+------------------------------
 
 Organized By:
 AJAY HASDA
 
-
 Venue:
 Padmabil Ground
-
 
 Contact:
 +91 9663116089
 +91 9353689775
 
-
 Email:
 ajayhasda623@gmail.com
 
-
 Thank You For Registering
-
 `;
 
-
-  const blob = new Blob(
-    [receipt],
-    {type:"text/plain"}
-  );
-
+  const blob = new Blob([receipt], {
+    type: "text/plain"
+  });
 
   const url = URL.createObjectURL(blob);
 
+  const link = document.createElement("a");
 
-  const a = document.createElement("a");
+link.href = url;
+link.setAttribute("download","APL2026_Receipt.txt");
 
-  a.href = url;
+document.body.appendChild(link);
 
-  a.download =
-  d.registrationId + "_APL2026_Receipt.txt";
-
-
-  a.click();
-
+setTimeout(()=>{
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+},100);
 
   URL.revokeObjectURL(url);
-
 
 };
