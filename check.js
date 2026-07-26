@@ -98,7 +98,34 @@ ${data.status}
 
 // Download Receipt
 
-window.downloadReceipt = function(){
+window.downloadReceipt = function () {
+
+  const d = window.receiptData;
+
+  const receipt = `
+🏆 AJAY PREMIER LEAGUE (APL) 2026
+
+Official Registration Receipt
+
+Registration ID: ${d.registrationId}
+Team Name: ${d.teamName}
+Captain Name: ${d.captainName}
+Mobile: ${d.mobile}
+Payment Status: ${d.paymentStatus}
+Registration Status: ${d.status}
+
+Organized By: AJAY HASDA
+Venue: Padmabil Ground
+Contact: +91 9663116089 / +91 9353689775
+Email: ajayhasda623@gmail.com
+`;
+
+  const newWindow = window.open("", "_blank");
+  newWindow.document.write("<pre>" + receipt + "</pre>");
+  newWindow.document.close();
+  newWindow.print();
+
+};
 
 
 let d = window.receiptData;
@@ -107,63 +134,57 @@ let d = window.receiptData;
 let receipt =
 
 `
-🏆 AJAY PREMIER LEAGUE (APL) 2026
+AJAY PREMIER LEAGUE (APL) 2026
 
 ==============================
 
-Official Registration Receipt
-
-Organized By:
-AJAY HASDA
-
-📍 Venue:
-Padmabil Ground
-
-📞 Contact:
-+91 9663116089
-+91 9353689775
-
-✉️ Email:
-ajayhasda623@gmail.com
-
-==============================
-
-Registration Details
+Registration Receipt
 
 Registration ID:
 ${d.registrationId}
 
+
 Team Name:
 ${d.teamName}
+
 
 Captain Name:
 ${d.captainName}
 
+
 Mobile:
 ${d.mobile}
+
 
 Email:
 ${d.email || ""}
 
+
 Address:
 ${d.address}
+
 
 Player Type:
 ${d.playerType}
 
+
 Payment Status:
 ${d.paymentStatus}
+
 
 Registration Status:
 ${d.status}
 
+
 ==============================
+
+Organized By:
+AJAY HASDA
+
 
 Thank You For Registering
 
-AJAY PREMIER LEAGUE (APL) 2026
 `;
-
 
 
 let blob = new Blob(

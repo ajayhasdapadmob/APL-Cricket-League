@@ -1,5 +1,9 @@
 import { db, storage } from "./firebase.js";
+import emailjs from "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/+esm";
 
+emailjs.init({
+  publicKey: "AsUiMVkBY3DFQ-DOJ"
+});
 import {
   collection,
   addDoc,
@@ -172,8 +176,25 @@ otherArea: document.getElementById("otherArea")?.value || "",
 
       }
     );
+await emailjs.send("service_ipztz05", "template_05udsk4", {
+  captain_name: document.getElementById("captainName").value,
+  team_name: document.getElementById("teamName").value,
+  registration_id: regId,
+  status: "Pending",
+  remark: "Your registration has been received. Payment verification is pending.",
+  email: document.getElementById("email").value
+});
 
-    alert("✅ Registration Submitted Successfully");
+alert(`✅ Registration Successful!
+
+Registration ID:
+${regId}
+
+Status Check:
+https://ajayhasdapadmob.github.io/APL-Cricket-League/check.html
+
+Is Registration ID ko sambhal kar rakhein.`);
+    
 
     document.getElementById("registrationForm").reset();
 
@@ -183,10 +204,11 @@ otherArea: document.getElementById("otherArea")?.value || "",
 
   } catch (error) {
 
-    console.error(error);
-    alert(error.message);
+    console.error("Full Error:", error);
 
-  }
+    alert(JSON.stringify(error));
+
+}
 
 });
 // =========================
