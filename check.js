@@ -82,27 +82,21 @@ window.downloadReceipt = function(){
 
 const d = window.receiptData;
 
-
 if(!d){
-
 alert("Please Check Registration First");
 return;
-
 }
 
+const { jsPDF } = window.jspdf;
 
-const {jsPDF}=window.jspdf;
+const pdf = new jsPDF();
 
-const pdf=new jsPDF();
-
-
-let y=20;
+let y = 20;
 
 
-// Header
+// HEADER
 
 pdf.setFont("helvetica","bold");
-
 pdf.setFontSize(18);
 
 pdf.text(
@@ -112,9 +106,7 @@ y,
 {align:"center"}
 );
 
-
-y+=10;
-
+y += 10;
 
 pdf.setFontSize(13);
 
@@ -126,117 +118,90 @@ y,
 );
 
 
-y+=8;
+// LINE
 
+y += 8;
 pdf.line(15,y,195,y);
 
 
+// ORGANIZER
 
-// Organizer
-
-y+=15;
+y += 15;
 
 pdf.setFontSize(12);
-
 pdf.text("Organized By:",20,y);
 
-y+=8;
+y += 8;
 
 pdf.setFont("helvetica","normal");
 
 pdf.text("AJAY HASDA",20,y);
 
-y+=8;
-
+y += 8;
 pdf.text("Venue: Padmabil Ground",20,y);
 
-y+=8;
-
+y += 8;
 pdf.text("Contact: +91 9663116089",20,y);
 
-y+=8;
-
+y += 8;
 pdf.text("+91 9353689775",20,y);
 
-y+=8;
-
+y += 8;
 pdf.text("Email: ajayhasda623@gmail.com",20,y);
 
 
+// LINE
 
-// Line
-
-y+=10;
-
+y += 10;
 pdf.line(15,y,195,y);
 
 
+// DETAILS
 
-// Registration Details
-
-y+=15;
+y += 15;
 
 pdf.setFont("helvetica","bold");
-
 pdf.text("Registration Details",20,y);
 
+y += 10;
 
-y+=10;
 
-
-let data=[
+let details = [
 
 ["Registration ID",d.registrationId],
-
 ["Team Name",d.teamName],
-
 ["Captain Name",d.captainName],
-
 ["Mobile",d.mobile],
-
 ["Email",d.email],
-
 ["Address",d.address],
-
 ["Player Type",d.playerType],
-
 ["Payment Status",d.paymentStatus],
-
 ["Registration Status",d.status]
 
 ];
 
 
-data.forEach(row=>{
-
+details.forEach(item=>{
 
 pdf.setFont("helvetica","bold");
-
-pdf.text(row[0]+":",20,y);
-
+pdf.text(item[0]+":",20,y);
 
 pdf.setFont("helvetica","normal");
+pdf.text(String(item[1] || ""),75,y);
 
-pdf.text(String(row[1] || ""),75,y);
-
-
-y+=9;
-
+y += 9;
 
 });
 
 
+// FOOTER
 
-// Footer
-
-
-y+=8;
+y += 8;
 
 pdf.line(15,y,195,y);
 
 
-y+=15;
-
+y += 15;
 
 pdf.setFont("helvetica","bold");
 
@@ -248,52 +213,83 @@ y,
 );
 
 
+// SIGNATURE IMAGE
 
-y+=15;
+const signature = new Image();
+
+signature.src = "./images/signature.png";
 
 
-// Signature
+signature.onload = function(){
 
-pdf.setFontSize(11);
+
+pdf.addImage(
+signature,
+"PNG",
+145,
+y+10,
+35,
+18
+);
+
+
+pdf.setFontSize(10);
 
 pdf.text(
 "Authorized Signature",
 145,
-y
+y+35
 );
-
-
-y+=8;
 
 
 pdf.text(
 "AJAY HASDA",
 145,
-y
+y+42
 );
 
 
-
-y+=10;
-
-
-// Date
-
-pdf.setFont("helvetica","normal");
+// DATE
 
 pdf.text(
-"Generated On: "+new Date().toLocaleString(),
+"Generated: "+new Date().toLocaleString(),
 20,
-y
+y+35
 );
 
 
-
-// Download
+// SAVE
 
 pdf.save(
 (d.registrationId || "APL2026")+"_Receipt.pdf"
 );
+
+
+};
+
+
+// अगर signature load ना हो तो भी PDF बने
+
+signature.onerror = function(){
+
+pdf.text(
+"Authorized Signature",
+145,
+y+20
+);
+
+pdf.text(
+"AJAY HASDA",
+145,
+y+28
+);
+
+
+pdf.save(
+(d.registrationId || "APL2026")+"_Receipt.pdf"
+);
+
+};
 
 
 };
