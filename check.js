@@ -1,5 +1,6 @@
-alert("CHECK JS UPDATED");
 import { db } from "./firebase.js";
+
+alert("CHECK JS UPDATED");
 
 import {
   collection,
@@ -217,7 +218,7 @@ y,
 
 const signature = new Image();
 
-signature.src = "./images/signature.png";
+signature.src = "./images/1000034852.png";
 
 
 signature.onload = function(){
