@@ -215,6 +215,21 @@ y,
 
 
 // SIGNATURE IMAGE
+signature.onload = function(){
+
+alert("SIGNATURE LOADED");
+
+pdf.addImage(
+signature,
+"PNG",
+145,
+y+10,
+35,
+18
+);
+
+...
+}
 
 const signature = new Image();
 
