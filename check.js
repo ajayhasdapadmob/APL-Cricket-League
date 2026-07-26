@@ -1,144 +1,120 @@
 import { db } from "./firebase.js";
 
 import {
-collection,
-query,
-where,
-getDocs
+  collection,
+  query,
+  where,
+  getDocs
 }
 from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 
+// CHECK REGISTRATION
+
 window.checkRegistration = async function(){
 
-let regId =
-document.getElementById("regId").value.trim();
+  let regId = document.getElementById("regId").value.trim();
+
+  if(regId === ""){
+    alert("Please Enter Registration ID");
+    return;
+  }
 
 
-if(regId===""){
-alert("Please Enter Registration ID");
-return;
-}
+  const q = query(
+    collection(db,"registrations"),
+    where("registrationId","==",regId)
+  );
 
 
-const q = query(
-collection(db,"registrations"),
-where("registrationId","==",regId)
-);
+  const snapshot = await getDocs(q);
 
 
-const snapshot = await getDocs(q);
+  if(snapshot.empty){
+
+    document.getElementById("result").innerHTML =
+    "❌ Registration ID Not Found";
+
+    return;
+
+  }
 
 
-if(snapshot.empty){
+  snapshot.forEach((doc)=>{
 
-document.getElementById("result").innerHTML =
-"❌ Registration ID Not Found";
+    let data = doc.data();
 
-return;
-
-}
+    window.receiptData = data;
 
 
-snapshot.forEach((doc)=>{
+    document.getElementById("result").innerHTML =
 
+    `
+    <h3>✅ Registration Found</h3>
 
-let data = doc.data();
+    <b>Registration ID:</b><br>
+    ${data.registrationId}
 
+    <br><br>
 
-window.receiptData = data;
+    <b>Team Name:</b><br>
+    ${data.teamName}
 
+    <br><br>
 
-document.getElementById("result").innerHTML =
+    <b>Captain Name:</b><br>
+    ${data.captainName}
 
-`
-<h3>✅ Registration Found</h3>
+    <br><br>
 
-<b>Registration ID:</b><br>
-${data.registrationId}
+    <b>Mobile:</b><br>
+    ${data.mobile}
 
-<br><br>
+    <br><br>
 
-<b>Team Name:</b>
-${data.teamName}
+    <b>Payment Status:</b><br>
+    ${data.paymentStatus}
 
-<br>
+    <br><br>
 
-<b>Captain:</b>
-${data.captainName}
+    <b>Status:</b><br>
+    ${data.status}
 
-<br>
+    <br><br>
 
-<b>Mobile:</b>
-${data.mobile}
+    <button onclick="downloadReceipt()">
+    📄 Download Receipt
+    </button>
 
-<br>
+    `;
 
-<b>Payment Status:</b>
-${data.paymentStatus}
+  });
 
-<br>
-
-<b>Status:</b>
-${data.status}
-
-<br><br>
-
-<button onclick="downloadReceipt()">
-📄 Download Receipt
-</button>
-
-`;
-
-});
-
-
-}
-
-
-// Download Receipt
-
-window.downloadReceipt = function () {
-
-  const d = window.receiptData;
-
-  const receipt = `
-🏆 AJAY PREMIER LEAGUE (APL) 2026
-
-Official Registration Receipt
-
-Registration ID: ${d.registrationId}
-Team Name: ${d.teamName}
-Captain Name: ${d.captainName}
-Mobile: ${d.mobile}
-Payment Status: ${d.paymentStatus}
-Registration Status: ${d.status}
-
-Organized By: AJAY HASDA
-Venue: Padmabil Ground
-Contact: +91 9663116089 / +91 9353689775
-Email: ajayhasda623@gmail.com
-`;
-
-  const newWindow = window.open("", "_blank");
-  newWindow.document.write("<pre>" + receipt + "</pre>");
-  newWindow.document.close();
-  newWindow.print();
 
 };
 
 
-let d = window.receiptData;
+
+// DOWNLOAD RECEIPT
+
+window.downloadReceipt = function(){
+
+  const d = window.receiptData;
 
 
-let receipt =
+  if(!d){
+    alert("Please Check Registration First");
+    return;
+  }
 
-`
-AJAY PREMIER LEAGUE (APL) 2026
+
+  const receipt = `
+
+🏆 AJAY PREMIER LEAGUE (APL) 2026
+
+Official Registration Receipt
 
 ==============================
-
-Registration Receipt
 
 Registration ID:
 ${d.registrationId}
@@ -161,11 +137,11 @@ ${d.email || ""}
 
 
 Address:
-${d.address}
+${d.address || ""}
 
 
 Player Type:
-${d.playerType}
+${d.playerType || ""}
 
 
 Payment Status:
@@ -182,32 +158,45 @@ Organized By:
 AJAY HASDA
 
 
+Venue:
+Padmabil Ground
+
+
+Contact:
++91 9663116089
++91 9353689775
+
+
+Email:
+ajayhasda623@gmail.com
+
+
 Thank You For Registering
 
 `;
 
 
-let blob = new Blob(
-[receipt],
-{type:"text/plain"}
-);
+  const blob = new Blob(
+    [receipt],
+    {type:"text/plain"}
+  );
 
 
-let url = URL.createObjectURL(blob);
+  const url = URL.createObjectURL(blob);
 
 
-let a = document.createElement("a");
+  const a = document.createElement("a");
 
-a.href = url;
+  a.href = url;
 
-a.download =
-d.registrationId + "_APL2026_Receipt.txt";
-
-
-a.click();
+  a.download =
+  d.registrationId + "_APL2026_Receipt.txt";
 
 
-URL.revokeObjectURL(url);
+  a.click();
 
 
-}
+  URL.revokeObjectURL(url);
+
+
+};
