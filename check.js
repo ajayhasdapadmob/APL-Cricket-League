@@ -215,21 +215,6 @@ y,
 
 
 // SIGNATURE IMAGE
-signature.onload = function(){
-
-alert("SIGNATURE LOADED");
-
-pdf.addImage(
-signature,
-"PNG",
-145,
-y+10,
-35,
-18
-);
-
-...
-}
 
 const signature = new Image();
 
@@ -237,6 +222,8 @@ signature.src = "./images/1000034852.png";
 
 
 signature.onload = function(){
+
+alert("SIGNATURE LOADED");
 
 
 pdf.addImage(
@@ -265,8 +252,6 @@ y+42
 );
 
 
-// DATE
-
 pdf.text(
 "Generated: "+new Date().toLocaleString(),
 20,
@@ -274,38 +259,21 @@ y+35
 );
 
 
-// SAVE
-
 pdf.save(
 (d.registrationId || "APL2026")+"_Receipt.pdf"
 );
 
-
 };
 
-
-// अगर signature load ना हो तो भी PDF बने
 
 signature.onerror = function(){
 
-pdf.text(
-"Authorized Signature",
-145,
-y+20
-);
-
-pdf.text(
-"AJAY HASDA",
-145,
-y+28
-);
-
+alert("SIGNATURE NOT FOUND");
 
 pdf.save(
 (d.registrationId || "APL2026")+"_Receipt.pdf"
 );
 
 };
-
 
 };
