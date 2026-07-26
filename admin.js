@@ -313,16 +313,16 @@ const team = registrations.find(r => r.id === id);
 if(team && team.email){
 
 await emailjs.send(
-"service_ipztz05",
-"template_05udsk4",
-{
-name: team.captainName,
-team_name: team.teamName,
-registration_id: team.registrationId,
-status: status,
-remarks: remark,
-to_email: team.email
-}
+  "service_ipztz05",
+  "template_05udsk4",
+  {
+    name: team.captainName,
+    team_name: team.teamName,
+    registration_id: team.registrationId,
+    status: status,
+    remark: remark,
+    to_email: team.email
+  }
 );
 
 }
