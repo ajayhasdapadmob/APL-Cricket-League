@@ -1,170 +1,115 @@
 import { db } from "./firebase.js";
-console.log("CHECK JS LOADED");
+
 import {
   collection,
   query,
   where,
   getDocs
-}
-from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
+window.checkRegistration = async function () {
 
-// CHECK REGISTRATION
+  const regId = document.getElementById("regId").value.trim();
 
-window.checkRegistration = async function(){
-
-  let regId = document.getElementById("regId").value.trim();
-
-  if(regId === ""){
+  if (!regId) {
     alert("Please Enter Registration ID");
     return;
   }
 
-
   const q = query(
-    collection(db,"registrations"),
-    where("registrationId","==",regId)
+    collection(db, "registrations"),
+    where("registrationId", "==", regId)
   );
-
 
   const snapshot = await getDocs(q);
 
-
-  if(snapshot.empty){
-
+  if (snapshot.empty) {
     document.getElementById("result").innerHTML =
-    "❌ Registration ID Not Found";
-
+      "<h3 style='color:red'>Registration Not Found</h3>";
     return;
-
   }
 
+  snapshot.forEach((doc) => {
 
-  snapshot.forEach((doc)=>{
+    const d = doc.data();
 
-    let data = doc.data();
+    window.receiptData = d;
 
-    window.receiptData = data;
+    document.getElementById("result").innerHTML = `
+      <h3>✅ Registration Found</h3>
 
+      <b>Registration ID:</b><br>${d.registrationId}<br><br>
 
-    document.getElementById("result").innerHTML =
+      <b>Team Name:</b><br>${d.teamName}<br><br>
 
-    `
-    <h3>✅ Registration Found</h3>
+      <b>Captain:</b><br>${d.captainName}<br><br>
 
-    <b>Registration ID:</b><br>
-    ${data.registrationId}
+      <b>Mobile:</b><br>${d.mobile}<br><br>
 
-    <br><br>
+      <b>Status:</b><br>${d.status}<br><br>
 
-    <b>Team Name:</b><br>
-    ${data.teamName}
-
-    <br><br>
-
-    <b>Captain Name:</b><br>
-    ${data.captainName}
-
-    <br><br>
-
-    <b>Mobile:</b><br>
-    ${data.mobile}
-
-    <br><br>
-
-    <b>Payment Status:</b><br>
-    ${data.paymentStatus}
-
-    <br><br>
-
-    <b>Status:</b><br>
-    ${data.status}
-
-    <br><br>
-
-    <button onclick="downloadReceipt()">
-    📄 Download Receipt
-    </button>
-
+      <button onclick="downloadReceipt()">
+      📄 Download Receipt
+      </button>
     `;
-
   });
 
-
 };
-
-
-
-// DOWNLOAD RECEIPT
-
-window.downloadReceipt = function(){
+window.downloadReceipt = function () {
 
   const d = window.receiptData;
 
-  if(!d){
+  if (!d) {
     alert("Please Check Registration First");
     return;
   }
 
-  const receipt = `
-🏆 AJAY PREMIER LEAGUE (APL) 2026
+  if (!window.jspdf) {
+    alert("jsPDF library not loaded.");
+    return;
+  }
 
-Official Registration Receipt
+  const { jsPDF } = window.jspdf;
 
-Registration ID:
-${d.registrationId}
+  const pdf = new jsPDF();
 
-Team Name:
-${d.teamName}
+  let y = 20;
 
-Captain Name:
-${d.captainName}
+  pdf.setFont("helvetica", "bold");
+  pdf.setFontSize(18);
+  pdf.text("AJAY PREMIER LEAGUE (APL) 2026", 20, y);
 
-Mobile:
-${d.mobile}
+  y += 12;
+  pdf.setFontSize(14);
+  pdf.text("Official Registration Receipt", 20, y);
 
-Email:
-${d.email || ""}
+  y += 15;
+  pdf.setFont("helvetica", "normal");
+  pdf.setFontSize(12);
 
-Address:
-${d.address || ""}
+  pdf.text("Registration ID : " + (d.registrationId || ""), 20, y); y += 10;
+  pdf.text("Team Name : " + (d.teamName || ""), 20, y); y += 10;
+  pdf.text("Captain Name : " + (d.captainName || ""), 20, y); y += 10;
+  pdf.text("Mobile : " + (d.mobile || ""), 20, y); y += 10;
+  pdf.text("Email : " + (d.email || ""), 20, y); y += 10;
+  pdf.text("Address : " + (d.address || ""), 20, y); y += 10;
+  pdf.text("Player Type : " + (d.playerType || ""), 20, y); y += 10;
+  pdf.text("Payment Status : " + (d.paymentStatus || ""), 20, y); y += 10;
+  pdf.text("Registration Status : " + (d.status || ""), 20, y); y += 15;
 
-Payment Status:
-${d.paymentStatus}
+  pdf.setFont("helvetica", "bold");
+  pdf.text("Organized By:", 20, y); y += 8;
 
-Registration Status:
-${d.status}
+  pdf.setFont("helvetica", "normal");
+  pdf.text("AJAY HASDA", 20, y); y += 8;
+  pdf.text("Venue: Padmabil Ground", 20, y); y += 8;
+  pdf.text("Contact: +91 9663116089", 20, y); y += 8;
+  pdf.text("Contact: +91 9353689775", 20, y); y += 8;
+  pdf.text("Email: ajayhasda623@gmail.com", 20, y); y += 15;
 
+  pdf.setFont("helvetica", "bold");
+  pdf.text("Thank You For Registering", 20, y);
 
-Organized By:
-AJAY HASDA
-
-Venue:
-Padmabil Ground
-
-Contact:
-+91 9663116089
-+91 9353689775
-
-Email:
-ajayhasda623@gmail.com
-
-Thank You For Registering
-`;
-
-
-  const newWindow = window.open("", "_blank");
-
-  newWindow.document.write(`
-  <html>
-  <body>
-  <pre style="font-size:16px;font-family:Arial;">
-  ${receipt}
-  </pre>
-  </body>
-  </html>
-  `);
-
-  newWindow.document.close();
+  pdf.save((d.registrationId || "APL2026") + "_Receipt.pdf");
 
 };
