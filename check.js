@@ -111,8 +111,6 @@ window.downloadReceipt = function(){
 
 Official Registration Receipt
 
-------------------------------
-
 Registration ID:
 ${d.registrationId}
 
@@ -137,7 +135,6 @@ ${d.paymentStatus}
 Registration Status:
 ${d.status}
 
-------------------------------
 
 Organized By:
 AJAY HASDA
@@ -155,25 +152,19 @@ ajayhasda623@gmail.com
 Thank You For Registering
 `;
 
-  const blob = new Blob([receipt], {
-    type: "text/plain"
-  });
 
-  const url = URL.createObjectURL(blob);
+  const newWindow = window.open("", "_blank");
 
-  const link = document.createElement("a");
+  newWindow.document.write(`
+  <html>
+  <body>
+  <pre style="font-size:16px;font-family:Arial;">
+  ${receipt}
+  </pre>
+  </body>
+  </html>
+  `);
 
-link.href = url;
-link.setAttribute("download","APL2026_Receipt.txt");
-
-document.body.appendChild(link);
-
-setTimeout(()=>{
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
-},100);
-
-  URL.revokeObjectURL(url);
+  newWindow.document.close();
 
 };
