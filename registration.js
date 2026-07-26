@@ -28,7 +28,37 @@ if (!teamId) {
   teamId = "TEAM-" + Date.now();
   localStorage.setItem("teamId", teamId);
 }
+window.addEventListener("DOMContentLoaded", () => {
 
+  const fields = [
+    "teamName",
+    "captainName",
+    "mobile",
+    "whatsapp",
+    "email",
+    "area",
+    "address",
+    "upi",
+    "playerType"
+  ];
+
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && localStorage.getItem(id)) {
+      el.value = localStorage.getItem(id);
+    }
+  });
+
+  const otherArea = document.getElementById("otherArea");
+  if (otherArea) {
+    otherArea.value = localStorage.getItem("otherArea") || "";
+  }
+
+  if (typeof showOther === "function") {
+    showOther();
+  }
+
+});
 
 const otherArea = document.getElementById("otherArea");
 
@@ -177,12 +207,12 @@ otherArea: document.getElementById("otherArea")?.value || "",
       }
     );
 await emailjs.send("service_ipztz05", "template_05udsk4", {
+  to_email: document.getElementById("email").value,
   captain_name: document.getElementById("captainName").value,
   team_name: document.getElementById("teamName").value,
   registration_id: regId,
   status: "Pending",
-  remark: "Your registration has been received. Payment verification is pending.",
-  email: document.getElementById("email").value
+  remark: "Your registration has been received. Payment verification is pending."
 });
 
 alert(`✅ Registration Successful!
