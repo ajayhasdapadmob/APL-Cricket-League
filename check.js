@@ -1,3 +1,4 @@
+alert("NEW CHECK JS WORKING");
 import { db } from "./firebase.js";
 
 alert("CHECK JS UPDATED");
