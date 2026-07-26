@@ -1,6 +1,7 @@
-alert("CHECK JS VERSION 10 LOADED");
-
+alert("NEW CHECK JS WORKING");
 import { db } from "./firebase.js";
+
+alert("CHECK JS UPDATED");
 
 import {
   collection,
@@ -9,10 +10,6 @@ import {
   getDocs
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-
-// =========================
-// CHECK REGISTRATION
-// =========================
 
 window.checkRegistration = async function () {
 
@@ -25,69 +22,100 @@ window.checkRegistration = async function () {
 
 
   const q = query(
-    collection(db, "registrations"),
-    where("registrationId", "==", regId)
+    collection(db,"registrations"),
+    where("registrationId","==",regId)
   );
 
 
   const snapshot = await getDocs(q);
 
 
-  if (snapshot.empty) {
+  if(snapshot.empty){
 
     document.getElementById("result").innerHTML =
-    `
-    <h3 style="color:red">
-    ❌ Registration Not Found
-    </h3>
-    `;
+    "<h3 style='color:red'>Registration Not Found</h3>";
 
-    return;
-  }
+import { db } from "./firebase.js";
 
-
-
-  snapshot.forEach((doc)=>{
-
-    const d = doc.data();
-
-    window.receiptData = d;
+import {
+  collection,
+  query,
+  where,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 
-    document.getElementById("result").innerHTML =
+window.checkRegistration = async function(){
 
-    `
-    <h3 style="color:green">
-    ✅ Registration Found
-    </h3>
-
-    <b>Registration ID:</b><br>
-    ${d.registrationId}<br><br>
+const regId = document.getElementById("regId").value.trim();
 
 
-    <b>Team Name:</b><br>
-    ${d.teamName}<br><br>
+if(!regId){
+
+alert("Please Enter Registration ID");
+return;
+
+}
 
 
-    <b>Captain Name:</b><br>
-    ${d.captainName}<br><br>
+const q = query(
+collection(db,"registrations"),
+where("registrationId","==",regId)
+);
 
 
-    <b>Mobile:</b><br>
-    ${d.mobile}<br><br>
+const snapshot = await getDocs(q);
 
 
-    <b>Status:</b><br>
-    ${d.status}<br><br>
+
+if(snapshot.empty){
+
+document.getElementById("result").innerHTML =
+"<h3 style='color:red'>Registration Not Found</h3>";
+
+return;
+
+}
 
 
-    <button onclick="downloadReceipt()">
-    📄 Download Receipt
-    </button>
 
-    `;
+snapshot.forEach((doc)=>{
 
-  });
+
+const d = doc.data();
+
+window.receiptData = d;
+
+
+
+document.getElementById("result").innerHTML = `
+
+<h3 style="color:lime">
+✅ Registration Found
+</h3>
+
+<b>Registration ID:</b><br>
+${d.registrationId}<br><br>
+
+<b>Team Name:</b><br>
+${d.teamName}<br><br>
+
+<b>Captain:</b><br>
+${d.captainName}<br><br>
+
+<b>Status:</b><br>
+${d.status}<br><br>
+
+
+<button onclick="downloadReceipt()">
+📄 Download Receipt
+</button>
+
+`;
+
+
+
+});
 
 
 };
@@ -95,30 +123,29 @@ window.checkRegistration = async function () {
 
 
 
-// =========================
-// DOWNLOAD RECEIPT
-// =========================
-
 
 window.downloadReceipt = function(){
 
+
 const d = window.receiptData;
 
+
 if(!d){
+
 alert("Please Check Registration First");
 return;
+
 }
 
-const { jsPDF } = window.jspdf;
+
+
+const {jsPDF} = window.jspdf;
 
 const pdf = new jsPDF();
 
+
 let y = 20;
 
-
-// BORDER
-
-pdf.rect(10,10,190,277);
 
 
 // LOGO
@@ -130,48 +157,51 @@ logo.src="./images/apl-logo.png";
 
 logo.onload=function(){
 
+
 pdf.addImage(
 logo,
 "PNG",
-80,
-15,
-50,
-30
+85,
+10,
+40,
+25
 );
 
-createReceipt();
+
+createPDF();
+
 
 };
 
 
 logo.onerror=function(){
 
-createReceipt();
+createPDF();
 
 };
 
 
 
 
-function createReceipt(){
+
+function createPDF(){
 
 
-y = 55;
+// HEADER
 
+y = 45;
 
-// TITLE
 
 pdf.setFont("helvetica","bold");
 
 pdf.setFontSize(18);
 
+
 pdf.text(
 "AJAY PREMIER LEAGUE (APL) 2026",
 105,
 y,
-{
-align:"center"
-}
+{align:"center"}
 );
 
 
@@ -179,26 +209,26 @@ align:"center"
 y+=10;
 
 
-pdf.setFontSize(14);
+pdf.setFontSize(13);
+
 
 pdf.text(
 "Official Registration Receipt",
 105,
 y,
-{
-align:"center"
-}
+{align:"center"}
 );
 
 
 
-y+=12;
+y+=10;
 
-pdf.line(20,y,190,y);
+pdf.line(15,y,195,y);
 
 
 
 // ORGANIZER
+
 
 y+=15;
 
@@ -206,7 +236,18 @@ y+=15;
 pdf.setFontSize(12);
 
 pdf.text(
-"Organized By : AJAY HASDA",
+"Organized By:",
+20,
+y
+);
+
+
+y+=8;
+
+pdf.setFont("helvetica","normal");
+
+pdf.text(
+"AJAY HASDA",
 20,
 y
 );
@@ -215,7 +256,7 @@ y
 y+=8;
 
 pdf.text(
-"Venue : Padmabil Ground",
+"Venue: Padmabil Ground",
 20,
 y
 );
@@ -224,7 +265,7 @@ y
 y+=8;
 
 pdf.text(
-"Contact : +91 9663116089 / +91 9353689775",
+"Contact: +91 9663116089",
 20,
 y
 );
@@ -233,25 +274,37 @@ y
 y+=8;
 
 pdf.text(
-"Email : ajayhasda623@gmail.com",
+"+91 9353689775",
+20,
+y
+);
+
+
+y+=8;
+
+pdf.text(
+"Email: ajayhasda623@gmail.com",
 20,
 y
 );
 
 
 
-y+=12;
+// LINE
 
-pdf.line(20,y,190,y);
+y+=10;
+
+pdf.line(15,y,195,y);
 
 
 
-// DETAILS BOX
+// DETAILS
+
 
 y+=15;
 
 
-pdf.setFontSize(14);
+pdf.setFont("helvetica","bold");
 
 pdf.text(
 "Registration Details",
@@ -273,13 +326,9 @@ let details=[
 ["Address",d.address],
 ["Player Type",d.playerType],
 ["Payment Status",d.paymentStatus],
-["Status",d.status]
+["Registration Status",d.status]
 
 ];
-
-
-
-pdf.setFontSize(11);
 
 
 
@@ -290,7 +339,7 @@ pdf.setFont("helvetica","bold");
 
 pdf.text(
 item[0]+":",
-25,
+20,
 y
 );
 
@@ -299,7 +348,7 @@ pdf.setFont("helvetica","normal");
 
 pdf.text(
 String(item[1] || ""),
-80,
+75,
 y
 );
 
@@ -314,15 +363,15 @@ y+=9;
 // FOOTER
 
 
-y+=8;
+y+=10;
 
-pdf.line(20,y,190,y);
+
+pdf.line(15,y,195,y);
+
 
 
 y+=15;
 
-
-pdf.setFontSize(13);
 
 pdf.setFont("helvetica","bold");
 
@@ -331,11 +380,8 @@ pdf.text(
 "Thank You For Registering",
 105,
 y,
-{
-align:"center"
-}
+{align:"center"}
 );
-
 
 
 
@@ -355,12 +401,11 @@ sign.onload=function(){
 pdf.addImage(
 sign,
 "PNG",
-140,
+145,
 y+10,
 35,
 18
 );
-
 
 
 pdf.setFontSize(10);
@@ -368,31 +413,304 @@ pdf.setFontSize(10);
 
 pdf.text(
 "Authorized Signature",
-140,
+145,
 y+35
 );
 
 
 pdf.text(
 "AJAY HASDA",
-140,
+145,
 y+42
 );
 
 
-
 pdf.text(
-"Generated On: "+new Date().toLocaleString(),
+"Generated: "+new Date().toLocaleString(),
 20,
 y+35
 );
 
 
 
-save();
+pdf.save(
+(d.registrationId || "APL2026")+"_Receipt.pdf"
+);
+
 
 };
 
 
 
-sign
+sign.onerror=function(){
+
+
+pdf.text(
+"Authorized Signature",
+145,
+y+25
+);
+
+
+pdf.text(
+"AJAY HASDA",
+145,
+y+32
+);
+
+
+pdf.save(
+(d.registrationId || "APL2026")+"_Receipt.pdf"
+);
+
+
+};
+
+
+
+}
+
+
+};    return;
+
+  }
+
+
+  snapshot.forEach((doc)=>{
+
+    const d = doc.data();
+
+    window.receiptData = d;
+
+
+    document.getElementById("result").innerHTML = `
+
+    <h3 style="color:lime">✅ Registration Found</h3>
+
+    <b>Registration ID:</b><br>
+    ${d.registrationId}<br><br>
+
+    <b>Team Name:</b><br>
+    ${d.teamName}<br><br>
+
+    <b>Captain:</b><br>
+    ${d.captainName}<br><br>
+
+    <b>Status:</b><br>
+    ${d.status}<br><br>
+
+
+    <button onclick="downloadReceipt()">
+    📄 Download Receipt
+    </button>
+
+    `;
+
+
+  });
+
+
+};
+
+
+
+
+
+window.downloadReceipt = function(){
+
+const d = window.receiptData;
+
+if(!d){
+alert("Please Check Registration First");
+return;
+}
+
+const { jsPDF } = window.jspdf;
+
+const pdf = new jsPDF();
+
+let y = 20;
+
+
+// HEADER
+
+pdf.setFont("helvetica","bold");
+pdf.setFontSize(18);
+
+pdf.text(
+"AJAY PREMIER LEAGUE (APL) 2026",
+105,
+y,
+{align:"center"}
+);
+
+y += 10;
+
+pdf.setFontSize(13);
+
+pdf.text(
+"Official Registration Receipt",
+105,
+y,
+{align:"center"}
+);
+
+
+// LINE
+
+y += 8;
+pdf.line(15,y,195,y);
+
+
+// ORGANIZER
+
+y += 15;
+
+pdf.setFontSize(12);
+pdf.text("Organized By:",20,y);
+
+y += 8;
+
+pdf.setFont("helvetica","normal");
+
+pdf.text("AJAY HASDA",20,y);
+
+y += 8;
+pdf.text("Venue: Padmabil Ground",20,y);
+
+y += 8;
+pdf.text("Contact: +91 9663116089",20,y);
+
+y += 8;
+pdf.text("+91 9353689775",20,y);
+
+y += 8;
+pdf.text("Email: ajayhasda623@gmail.com",20,y);
+
+
+// LINE
+
+y += 10;
+pdf.line(15,y,195,y);
+
+
+// DETAILS
+
+y += 15;
+
+pdf.setFont("helvetica","bold");
+pdf.text("Registration Details",20,y);
+
+y += 10;
+
+
+let details = [
+
+["Registration ID",d.registrationId],
+["Team Name",d.teamName],
+["Captain Name",d.captainName],
+["Mobile",d.mobile],
+["Email",d.email],
+["Address",d.address],
+["Player Type",d.playerType],
+["Payment Status",d.paymentStatus],
+["Registration Status",d.status]
+
+];
+
+
+details.forEach(item=>{
+
+pdf.setFont("helvetica","bold");
+pdf.text(item[0]+":",20,y);
+
+pdf.setFont("helvetica","normal");
+pdf.text(String(item[1] || ""),75,y);
+
+y += 9;
+
+});
+
+
+// FOOTER
+
+y += 8;
+
+pdf.line(15,y,195,y);
+
+
+y += 15;
+
+pdf.setFont("helvetica","bold");
+
+pdf.text(
+"Thank You For Registering",
+105,
+y,
+{align:"center"}
+);
+
+
+// SIGNATURE IMAGE
+
+const signature = new Image();
+
+signature.src = "./images/1000034852.png";
+
+
+signature.onload = function(){
+
+alert("SIGNATURE LOADED");
+
+
+pdf.addImage(
+signature,
+"PNG",
+145,
+y+10,
+35,
+18
+);
+
+
+pdf.setFontSize(10);
+
+pdf.text(
+"Authorized Signature",
+145,
+y+35
+);
+
+
+pdf.text(
+"AJAY HASDA",
+145,
+y+42
+);
+
+
+pdf.text(
+"Generated: "+new Date().toLocaleString(),
+20,
+y+35
+);
+
+
+pdf.save(
+(d.registrationId || "APL2026")+"_Receipt.pdf"
+);
+
+};
+
+
+signature.onerror = function(){
+
+alert("SIGNATURE NOT FOUND");
+
+pdf.save(
+(d.registrationId || "APL2026")+"_Receipt.pdf"
+);
+
+};
+
+};
