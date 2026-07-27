@@ -251,24 +251,26 @@ window.downloadReceipt = function () {
 
 const signature = new Image();
 
-signature.src = "ajay-sign.png";
+signature.src = "./ajay-sign.png";
 
 signature.onload = function () {
 
+  // Signature Image (Thoda niche)
   pdf.addImage(
     signature,
     "PNG",
     145,
-    y + 5,
-    35,
-    18
+    y + 10,
+    38,
+    20
   );
 
+  // Signature Text
   pdf.setFont("helvetica", "bold");
   pdf.setFontSize(10);
 
-  pdf.text("Authorized Signature", 145, y + 30);
-  pdf.text("AJAY HASDA", 145, y + 37);
+  pdf.text("Authorized Signature", 145, y + 35);
+  pdf.text("AJAY HASDA", 145, y + 42);
 
   pdf.save(
     (d.registrationId || "APL2026") + "_Receipt.pdf"
@@ -278,13 +280,11 @@ signature.onload = function () {
 
 signature.onerror = function () {
 
-  alert("Signature image not found!");
-
   pdf.setFont("helvetica", "bold");
   pdf.setFontSize(10);
 
-  pdf.text("Authorized Signature", 145, y + 20);
-  pdf.text("AJAY HASDA", 145, y + 27);
+  pdf.text("Authorized Signature", 145, y + 35);
+  pdf.text("AJAY HASDA", 145, y + 42);
 
   pdf.save(
     (d.registrationId || "APL2026") + "_Receipt.pdf"
