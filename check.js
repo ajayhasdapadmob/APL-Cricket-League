@@ -88,7 +88,6 @@ window.checkRegistration = async function () {
 };
 
 window.downloadReceipt = function () {
-alert("NEW RECEIPT CODE RUNNING");
 
   const d = window.receiptData;
 
@@ -102,24 +101,28 @@ alert("NEW RECEIPT CODE RUNNING");
 
   const pageWidth = pdf.internal.pageSize.getWidth();
 
+
   // ===== Banner =====
   const banner = new Image();
-  banner.src = "./images/banner.png";
+
+  banner.src = "./images/banner.jpg";
+
 
   banner.onload = function () {
 
     pdf.addImage(
       banner,
-      "PNG",
+      "JPEG",
       10,
       10,
       pageWidth - 20,
-      35
+      40
     );
 
     createReceipt();
 
   };
+
 
   banner.onerror = function () {
 
@@ -128,12 +131,19 @@ alert("NEW RECEIPT CODE RUNNING");
   };
 
 
+
   function createReceipt() {
 
-    let y = 60;
+
+    // Top Colour Bar
+    pdf.setFillColor(0,102,204);
+    pdf.rect(0,0,pageWidth,8,"F");
 
 
-    // ===== Header =====
+    let y = 65;
+
+
+    // Title
 
     pdf.setFont("helvetica","bold");
     pdf.setFontSize(18);
@@ -145,32 +155,38 @@ alert("NEW RECEIPT CODE RUNNING");
       {align:"center"}
     );
 
+
     y += 10;
+
 
     pdf.setFontSize(13);
 
     pdf.text(
-      "Official Registration Receipt",
+      "OFFICIAL REGISTRATION RECEIPT",
       pageWidth/2,
       y,
       {align:"center"}
     );
 
 
-    // Border Box
+
+    // Receipt Box
+
+    y += 15;
+
+    pdf.setDrawColor(0,102,204);
 
     pdf.rect(
       10,
-      75,
+      y,
       pageWidth-20,
-      125
+      130
     );
 
 
-    y = 90;
+    y += 15;
 
 
-    // ===== Details =====
 
     const details = [
 
@@ -186,13 +202,14 @@ alert("NEW RECEIPT CODE RUNNING");
     ];
 
 
-    details.forEach(item => {
+
+    details.forEach(row=>{
 
       pdf.setFont("helvetica","bold");
       pdf.setFontSize(11);
 
       pdf.text(
-        item[0] + ":",
+        row[0]+":",
         20,
         y
       );
@@ -201,7 +218,7 @@ alert("NEW RECEIPT CODE RUNNING");
       pdf.setFont("helvetica","normal");
 
       pdf.text(
-        String(item[1] || ""),
+        String(row[1] || ""),
         75,
         y
       );
@@ -213,20 +230,22 @@ alert("NEW RECEIPT CODE RUNNING");
 
 
 
-    // ===== Footer =====
+    // Footer
 
     y += 10;
 
-    pdf.line(
-      15,
+    pdf.setFillColor(240,240,240);
+
+    pdf.rect(
+      10,
       y,
-      195,
-      y
+      pageWidth-20,
+      35,
+      "F"
     );
 
 
     pdf.setFont("helvetica","bold");
-    pdf.setFontSize(14);
 
     pdf.text(
       "Thank You For Registering",
@@ -236,48 +255,44 @@ alert("NEW RECEIPT CODE RUNNING");
     );
 
 
-    pdf.setFontSize(10);
+
     pdf.setFont("helvetica","normal");
+    pdf.setFontSize(10);
 
     pdf.text(
       "Generated: " + new Date().toLocaleString(),
       20,
-      y+35
+      y+28
     );
 
 
-    // ===== Signature =====
+
+    // Signature
 
     const signature = new Image();
 
-    signature.src = "./images/signature.png";
+    signature.src = "./ajay-sign.png";
 
 
     signature.onload = function(){
+
 
       pdf.addImage(
         signature,
         "PNG",
         140,
-        y+5,
+        y+45,
         45,
         20
       );
 
 
       pdf.setFont("helvetica","bold");
-      pdf.text(
-        "Authorized Signature",
-        162,
-        y+32,
-        {align:"center"}
-      );
-
 
       pdf.text(
         "AJAY HASDA",
         162,
-        y+38,
+        y+75,
         {align:"center"}
       );
 
@@ -286,26 +301,17 @@ alert("NEW RECEIPT CODE RUNNING");
         (d.registrationId || "APL2026")+"_Receipt.pdf"
       );
 
+
     };
 
 
     signature.onerror = function(){
 
-      pdf.setFont("helvetica","bold");
-
-      pdf.text(
-        "Authorized Signature",
-        162,
-        y+32,
-        {align:"center"}
-      );
-
 
       pdf.text(
         "AJAY HASDA",
-        162,
-        y+38,
-        {align:"center"}
+        160,
+        y+70
       );
 
 
