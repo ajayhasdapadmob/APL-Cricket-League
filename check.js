@@ -255,12 +255,12 @@ signature.src = "./ajay-sign.png";
 
 signature.onload = function () {
 
-  // Signature Image (Thoda niche)
+  // Signature Image (Aur niche)
   pdf.addImage(
     signature,
     "PNG",
     145,
-    y + 10,
+    y + 18,
     38,
     20
   );
@@ -269,8 +269,8 @@ signature.onload = function () {
   pdf.setFont("helvetica", "bold");
   pdf.setFontSize(10);
 
-  pdf.text("Authorized Signature", 145, y + 35);
-  pdf.text("AJAY HASDA", 145, y + 42);
+  pdf.text("Authorized Signature", 145, y + 43);
+  pdf.text("AJAY HASDA", 145, y + 50);
 
   pdf.save(
     (d.registrationId || "APL2026") + "_Receipt.pdf"
@@ -283,8 +283,8 @@ signature.onerror = function () {
   pdf.setFont("helvetica", "bold");
   pdf.setFontSize(10);
 
-  pdf.text("Authorized Signature", 145, y + 35);
-  pdf.text("AJAY HASDA", 145, y + 42);
+  pdf.text("Authorized Signature", 145, y + 43);
+  pdf.text("AJAY HASDA", 145, y + 50);
 
   pdf.save(
     (d.registrationId || "APL2026") + "_Receipt.pdf"
