@@ -89,239 +89,343 @@ window.checkRegistration = async function () {
 
 window.downloadReceipt = function () {
 
-  const d = window.receiptData;
+alert("NEW RECEIPT CODE RUNNING");
 
-  if (!d) {
-    alert("Please Check Registration First");
-    return;
-  }
+const d = window.receiptData;
 
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF();
+if(!d){
+ alert("Please Check Registration First");
+ return;
+}
 
-  const pageWidth = pdf.internal.pageSize.getWidth();
 
+const { jsPDF } = window.jspdf;
 
-  // ===== Banner =====
-  const banner = new Image();
+const pdf = new jsPDF();
 
-  banner.src = "./images/banner.jpg";
+const pageWidth = pdf.internal.pageSize.getWidth();
 
 
-  banner.onload = function () {
 
-    pdf.addImage(
-      banner,
-      "JPEG",
-      10,
-      10,
-      pageWidth - 20,
-      40
-    );
+// =====================
+// BANNER
+// =====================
 
-    createReceipt();
+const banner = new Image();
 
-  };
+banner.src = "./images/banner.png";
 
 
-  banner.onerror = function () {
+banner.onload = function(){
 
-    createReceipt();
+pdf.addImage(
+banner,
+"PNG",
+10,
+10,
+190,
+35
+);
 
-  };
+makeReceipt();
 
+};
 
 
-  function createReceipt() {
+banner.onerror=function(){
 
+makeReceipt();
 
-    // Top Colour Bar
-    pdf.setFillColor(0,102,204);
-    pdf.rect(0,0,pageWidth,8,"F");
+};
 
 
-    let y = 65;
 
 
-    // Title
 
-    pdf.setFont("helvetica","bold");
-    pdf.setFontSize(18);
+function makeReceipt(){
 
-    pdf.text(
-      "AJAY PREMIER LEAGUE (APL) 2026",
-      pageWidth/2,
-      y,
-      {align:"center"}
-    );
 
+let y = 55;
 
-    y += 10;
 
+// TITLE
 
-    pdf.setFontSize(13);
+pdf.setFont("helvetica","bold");
+pdf.setFontSize(16);
 
-    pdf.text(
-      "OFFICIAL REGISTRATION RECEIPT",
-      pageWidth/2,
-      y,
-      {align:"center"}
-    );
+pdf.text(
+"AJAY PREMIER LEAGUE (APL) 2026",
+pageWidth/2,
+y,
+{align:"center"}
+);
 
 
+y += 9;
 
-    // Receipt Box
 
-    y += 15;
+pdf.setFontSize(11);
 
-    pdf.setDrawColor(0,102,204);
+pdf.text(
+"Official Registration Receipt",
+pageWidth/2,
+y,
+{align:"center"}
+);
 
-    pdf.rect(
-      10,
-      y,
-      pageWidth-20,
-      130
-    );
 
 
-    y += 15;
+// ORGANIZER
 
+y += 15;
 
+pdf.setFontSize(10);
 
-    const details = [
+pdf.setFont("helvetica","bold");
 
-      ["Registration ID", d.registrationId],
-      ["Team Name", d.teamName],
-      ["Captain Name", d.captainName],
-      ["Mobile", d.mobile],
-      ["Email", d.email],
-      ["Address", d.address],
-      ["Payment Status", d.paymentStatus],
-      ["Status", d.status]
+pdf.text(
+"Organized By: AJAY HASDA",
+20,
+y
+);
 
-    ];
 
+y+=7;
 
+pdf.setFont("helvetica","normal");
 
-    details.forEach(row=>{
+pdf.text(
+"Venue: Padmabil Ground",
+20,
+y
+);
 
-      pdf.setFont("helvetica","bold");
-      pdf.setFontSize(11);
 
-      pdf.text(
-        row[0]+":",
-        20,
-        y
-      );
+y+=7;
 
+pdf.text(
+"Contact: +91 9663116089",
+20,
+y
+);
 
-      pdf.setFont("helvetica","normal");
 
-      pdf.text(
-        String(row[1] || ""),
-        75,
-        y
-      );
+y+=7;
 
+pdf.text(
+"+91 9353689775",
+20,
+y
+);
 
-      y += 12;
 
-    });
+y+=7;
 
+pdf.text(
+"Email: ajayhasda623@gmail.com",
+20,
+y
+);
 
 
-    // Footer
 
-    y += 10;
+// REGISTRATION TITLE
 
-    pdf.setFillColor(240,240,240);
+y+=12;
 
-    pdf.rect(
-      10,
-      y,
-      pageWidth-20,
-      35,
-      "F"
-    );
+pdf.setFont("helvetica","bold");
 
+pdf.setFontSize(11);
 
-    pdf.setFont("helvetica","bold");
+pdf.text(
+"Registration Details",
+20,
+y
+);
 
-    pdf.text(
-      "Thank You For Registering",
-      pageWidth/2,
-      y+15,
-      {align:"center"}
-    );
 
 
+// BOX
 
-    pdf.setFont("helvetica","normal");
-    pdf.setFontSize(10);
+y+=8;
 
-    pdf.text(
-      "Generated: " + new Date().toLocaleString(),
-      20,
-      y+28
-    );
 
+pdf.roundedRect(
+10,
+y-5,
+190,
+90,
+3,
+3
+);
 
 
-    // Signature
 
-    const signature = new Image();
+y+=8;
 
-    signature.src = "./ajay-sign.png";
 
 
-    signature.onload = function(){
+const details=[
 
+["Registration ID",d.registrationId],
+["Team Name",d.teamName],
+["Captain Name",d.captainName],
+["Mobile",d.mobile],
+["Email",d.email],
+["Address",d.address],
+["Player Type",d.playerType],
+["Payment Status",d.paymentStatus],
+["Registration Status",d.status]
 
-      pdf.addImage(
-        signature,
-        "PNG",
-        140,
-        y+45,
-        45,
-        20
-      );
+];
 
 
-      pdf.setFont("helvetica","bold");
 
-      pdf.text(
-        "AJAY HASDA",
-        162,
-        y+75,
-        {align:"center"}
-      );
+details.forEach(item=>{
 
 
-      pdf.save(
-        (d.registrationId || "APL2026")+"_Receipt.pdf"
-      );
+pdf.setFontSize(9);
 
+pdf.setFont("helvetica","bold");
 
-    };
+pdf.text(
+item[0]+":",
+20,
+y
+);
 
 
-    signature.onerror = function(){
+pdf.setFont("helvetica","normal");
 
+pdf.text(
+String(item[1] || ""),
+75,
+y
+);
 
-      pdf.text(
-        "AJAY HASDA",
-        160,
-        y+70
-      );
 
+y+=8;
 
-      pdf.save(
-        (d.registrationId || "APL2026")+"_Receipt.pdf"
-      );
 
-    };
+});
 
 
-  }
+
+
+// =====================
+// FOOTER
+// =====================
+
+
+pdf.line(
+15,
+235,
+195,
+235
+);
+
+
+
+pdf.setFont("helvetica","bold");
+
+pdf.setFontSize(12);
+
+
+pdf.text(
+"Thank You For Registering",
+pageWidth/2,
+248,
+{align:"center"}
+);
+
+
+
+// DATE LEFT
+
+
+pdf.setFont("helvetica","normal");
+
+pdf.setFontSize(9);
+
+
+pdf.text(
+"Generated Date: "+new Date().toLocaleString(),
+20,
+270
+);
+
+
+
+
+// SIGNATURE
+
+
+const signature = new Image();
+
+signature.src="./ajay-sign.png";
+
+
+
+signature.onload=function(){
+
+
+pdf.addImage(
+  signature,
+  "PNG",
+  150,
+  250,
+  30,
+  10
+);
+
+pdf.setFont("helvetica","bold");
+pdf.setFontSize(9);
+
+pdf.text(
+  "Authorized Signature",
+  165,
+  262,
+  {align:"center"}
+);
+
+pdf.text(
+  "AJAY HASDA",
+  165,
+  270,
+  {align:"center"}
+);
+
+
+
+savePDF();
+
+
+};
+
+
+
+signature.onerror=function(){
+
+savePDF();
+
+};
+
+
+
+
+function savePDF(){
+
+
+pdf.save(
+(d.registrationId || "APL2026")+"_Receipt.pdf"
+);
+
+
+}
+
+
+}
+
+
 
 };
