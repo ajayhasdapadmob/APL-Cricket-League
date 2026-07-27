@@ -1,4 +1,4 @@
-alert("CHECK JS LOADED");
+alert("NEW CHECK JS LOADED");
 
 import { db } from "./firebase.js";
 
@@ -97,48 +97,51 @@ window.downloadReceipt = function () {
   }
 
   const { jsPDF } = window.jspdf;
-
   const pdf = new jsPDF();
 
-  let y = 20;
+  const pageWidth = pdf.internal.pageSize.getWidth();
 
-  const logo = new Image();
+  // ===== Banner =====
+  const banner = new Image();
+  banner.src = "./images/banner.png";
 
-  logo.src = "./images/apl-logo.png";
-
-  logo.onload = function () {
+  banner.onload = function () {
 
     pdf.addImage(
-      logo,
+      banner,
       "PNG",
-      85,
       10,
-      40,
-      25
+      10,
+      pageWidth - 20,
+      35
     );
 
-    createPDF();
+    createReceipt();
 
   };
 
-  logo.onerror = function () {
+  banner.onerror = function () {
 
-    createPDF();
+    createReceipt();
 
   };
 
-  function createPDF() {
-        y = 45;
 
-    // HEADER
-    pdf.setFont("helvetica", "bold");
+  function createReceipt() {
+
+    let y = 60;
+
+
+    // ===== Header =====
+
+    pdf.setFont("helvetica","bold");
     pdf.setFontSize(18);
 
     pdf.text(
       "AJAY PREMIER LEAGUE (APL) 2026",
-      105,
+      pageWidth/2,
       y,
-      { align: "center" }
+      {align:"center"}
     );
 
     y += 10;
@@ -147,51 +150,26 @@ window.downloadReceipt = function () {
 
     pdf.text(
       "Official Registration Receipt",
-      105,
+      pageWidth/2,
       y,
-      { align: "center" }
+      {align:"center"}
     );
 
-    y += 8;
-    pdf.line(15, y, 195, y);
 
-    // ORGANIZER
+    // Border Box
 
-    y += 15;
+    pdf.rect(
+      10,
+      75,
+      pageWidth-20,
+      125
+    );
 
-    pdf.setFontSize(12);
-    pdf.setFont("helvetica", "bold");
-    pdf.text("Organized By:", 20, y);
 
-    y += 8;
+    y = 90;
 
-    pdf.setFont("helvetica", "normal");
-    pdf.text("AJAY HASDA", 20, y);
 
-    y += 8;
-    pdf.text("Venue: Padmabil Ground", 20, y);
-
-    y += 8;
-    pdf.text("Contact: +91 9663116089", 20, y);
-
-    y += 8;
-    pdf.text("+91 9353689775", 20, y);
-
-    y += 8;
-    pdf.text("Email: ajayhasda623@gmail.com", 20, y);
-
-    y += 10;
-    pdf.line(15, y, 195, y);
-
-    // REGISTRATION DETAILS
-
-    y += 15;
-
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(13);
-    pdf.text("Registration Details", 20, y);
-
-    y += 10;
+    // ===== Details =====
 
     const details = [
 
@@ -201,96 +179,142 @@ window.downloadReceipt = function () {
       ["Mobile", d.mobile],
       ["Email", d.email],
       ["Address", d.address],
-      ["Player Type", d.playerType],
       ["Payment Status", d.paymentStatus],
-      ["Registration Status", d.status]
+      ["Status", d.status]
 
     ];
 
-    details.forEach((item) => {
 
-      pdf.setFont("helvetica", "bold");
-      pdf.text(item[0] + ":", 20, y);
+    details.forEach(item => {
 
-      pdf.setFont("helvetica", "normal");
-      pdf.text(String(item[1] || ""), 75, y);
+      pdf.setFont("helvetica","bold");
+      pdf.setFontSize(11);
 
-      y += 9;
+      pdf.text(
+        item[0] + ":",
+        20,
+        y
+      );
+
+
+      pdf.setFont("helvetica","normal");
+
+      pdf.text(
+        String(item[1] || ""),
+        75,
+        y
+      );
+
+
+      y += 12;
 
     });
-    
-    // FOOTER
 
-    y += 8;
-    pdf.line(15, y, 195, y);
 
-    y += 15;
 
-    pdf.setFont("helvetica", "bold");
+    // ===== Footer =====
+
+    y += 10;
+
+    pdf.line(
+      15,
+      y,
+      195,
+      y
+    );
+
+
+    pdf.setFont("helvetica","bold");
     pdf.setFontSize(14);
 
     pdf.text(
       "Thank You For Registering",
-      105,
-      y,
-      { align: "center" }
+      pageWidth/2,
+      y+15,
+      {align:"center"}
     );
 
-    // GENERATED DATE
 
-    pdf.setFont("helvetica", "normal");
     pdf.setFontSize(10);
+    pdf.setFont("helvetica","normal");
 
     pdf.text(
       "Generated: " + new Date().toLocaleString(),
       20,
-      y + 20
+      y+35
     );
 
-// SIGNATURE
 
-const signature = new Image();
+    // ===== Signature =====
 
-signature.src = "./ajay-sign.png";
+    const signature = new Image();
 
-signature.onload = function () {
+    signature.src = "./images/signature.png";
 
-  // Signature
-  pdf.addImage(
-    signature,
-    "PNG",
-    142,   // Left-Right Position
-    y + 8, // Niche Position
-    38,    // Width
-    20     // Height
-  );
 
-  // Signature Text
-  pdf.setFont("helvetica", "bold");
-  pdf.setFontSize(10);
+    signature.onload = function(){
 
-  pdf.text("Authorized Signature", 142, y + 31);
-  pdf.text("AJAY HASDA", 142, y + 38);
+      pdf.addImage(
+        signature,
+        "PNG",
+        140,
+        y+5,
+        45,
+        20
+      );
 
-  pdf.save(
-    (d.registrationId || "APL2026") + "_Receipt.pdf"
-  );
 
-};
+      pdf.setFont("helvetica","bold");
+      pdf.text(
+        "Authorized Signature",
+        162,
+        y+32,
+        {align:"center"}
+      );
 
-signature.onerror = function () {
 
-  pdf.setFont("helvetica", "bold");
-  pdf.setFontSize(10);
+      pdf.text(
+        "AJAY HASDA",
+        162,
+        y+38,
+        {align:"center"}
+      );
 
-  pdf.text("Authorized Signature", 142, y + 31);
-  pdf.text("AJAY HASDA", 142, y + 38);
 
-  pdf.save(
-    (d.registrationId || "APL2026") + "_Receipt.pdf"
-  );
+      pdf.save(
+        (d.registrationId || "APL2026")+"_Receipt.pdf"
+      );
 
-};
+    };
+
+
+    signature.onerror = function(){
+
+      pdf.setFont("helvetica","bold");
+
+      pdf.text(
+        "Authorized Signature",
+        162,
+        y+32,
+        {align:"center"}
+      );
+
+
+      pdf.text(
+        "AJAY HASDA",
+        162,
+        y+38,
+        {align:"center"}
+      );
+
+
+      pdf.save(
+        (d.registrationId || "APL2026")+"_Receipt.pdf"
+      );
+
+    };
+
+
   }
 
 };
