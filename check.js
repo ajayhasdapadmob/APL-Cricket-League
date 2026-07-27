@@ -88,6 +88,7 @@ window.checkRegistration = async function () {
 };
 
 window.downloadReceipt = function () {
+alert("NEW RECEIPT CODE RUNNING");
 
   const d = window.receiptData;
 
