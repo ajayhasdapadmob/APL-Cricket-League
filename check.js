@@ -247,13 +247,13 @@ window.downloadReceipt = function () {
       y + 20
     );
 
-    // SIGNATURE
+// SIGNATURE
 
-    const signature = new Image();
+const signature = new Image();
+
+signature.src = "images/ajay-sign.png";
 
 signature.onload = function () {
-
-  alert("SIGNATURE LOADED");
 
   pdf.addImage(
     signature,
@@ -264,6 +264,12 @@ signature.onload = function () {
     18
   );
 
+  pdf.setFont("helvetica", "bold");
+  pdf.setFontSize(10);
+
+  pdf.text("Authorized Signature", 145, y + 30);
+  pdf.text("AJAY HASDA", 145, y + 37);
+
   pdf.save(
     (d.registrationId || "APL2026") + "_Receipt.pdf"
   );
@@ -272,53 +278,19 @@ signature.onload = function () {
 
 signature.onerror = function () {
 
-  alert("SIGNATURE NOT FOUND");
+  alert("Signature image not found!");
+
+  pdf.setFont("helvetica", "bold");
+  pdf.setFontSize(10);
+
+  pdf.text("Authorized Signature", 145, y + 20);
+  pdf.text("AJAY HASDA", 145, y + 27);
 
   pdf.save(
     (d.registrationId || "APL2026") + "_Receipt.pdf"
   );
 
 };
-
-signature.src = "./images/signature.png";
-
-    signature.onload = function () {
-
-      pdf.addImage(
-        signature,
-        "PNG",
-        145,
-        y + 5,
-        35,
-        18
-      );
-
-      pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(10);
-
-      pdf.text("Authorized Signature", 145, y + 30);
-      pdf.text("AJAY HASDA", 145, y + 37);
-
-      pdf.save(
-        (d.registrationId || "APL2026") + "_Receipt.pdf"
-      );
-
-    };
-
-    signature.onerror = function () {
-
-      pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(10);
-
-      pdf.text("Authorized Signature", 145, y + 20);
-      pdf.text("AJAY HASDA", 145, y + 27);
-
-      pdf.save(
-        (d.registrationId || "APL2026") + "_Receipt.pdf"
-      );
-
-    };
-
   }
 
 };
