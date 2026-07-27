@@ -251,7 +251,7 @@ window.downloadReceipt = function () {
 
 const signature = new Image();
 
-signature.src = "images/ajay-sign.png";
+signature.src = "ajay-sign.png";
 
 signature.onload = function () {
 
