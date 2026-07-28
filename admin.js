@@ -251,6 +251,14 @@ placeholder="Enter Remark">
 
 </td>
 
+<td>
+
+<button class="approve"
+onclick="sendEmail('${item.id}')">
+📧 Send Email
+</button>
+
+</td>
 
 </tr>
 `;
@@ -340,7 +348,50 @@ alert(error.message);
 
 }
 
+// SEND EMAIL MANUALLY
 
+window.sendEmail = async function(id){
+
+const team = registrations.find(r => r.id === id);
+
+if(!team){
+alert("Registration not found");
+return;
+}
+
+if(!team.email){
+alert("Email not available");
+return;
+}
+
+try{
+
+const remark = document.getElementById("remark-" + id).value;
+
+await emailjs.send(
+"service_ipztz05",
+"template_05udsk4",
+{
+name: team.captainName,
+team_name: team.teamName,
+registration_id: team.registrationId,
+status: team.status,
+remark: remark,
+to_email: team.email
+}
+);
+
+alert("📧 Email Sent Successfully");
+
+}
+catch(error){
+
+console.error(error);
+alert("❌ Email Failed");
+
+}
+
+}
 
 // SAVE REMARK
 
