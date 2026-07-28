@@ -141,41 +141,69 @@ const pageWidth = pdf.internal.pageSize.getWidth();
 
 
 
+// =====================
+// BACKGROUND
+// =====================
+
+const bg = new Image();
+
+bg.src = "./background.jpg";
+
+bg.onload = function () {
+
+  pdf.addImage(
+    bg,
+    "JPEG",
+    0,
+    0,
+    210,
+    297
+  );
+
+  loadBanner();
+
+};
+
+bg.onerror = function () {
+
+  loadBanner();
+
+};
+
+
 
 // =====================
 // BANNER
 // =====================
 
-const banner = new Image();
+function loadBanner() {
 
-banner.src = "./banner.jpg";
+  const banner = new Image();
 
+  banner.src = "./banner.jpg";
 
-banner.onload = function(){
+  banner.onload = function () {
 
+    pdf.addImage(
+      banner,
+      "JPEG",
+      10,
+      10,
+      190,
+      35
+    );
 
-pdf.addImage(
-banner,
-"JPEG",
-10,
-10,
-190,
-35
-);
+    loadLogo();
 
+  };
 
-loadLogo();
+  banner.onerror = function () {
 
+    loadLogo();
 
-};
+  };
 
-
-banner.onerror=function(){
-
-loadLogo();
-
-};
-
+}
 
 
 
@@ -355,6 +383,22 @@ y
 
 y+=8;
 
+
+// White Background Box
+pdf.setFillColor(255,255,255);
+
+pdf.roundedRect(
+10,
+y-5,
+190,
+100,
+3,
+3,
+"F"
+);
+
+// Black Border
+pdf.setDrawColor(0,0,0);
 
 pdf.roundedRect(
 10,
