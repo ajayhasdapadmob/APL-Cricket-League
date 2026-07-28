@@ -15,26 +15,26 @@ import {
 
 const IMAGES = {
 
-  banner: "./images/banner.jpg",
+  banner: "./banner.jpg",
 
-  logo: "./images/apl-logo.png",
+  logo: "./apl-logo.png",
 
   signature: "./ajay-sign.png",
 
   gallery: [
-    "./images/gallery1.jpg",
-    "./images/gallery2.jpg",
-    "./images/gallery3.jpg",
-    "./images/gallery4.jpg",
-    "./images/gallery5.jpg",
-    "./images/gallery6.jpg"
+    "./gallery1.jpg",
+    "./gallery2.jpg",
+    "./gallery3.jpg",
+    "./gallery4.jpg",
+    "./gallery5.jpg",
+    "./gallery6.jpg"
   ],
 
-  trophy: "./images/trophy.png",
+  trophy: "./trophy.png",
 
-  cricketBall: "./images/cricket-ball.png",
+  cricketBall: "./cricket-ball.png",
 
-  background: "./images/background.jpg"
+  background: "./background.jpg"
 
 };
 
@@ -148,7 +148,7 @@ const pageWidth = pdf.internal.pageSize.getWidth();
 
 const banner = new Image();
 
-banner.src = "./images/banner.jpg";
+banner.src = "./banner.jpg";
 
 
 banner.onload = function(){
@@ -189,7 +189,7 @@ function loadLogo(){
 const logo = new Image();
 
 
-logo.src="./images/apl-logo.png";
+logo.src = "./apl-logo.png";
 
 
 
