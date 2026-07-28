@@ -3,64 +3,89 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>APL 2026 - Gallery</title>
+
 <link rel="stylesheet" href="style.css">
+
+<style>
+
+.gallery-box{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:15px;
+margin-top:20px;
+}
+
+.gallery-box img{
+width:100%;
+height:220px;
+object-fit:cover;
+border-radius:12px;
+transition:0.3s;
+}
+
+.gallery-box img:hover{
+transform:scale(1.05);
+}
+
+.apl-logo{
+width:120px;
+margin-bottom:10px;
+}
+
+</style>
+
 </head>
 
 <body>
 
 <header>
+
+<img src="images/apl-logo.png" class="apl-logo">
+
 <h1>🖼️ APL 2026 Gallery</h1>
+
 <p><strong>AJAY PREMIER LEAGUE (APL) 2026</strong></p>
+
 <p>Organized by: <strong>AJAY HASDA</strong></p>
+
 <p>📞 +91 9663116089 / +91 9353689775</p>
+
 <p>✉️ ajayhasda623@gmail.com</p>
+
 </header>
+
 
 <div class="container">
 
+
 <div class="card">
+
 <h2>🏏 Tournament Gallery</h2>
-<p>Official Photos of AJAY PREMIER LEAGUE (APL) 2026</p>
+
+<p>
+Official Photos of AJAY PREMIER LEAGUE (APL) 2026
+</p>
+
+
+<div class="gallery-box">
+
+
+<a href="images/banner.jpg" target="_blank">
+<img src="images/banner.jpg" alt="APL Banner">
+</a>
+
 
 <a href="images/gallery1.jpg" target="_blank">
-<img src="images/gallery1.jpg" alt="Gallery 1" style="width:48%;margin:5px;border-radius:10px;">
+<img src="images/gallery1.jpg" alt="Gallery 1">
 </a>
+
 
 <a href="images/gallery2.jpg" target="_blank">
-<img src="images/gallery2.jpg" alt="Gallery 2" style="width:48%;margin:5px;border-radius:10px;">
+<img src="images/gallery2.jpg" alt="Gallery 2">
 </a>
+
 
 <a href="images/gallery3.jpg" target="_blank">
-<img src="images/gallery3.jpg" alt="Gallery 3" style="width:48%;margin:5px;border-radius:10px;">
-</a>
-
-<a href="images/gallery4.jpg" target="_blank">
-<img src="images/gallery4.jpg" alt="Gallery 4" style="width:48%;margin:5px;border-radius:10px;">
-</a>
-
-<a href="images/gallery5.jpg" target="_blank">
-<img src="images/gallery5.jpg" alt="Gallery 5" style="width:48%;margin:5px;border-radius:10px;">
-</a>
-
-<a href="images/gallery6.jpg" target="_blank">
-<img src="images/gallery6.jpg" alt="Gallery 6" style="width:48%;margin:5px;border-radius:10px;">
-</a>
-
-</div>
-
-<div class="card">
-<a class="btn register" href="index.html">🏠 Back to Home</a>
-</div>
-
-</div>
-
-<footer>
-<p>© 2026 AJAY PREMIER LEAGUE (APL)</p>
-<p>All Rights Reserved.</p>
-</footer>
-
-<script src="script.js"></script>
-
-</body>
-</html>
+<img src="images/gallery3.jpg" alt
