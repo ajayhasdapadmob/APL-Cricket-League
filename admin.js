@@ -18,6 +18,8 @@ collection,
 getDocs,
 doc,
 updateDoc,
+getDoc,
+setDoc,
 orderBy,
 query
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
