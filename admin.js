@@ -76,8 +76,8 @@ displayTable(registrations);
 }
 catch(error){
 
-console.log(error);
-alert(error.message);
+console.error(error);
+alert(error.code + "\n" + error.message);
 
 }
 
@@ -534,4 +534,3 @@ if (updateLiveBtn) {
 
   });
 }
-<script type="module" src="livematch.js"></script>
