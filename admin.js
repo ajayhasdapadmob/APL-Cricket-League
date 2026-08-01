@@ -189,11 +189,18 @@ table.innerHTML += `
 
 <td>
 
-<a href="${item.paymentScreenshot || '#'}" target="_blank">
+<input
+type="text"
+id="upi-${item.id}"
+value="${item.upi || ""}"
+placeholder="UPI Transaction ID">
 
-View
+<br><br>
 
-</a>
+<button
+onclick="saveTransactionId('${item.id}')">
+💾 Save
+</button>
 
 </td>
 
@@ -712,3 +719,36 @@ row.style.display="none";
 
 
 loadRegistrations();
+window.saveTransactionId = async function(id){
+
+try{
+
+const value =
+document.getElementById(
+"upi-"+id
+).value;
+
+
+await updateDoc(
+doc(db,"registrations",id),
+{
+upi:value,
+updatedAt:serverTimestamp()
+}
+);
+
+
+alert("✅ UPI Transaction ID Saved");
+
+loadRegistrations();
+
+
+}
+catch(error){
+
+console.log(error);
+alert(error.message);
+
+}
+
+};
