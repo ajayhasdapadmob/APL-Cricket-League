@@ -316,3 +316,25 @@ button.save{
     background:#28a745;
     color:#fff;
 }
+.match-control{
+    width:100%;
+    max-width:700px;
+    margin:20px auto;
+    background:#fff;
+    color:#000;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,.2);
+    text-align:left;
+}
+
+.match-control input{
+    width:100%;
+    padding:10px;
+    margin-bottom:10px;
+    box-sizing:border-box;
+}
+
+.match-control button{
+    width:100%;
+}
