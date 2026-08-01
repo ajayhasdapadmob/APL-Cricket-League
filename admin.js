@@ -14,14 +14,15 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
 import {
-collection,
-getDocs,
-doc,
-updateDoc,
-getDoc,
-setDoc,
-orderBy,
-query
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+  getDoc,
+  setDoc,
+  deleteDoc,
+  orderBy,
+  query
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 
@@ -258,6 +259,11 @@ placeholder="Enter Remark">
 <button class="approve"
 onclick="sendEmail('${item.id}')">
 📧 Send Email
+</button>
+
+<button class="reject"
+onclick="deleteRegistration('${item.id}')">
+🗑 Delete
 </button>
 
 </td>
@@ -533,4 +539,22 @@ if (updateLiveBtn) {
     alert("✅ Live Match Updated");
 
   });
+}
+window.deleteRegistration = async function(id) {
+
+  if (!confirm("Are you sure you want to delete this application?")) {
+    return;
+  }
+
+  try {
+    await deleteDoc(doc(db, "registrations", id));
+
+    alert("✅ Application Deleted");
+
+    loadRegistrations();
+
+  } catch (error) {
+    console.error(error);
+    alert(error.message);
+  }
 }
