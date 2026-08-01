@@ -310,50 +310,36 @@ alert(error.message);
 
 // STATUS UPDATE
 
-window.changeStatus = async function(id, status){
+window.deleteRegistration = async function(id) {
 
-try{
-
-const remark = document.getElementById("remark-" + id).value;
-
-await updateDoc(
-doc(db,"registrations",id),
-{
-status: status,
-remarks: remark
-}
-);
-
-const team = registrations.find(r => r.id === id);
-
-if(team && team.email){
-
-await emailjs.send(
-  "service_ipztz05",
-  "template_05udsk4",
-  {
-    name: team.captainName,
-    team_name: team.teamName,
-    registration_id: team.registrationId,
-    status: status,
-    remark: remark,
-    to_email: team.email
+  if (!confirm("Move this application to Recycle Bin?")) {
+    return;
   }
-);
 
-}
+  try {
 
-alert("✅ Status Updated");
+    const regRef = doc(db, "registrations", id);
+    const regSnap = await getDoc(regRef);
 
-loadRegistrations();
+    if (!regSnap.exists()) {
+      alert("Application not found");
+      return;
+    }
 
-}catch(error){
+    // Backup in deleted collection
+    await setDoc(doc(db, "deleted", id), regSnap.data());
 
-console.error(error);
-alert(error.message);
+    // Delete from registrations
+    await deleteDoc(regRef);
 
-}
+    alert("✅ Application moved to Recycle Bin");
 
+    loadRegistrations();
+
+  } catch (error) {
+    console.error(error);
+    alert(error.message);
+  }
 }
 
 // SEND EMAIL MANUALLY
