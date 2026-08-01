@@ -506,3 +506,32 @@ if (logoutBtn) {
     });
 
 }
+// LIVE MATCH UPDATE
+
+const updateLiveBtn = document.getElementById("updateLiveBtn");
+
+if (updateLiveBtn) {
+  updateLiveBtn.addEventListener("click", async () => {
+
+    await setDoc(doc(db, "liveMatch", "current"), {
+
+      teamA: document.getElementById("teamA").value,
+      teamB: document.getElementById("teamB").value,
+
+      scoreA: document.getElementById("scoreA").value,
+      scoreB: document.getElementById("scoreB").value,
+
+      oversA: document.getElementById("oversA").value,
+      oversB: document.getElementById("oversB").value,
+
+      target: document.getElementById("target").value,
+
+      status: document.getElementById("status").value
+
+    });
+
+    alert("✅ Live Match Updated");
+
+  });
+}
+<script type="module" src="livematch.js"></script>
