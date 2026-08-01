@@ -4,26 +4,23 @@ emailjs.init({
     publicKey: "AsUiMVkBY3DFQ-DOJ"
 });
 
-console.log("APL Admin JS Loaded");
 
-
-import { db, auth } from "./firebase.js";
-import {
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+import { db } from "./firebase.js";
 
 import {
-  collection,
-  getDocs,
-  doc,
-  updateDoc,
-  getDoc,
-  setDoc,
-  deleteDoc,
-  orderBy,
-  query
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    collection,
+    getDocs,
+    doc,
+    updateDoc,
+    getDoc,
+    setDoc,
+    deleteDoc,
+    query,
+    orderBy,
+    serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
 
 
 const table = document.getElementById("registrationTable");
@@ -33,17 +30,18 @@ const pendingTeams = document.getElementById("pendingTeams");
 const approvedTeams = document.getElementById("approvedTeams");
 const rejectedTeams = document.getElementById("rejectedTeams");
 
-const searchInput = document.getElementById("searchInput");
-
-
 let registrations = [];
 
 
-// LOAD DATA
+
+// ===============================
+// LOAD REGISTRATIONS
+// ===============================
 
 async function loadRegistrations(){
 
 try{
+
 
 const q = query(
 collection(db,"registrations"),
@@ -57,12 +55,12 @@ const snapshot = await getDocs(q);
 registrations=[];
 
 
-snapshot.forEach((item)=>{
+snapshot.forEach(docSnap=>{
 
 registrations.push({
 
-id:item.id,
-...item.data()
+id:docSnap.id,
+...docSnap.data()
 
 });
 
@@ -77,16 +75,21 @@ displayTable(registrations);
 }
 catch(error){
 
-console.error(error);
-alert(error.code + "\n" + error.message);
+console.log(error);
+alert(error.message);
 
 }
 
+
 }
 
 
 
-// DASHBOARD
+
+// ===============================
+// DASHBOARD COUNT
+// ===============================
+
 
 function updateDashboard(){
 
@@ -95,47 +98,47 @@ let approved=0;
 let rejected=0;
 
 
-registrations.forEach(data=>{
+registrations.forEach(item=>{
 
 
-if(data.status==="Pending"){
+if(item.status==="Pending")
 pending++;
-}
 
 
-if(data.status==="Approved"){
+if(item.status==="Approved")
 approved++;
-}
 
 
-if(data.status==="Rejected"){
+if(item.status==="Rejected")
 rejected++;
-}
 
 
 });
 
 
-totalTeams.innerHTML = registrations.length;
+totalTeams.textContent=registrations.length;
 
-pendingTeams.innerHTML = pending;
+pendingTeams.textContent=pending;
 
-approvedTeams.innerHTML = approved;
+approvedTeams.textContent=approved;
 
-rejectedTeams.innerHTML = rejected;
+rejectedTeams.textContent=rejected;
 
 
 }
 
 
 
+
+
+// ===============================
 // DISPLAY TABLE
+// ===============================
+
 
 function displayTable(data){
 
-
 table.innerHTML="";
-
 
 let sl=1;
 
@@ -144,7 +147,6 @@ data.forEach(item=>{
 
 
 let date="";
-
 
 if(item.createdAt){
 
@@ -155,129 +157,194 @@ item.createdAt.seconds*1000
 }
 
 
-
 table.innerHTML += `
 
 <tr>
 
+
 <td>${sl++}</td>
+
 
 <td>${date}</td>
 
+
 <td>${item.registrationId || ""}</td>
+
 
 <td>${item.teamName || ""}</td>
 
+
 <td>${item.captainName || ""}</td>
+
 
 <td>${item.mobile || ""}</td>
 
+
 <td>${item.area || ""}</td>
+
 
 <td>${item.address || ""}</td>
 
 
+
 <td>
-<a href="${item.paymentScreenshot}" target="_blank">
+
+<a href="${item.paymentScreenshot || '#'}" target="_blank">
+
 View
+
 </a>
+
 </td>
 
 
-<td class="${
-item.paymentStatus==="Paid"
-?"status-approved"
-:"status-pending"
-}">
-${item.paymentStatus || "Unpaid"}
-</td>
-
-
-<td class="${
-item.status==="Approved"
-?"status-approved"
-:
-item.status==="Rejected"
-?"status-rejected"
-:
-item.status==="Cancelled"
-?"status-cancelled"
-:
-"status-pending"
-}">
-${item.status || "Pending"}
-</td>
 
 <td>
+
+${item.paymentStatus || "Unpaid"}
+
+</td>
+
+
+
+<td>
+
+${item.status || "Pending"}
+
+</td>
+
+
+
+
+<td>
+
 
 <button class="approve"
 onclick="changeStatus('${item.id}','Approved')">
+
 ✅ Approve
+
 </button>
+
+
 
 <button class="reject"
 onclick="changeStatus('${item.id}','Rejected')">
+
 ❌ Reject
+
 </button>
 
-<button class="cancel"
-onclick="changeStatus('${item.id}','Cancelled')">
-🚫 Cancel
-</button>
+
 
 <button class="pending-btn"
 onclick="changeStatus('${item.id}','Pending')">
+
 ⏳ Pending
+
 </button>
 
-<button class="approve"
-onclick="changePaymentStatus('${item.id}','Paid')">
-💰 Mark Paid
+
+
+<button class="cancel"
+onclick="changeStatus('${item.id}','Cancelled')">
+
+🚫 Cancel
+
 </button>
+
+
+
+<button class="paid"
+onclick="changePaymentStatus('${item.id}','Paid')">
+
+💰 Paid
+
+</button>
+
+
+
+<button class="email"
+onclick="sendEmail('${item.id}')">
+
+📧 Email
+
+</button>
+
+
+
+<button class="recycle"
+onclick="deleteRegistration('${item.id}')">
+
+♻️ Recycle
+
+</button>
+
+
+
+<button class="reject"
+onclick="hardDelete('${item.id}')">
+
+🗑 Delete
+
+</button>
+
 
 </td>
 
 
+
+
+
 <td>
 
+
 <input
-type="text"
+
 id="remark-${item.id}"
+
 value="${item.remarks || ""}"
-placeholder="Enter Remark">
+
+placeholder="Remark">
+
 
 <br><br>
 
-<button onclick="saveRemark('${item.id}')">
+
+<button class="save"
+onclick="saveRemark('${item.id}')">
+
 💾 Save
+
 </button>
 
+
 </td>
+
+
+
+
 
 <td>
 
-<button class="approve"
-onclick="sendEmail('${item.id}')">
-📧 Send Email
-</button>
-
-<button class="reject"
-onclick="deleteRegistration('${item.id}')">
-🗑 Delete
-</button>
+${item.email || ""}
 
 </td>
 
+
+
 </tr>
+
 `;
+
 });
+
 
 }
 
-
-
-
+// ===============================
 // PAYMENT STATUS UPDATE
+// ===============================
 
 window.changePaymentStatus = async function(id,status){
 
@@ -286,7 +353,8 @@ try{
 await updateDoc(
 doc(db,"registrations",id),
 {
-paymentStatus: status
+paymentStatus:status,
+updatedAt:serverTimestamp()
 }
 );
 
@@ -299,102 +367,30 @@ loadRegistrations();
 }
 catch(error){
 
-console.error(error);
+console.log(error);
 alert(error.message);
 
 }
 
-}
-
-
-
-// STATUS UPDATE
-
-window.deleteRegistration = async function(id) {
-
-  if (!confirm("Are you sure you want to delete this application?")) {
-    return;
-  }
-
-  try {
-
-    // Registration data lao
-    const ref = doc(db, "registrations", id);
-    const snap = await getDoc(ref);
-
-    if (snap.exists()) {
-
-      // Recycle Bin me save karo
-      await setDoc(doc(db, "recycleBin", id), snap.data());
-
-      // Original registration delete karo
-      await deleteDoc(ref);
-
-      alert("✅ Application Moved to Recycle Bin");
-
-      loadRegistrations();
-
-    }
-
-  } catch (error) {
-    console.error(error);
-    alert(error.message);
-  }
-
 };
 
-// SEND EMAIL MANUALLY
 
-window.sendEmail = async function(id){
 
-const team = registrations.find(r => r.id === id);
 
-if(!team){
-alert("Registration not found");
-return;
-}
+// ===============================
+// STATUS UPDATE
+// ===============================
 
-if(!team.email){
-alert("Email not available");
-return;
-}
+
+window.changeStatus = async function(id,status){
 
 try{
 
-const remark = document.getElementById("remark-" + id).value;
 
-await emailjs.send(
-"service_ipztz05",
-"template_05udsk4",
-{
-name: team.captainName,
-team_name: team.teamName,
-registration_id: team.registrationId,
-status: team.status,
-remark: remark,
-to_email: team.email
-}
-);
-
-alert("📧 Email Sent Successfully");
-
-}
-catch(error){
-
-console.error(error);
-alert("❌ Email Failed");
-
-}
-
-}
-
-// SAVE REMARK
-
-window.saveRemark = async function(id){
-
-
-let remark =
-document.getElementById("remark-"+id).value;
+const remark =
+document.getElementById(
+"remark-"+id
+).value;
 
 
 
@@ -403,7 +399,67 @@ await updateDoc(
 doc(db,"registrations",id),
 
 {
-remarks:remark
+
+status:status,
+
+remarks:remark,
+
+updatedAt:serverTimestamp()
+
+}
+
+);
+
+
+
+alert("✅ Status Updated");
+
+
+loadRegistrations();
+
+
+}
+catch(error){
+
+console.log(error);
+alert(error.message);
+
+}
+
+};
+
+
+
+
+
+
+// ===============================
+// SAVE REMARK
+// ===============================
+
+
+window.saveRemark = async function(id){
+
+try{
+
+
+const remark =
+document.getElementById(
+"remark-"+id
+).value;
+
+
+
+await updateDoc(
+
+doc(db,"registrations",id),
+
+{
+
+remarks:remark,
+
+updatedAt:serverTimestamp()
+
 }
 
 );
@@ -417,131 +473,242 @@ loadRegistrations();
 
 
 }
+catch(error){
+
+console.log(error);
+
+alert(error.message);
+
+}
+
+};
 
 
 
 
 
+
+// ===============================
+// SEND EMAIL
+// ===============================
+
+
+window.sendEmail = async function(id){
+
+
+const team =
+registrations.find(
+item=>item.id===id
+);
+
+
+
+if(!team){
+
+alert("Registration not found");
+
+return;
+
+}
+
+
+
+try{
+
+
+const remark =
+document.getElementById(
+"remark-"+id
+).value;
+
+
+
+await emailjs.send(
+
+"service_ipztz05",
+
+"template_05udsk4",
+
+{
+
+name:team.captainName,
+
+team_name:team.teamName,
+
+registration_id:team.registrationId,
+
+status:team.status,
+
+remark:remark,
+
+to_email:team.email
+
+}
+
+);
+
+
+
+alert("📧 Email Sent");
+
+
+}
+catch(error){
+
+console.log(error);
+
+alert("Email Failed");
+
+}
+
+
+};
+
+
+
+
+
+
+// ===============================
+// DELETE TO RECYCLE BIN
+// ===============================
+
+
+window.deleteRegistration = async function(id){
+
+
+if(!confirm(
+"Move this application to Recycle Bin?"
+)){
+
+return;
+
+}
+
+
+
+try{
+
+
+const ref =
+doc(db,"registrations",id);
+
+
+
+const snap =
+await getDoc(ref);
+
+
+
+if(!snap.exists()){
+
+alert("Application not found");
+
+return;
+
+}
+
+
+
+await setDoc(
+
+doc(db,"recycleBin",id),
+
+{
+
+...snap.data(),
+
+deletedAt:new Date()
+
+}
+
+);
+
+
+
+await deleteDoc(ref);
+
+
+
+alert("✅ Moved to Recycle Bin");
+
+
+loadRegistrations();
+
+
+}
+catch(error){
+
+console.log(error);
+
+alert(error.message);
+
+}
+
+
+};
+
+
+
+
+
+
+// ===============================
 // SEARCH
+// ===============================
 
-searchInput.addEventListener(
+
+document
+.getElementById("searchInput")
+?.addEventListener(
 "input",
-()=>{
+function(){
 
 
 let value =
-searchInput.value.toLowerCase();
+this.value.toLowerCase();
 
 
 
-let result =
-registrations.filter(item=>
-
-
-(item.teamName || "")
-.toLowerCase()
-.includes(value)
-
-
-||
-
-(item.mobile || "")
-.includes(value)
-
-
-||
-
-(item.registrationId || "")
-.toLowerCase()
-.includes(value)
-
-
+let rows =
+document.querySelectorAll(
+"#registrationTable tr"
 );
 
 
 
-displayTable(result);
+rows.forEach(row=>{
 
+
+let text =
+row.innerText.toLowerCase();
+
+
+
+if(text.includes(value)){
+
+row.style.display="";
+
+}
+else{
+
+row.style.display="none";
 
 }
 
-);
-
-
-
-
-
-// Login Check
-
-onAuthStateChanged(auth, (user) => {
-
-    if (!user) {
-        window.location.href = "admin-login.html";
-        return;
-    }
-
-    loadRegistrations();
 
 });
 
-// Logout
 
-const logoutBtn = document.getElementById("logoutBtn");
+});
 
-if (logoutBtn) {
 
-    logoutBtn.addEventListener("click", async () => {
 
-        await signOut(auth);
 
-        window.location.href = "admin-login.html";
 
-    });
+// ===============================
+// START
+// ===============================
 
-}
-// LIVE MATCH UPDATE
 
-const updateLiveBtn = document.getElementById("updateLiveBtn");
-
-if (updateLiveBtn) {
-  updateLiveBtn.addEventListener("click", async () => {
-
-    await setDoc(doc(db, "liveMatch", "current"), {
-
-      teamA: document.getElementById("teamA").value,
-      teamB: document.getElementById("teamB").value,
-
-      scoreA: document.getElementById("scoreA").value,
-      scoreB: document.getElementById("scoreB").value,
-
-      oversA: document.getElementById("oversA").value,
-      oversB: document.getElementById("oversB").value,
-
-      target: document.getElementById("target").value,
-
-      status: document.getElementById("status").value
-
-    });
-
-    alert("✅ Live Match Updated");
-
-  });
-}
-window.deleteRegistration = async function(id) {
-
-  if (!confirm("Are you sure you want to delete this application?")) {
-    return;
-  }
-
-  try {
-    await deleteDoc(doc(db, "registrations", id));
-
-    alert("✅ Application Deleted");
-
-    loadRegistrations();
-
-  } catch (error) {
-    console.error(error);
-    alert(error.message);
-  }
-}
+loadRegistrations();

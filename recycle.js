@@ -1,87 +1,202 @@
 import { db } from "./firebase.js";
 
 import {
-  collection,
-  getDocs,
-  doc,
-  getDoc,
-  setDoc,
-  deleteDoc
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+collection,
+getDocs,
+doc,
+getDoc,
+setDoc,
+deleteDoc
+}
+from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
 
 const table = document.getElementById("recycleTable");
 
-async function loadDeleted() {
 
-  table.innerHTML = "";
+async function loadRecycle(){
 
-  const snapshot = await getDocs(collection(db, "deleted"));
+try{
 
-  let sl = 1;
+const snapshot = await getDocs(
+collection(db,"recycleBin")
+);
 
-  snapshot.forEach((item) => {
 
-    const data = item.data();
+table.innerHTML="";
 
-    table.innerHTML += `
-    <tr>
+let sl=1;
 
-      <td>${sl++}</td>
 
-      <td>${data.registrationId || ""}</td>
+snapshot.forEach(item=>{
 
-      <td>${data.teamName || ""}</td>
 
-      <td>${data.captainName || ""}</td>
+let data=item.data();
 
-      <td>${data.mobile || ""}</td>
 
-      <td>${data.status || ""}</td>
+table.innerHTML += `
 
-      <td>
+<tr>
 
-        <button onclick="restoreRegistration('${item.id}')">
-        ♻️ Restore
-        </button>
+<td>${sl++}</td>
 
-        <button onclick="permanentDelete('${item.id}')">
-        ❌ Delete Permanently
-        </button>
+<td>${data.registrationId || ""}</td>
 
-      </td>
+<td>${data.teamName || ""}</td>
 
-    </tr>
-    `;
-  });
+<td>${data.captainName || ""}</td>
+
+<td>${data.mobile || ""}</td>
+
+<td>${data.status || "Pending"}</td>
+
+
+<td>
+
+
+<button class="approve"
+onclick="restore('${item.id}')">
+
+♻️ Restore
+
+</button>
+
+
+
+<button class="reject"
+onclick="removeForever('${item.id}')">
+
+🗑 Delete
+
+</button>
+
+
+</td>
+
+
+</tr>
+
+`;
+
+
+});
+
+
+}
+catch(error){
+
+console.log(error);
+
+alert(error.message);
 
 }
 
-window.restoreRegistration = async function(id) {
-
-  const snap = await getDoc(doc(db, "deleted", id));
-
-  if (!snap.exists()) return;
-
-  await setDoc(doc(db, "registrations", id), snap.data());
-
-  await deleteDoc(doc(db, "deleted", id));
-
-  alert("✅ Application Restored");
-
-  loadDeleted();
 
 }
 
-window.permanentDelete = async function(id) {
 
-  if (!confirm("Delete permanently?")) return;
 
-  await deleteDoc(doc(db, "deleted", id));
 
-  alert("✅ Permanently Deleted");
 
-  loadDeleted();
+// RESTORE BACK TO REGISTRATIONS
+
+window.restore = async function(id){
+
+try{
+
+
+const oldRef =
+doc(db,"recycleBin",id);
+
+
+const snap =
+await getDoc(oldRef);
+
+
+
+if(!snap.exists()){
+
+alert("Data not found");
+
+return;
 
 }
 
-loadDeleted();
+
+
+await setDoc(
+
+doc(db,"registrations",id),
+
+snap.data()
+
+);
+
+
+
+await deleteDoc(oldRef);
+
+
+
+alert("♻️ Restored Successfully");
+
+
+loadRecycle();
+
+
+}
+catch(error){
+
+console.log(error);
+
+alert(error.message);
+
+}
+
+};
+
+
+
+
+
+// PERMANENT DELETE
+
+window.removeForever = async function(id){
+
+
+if(!confirm("Delete permanently?")){
+
+return;
+
+}
+
+
+try{
+
+
+await deleteDoc(
+doc(db,"recycleBin",id)
+);
+
+
+alert("🗑 Deleted Forever");
+
+
+loadRecycle();
+
+
+}
+catch(error){
+
+console.log(error);
+
+alert(error.message);
+
+}
+
+};
+
+
+
+
+loadRecycle();

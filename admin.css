@@ -235,3 +235,63 @@ tbody input{
   font-size:11px !important;
   width:80px;
 }
+/* Action Buttons */
+
+button{
+    border:none;
+    padding:8px 12px;
+    border-radius:6px;
+    cursor:pointer;
+    color:white;
+    font-size:14px;
+    margin:3px;
+}
+
+
+/* Approve */
+button.approve{
+    background:#28a745;
+}
+
+
+/* Reject */
+button.reject{
+    background:#dc3545;
+}
+
+
+/* Pending */
+button.pending-btn{
+    background:#ffc107;
+    color:#000;
+}
+
+
+/* Cancel */
+button.cancel{
+    background:#ff8800;
+}
+
+
+/* Paid */
+button.paid{
+    background:#007bff;
+}
+
+
+/* Recycle */
+button.recycle{
+    background:#6f42c1;
+}
+
+
+/* Email */
+button.email{
+    background:#17a2b8;
+}
+
+
+/* Save Remark */
+button.save{
+    background:#343a40;
+}
