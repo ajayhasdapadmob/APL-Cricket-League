@@ -756,48 +756,38 @@ alert(error.message);
 // LIVE MATCH UPDATE
 // ===============================
 
-import {
-  setDoc
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-
 const updateBtn = document.getElementById("updateLiveBtn");
 
-if(updateBtn){
+if (updateBtn) {
 
-updateBtn.addEventListener("click", async()=>{
+    updateBtn.onclick = async function () {
 
-try{
+        try {
 
-await setDoc(doc(db,"liveMatch","current"),{
+            const liveData = {
+                teamA: document.getElementById("teamA").value.trim(),
+                teamB: document.getElementById("teamB").value.trim(),
+                scoreA: document.getElementById("scoreA").value.trim(),
+                scoreB: document.getElementById("scoreB").value.trim(),
+                oversA: document.getElementById("oversA").value.trim(),
+                oversB: document.getElementById("oversB").value.trim(),
+                target: document.getElementById("target").value.trim(),
+                status: document.getElementById("status").value.trim(),
+                updatedAt: serverTimestamp()
+            };
 
-teamA:document.getElementById("teamA").value,
-teamB:document.getElementById("teamB").value,
+            await setDoc(doc(db, "liveMatch", "current"), liveData);
 
-scoreA:document.getElementById("scoreA").value,
-scoreB:document.getElementById("scoreB").value,
+            alert("✅ Live Match Updated Successfully");
 
-oversA:document.getElementById("oversA").value,
-oversB:document.getElementById("oversB").value,
+        } catch (error) {
 
-target:document.getElementById("target").value,
+            console.error("Live Match Error:", error);
+            alert("❌ " + error.message);
 
-status:document.getElementById("status").value,
+        }
 
-updatedAt:serverTimestamp()
-
-});
-
-alert("✅ Live Match Updated Successfully");
-
-}
-catch(error){
-
-console.log(error);
-alert(error.message);
-
-}
-
-});
+    };
 
 }
 // ===============================
@@ -823,5 +813,65 @@ totalMatches-played;
 alert("✅ Match Marked Completed");
 
 });
+
+}
+// ===============================
+// LIVE MATCH UPDATE
+// ===============================
+
+const updateBtn = document.getElementById("updateLiveBtn");
+
+if (updateBtn) {
+
+  updateBtn.addEventListener("click", async () => {
+
+    try {
+
+      await setDoc(doc(db, "liveMatch", "current"), {
+        teamA: document.getElementById("teamA").value,
+        teamB: document.getElementById("teamB").value,
+        scoreA: document.getElementById("scoreA").value,
+        scoreB: document.getElementById("scoreB").value,
+        oversA: document.getElementById("oversA").value,
+        oversB: document.getElementById("oversB").value,
+        target: document.getElementById("target").value,
+        status: document.getElementById("status").value,
+        updatedAt: serverTimestamp()
+      });
+
+      alert("✅ Live Match Updated Successfully");
+
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
+    }
+
+  });
+
+}
+
+
+// ===============================
+// MATCH COMPLETED
+// ===============================
+
+const completeBtn = document.getElementById("completeMatchBtn");
+
+let played = 0;
+const totalMatches = 28;
+
+if (completeBtn) {
+
+  completeBtn.addEventListener("click", () => {
+
+    played++;
+
+    document.getElementById("adminMatchesPlayed").textContent = played;
+    document.getElementById("adminRemainingMatches").textContent =
+      totalMatches - played;
+
+    alert("✅ Match Marked Completed");
+
+  });
 
 }
