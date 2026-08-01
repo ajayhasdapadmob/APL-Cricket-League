@@ -312,35 +312,36 @@ alert(error.message);
 
 window.deleteRegistration = async function(id) {
 
-  if (!confirm("Move this application to Recycle Bin?")) {
+  if (!confirm("Are you sure you want to delete this application?")) {
     return;
   }
 
   try {
 
-    const regRef = doc(db, "registrations", id);
-    const regSnap = await getDoc(regRef);
+    // Registration data lao
+    const ref = doc(db, "registrations", id);
+    const snap = await getDoc(ref);
 
-    if (!regSnap.exists()) {
-      alert("Application not found");
-      return;
+    if (snap.exists()) {
+
+      // Recycle Bin me save karo
+      await setDoc(doc(db, "recycleBin", id), snap.data());
+
+      // Original registration delete karo
+      await deleteDoc(ref);
+
+      alert("✅ Application Moved to Recycle Bin");
+
+      loadRegistrations();
+
     }
-
-    // Backup in deleted collection
-    await setDoc(doc(db, "deleted", id), regSnap.data());
-
-    // Delete from registrations
-    await deleteDoc(regRef);
-
-    alert("✅ Application moved to Recycle Bin");
-
-    loadRegistrations();
 
   } catch (error) {
     console.error(error);
     alert(error.message);
   }
-}
+
+};
 
 // SEND EMAIL MANUALLY
 
