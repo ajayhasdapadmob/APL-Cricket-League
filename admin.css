@@ -295,3 +295,24 @@ button.email{
 button.save{
     background:#343a40;
 }
+.match-control{
+    background:#ffffff;
+    color:#000;
+    padding:15px;
+    border-radius:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.2);
+}
+
+.match-control h3{
+    color:#222;
+}
+
+.match-control p{
+    color:#000;
+    font-weight:bold;
+}
+
+.match-control button{
+    background:#28a745;
+    color:#fff;
+}
