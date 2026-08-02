@@ -438,38 +438,43 @@ row.style.display=row.innerText.toLowerCase().includes(value)
 // LIVE MATCH UPDATE
 // ===============================
 
-const updateBtn=document.getElementById("updateLiveBtn");
+const updateBtn = document.getElementById("updateLiveBtn");
 
-if(updateBtn){
+if (updateBtn) {
 
-updateBtn.addEventListener("click",async()=>{
+  updateBtn.onclick = async function () {
 
-try{
+    try {
 
-await setDoc(doc(db,"liveMatch","current"),{
+      await setDoc(doc(db, "liveMatch", "current"), {
 
-teamA:document.getElementById("teamA").value,
-teamB:document.getElementById("teamB").value,
-scoreA:document.getElementById("scoreA").value,
-scoreB:document.getElementById("scoreB").value,
-oversA:document.getElementById("oversA").value,
-oversB:document.getElementById("oversB").value,
-target:document.getElementById("target").value,
-status:document.getElementById("status").value,
-updatedAt:serverTimestamp()
+        teamA: document.getElementById("teamA").value,
+        teamB: document.getElementById("teamB").value,
 
-});
+        scoreA: document.getElementById("scoreA").value,
+        scoreB: document.getElementById("scoreB").value,
 
-alert("✅ Live Match Updated Successfully");
+        oversA: document.getElementById("oversA").value,
+        oversB: document.getElementById("oversB").value,
 
-}catch(error){
+        target: document.getElementById("target").value,
 
-console.log(error);
-alert(error.message);
+        status: document.getElementById("status").value,
 
-}
+        updatedAt: serverTimestamp()
 
-});
+      });
+
+      alert("✅ Live Match Updated Successfully");
+
+    } catch (error) {
+
+      console.error(error);
+      alert(error.message);
+
+    }
+
+  };
 
 }
 
