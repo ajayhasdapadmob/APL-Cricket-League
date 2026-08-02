@@ -39,17 +39,20 @@ window.addEventListener("DOMContentLoaded", () => {
     "area",
     "address",
     "upi",
-    "playerType"
+    "playerType",
+    "paymentDone"
   ];
 
   fields.forEach(id => {
     const el = document.getElementById(id);
+
     if (el && localStorage.getItem(id)) {
       el.value = localStorage.getItem(id);
     }
   });
 
   const otherArea = document.getElementById("otherArea");
+
   if (otherArea) {
     otherArea.value = localStorage.getItem("otherArea") || "";
   }
@@ -83,7 +86,8 @@ window.saveRegistrationData = function () {
     "area",
     "address",
     "upi",
-    "playerType"
+    "playerType",
+    "paymentDone"
   ];
 
   fields.forEach(id => {
@@ -95,11 +99,12 @@ window.saveRegistrationData = function () {
 
   const otherArea = document.getElementById("otherArea");
 
-if (otherArea) {
-  localStorage.setItem("otherArea", otherArea.value);
-}
+  if (otherArea) {
+    localStorage.setItem("otherArea", otherArea.value);
+  }
 
 };
+
 // =========================
 // REGISTRATION SUBMIT
 // =========================
@@ -115,16 +120,17 @@ document
     
 
     const requiredFields = [
-      "teamName",
-      "captainName",
-      "mobile",
-      "whatsapp",
-      "email",
-      "area",
-      "address",
-      "upi",
-      "playerType"
-    ];
+  "teamName",
+  "captainName",
+  "mobile",
+  "whatsapp",
+  "email",
+  "area",
+  "address",
+  "upi",
+  "playerType",
+  "paymentDone"
+];
 
     for (const id of requiredFields) {
 
@@ -194,10 +200,13 @@ otherArea: document.getElementById("otherArea")?.value || "",
           document.getElementById("upi").value,
 
         playerType:
-          document.getElementById("playerType").value,
+  document.getElementById("playerType").value,
 
-        paymentScreenshot:
-          screenshotURL,
+paymentDone:
+  document.getElementById("paymentDone").value,
+
+paymentScreenshot:
+  screenshotURL,
 
         paymentStatus: "Unpaid",
         status: "Pending",
@@ -321,7 +330,8 @@ function clearRegistrationData() {
     "otherArea",
     "address",
     "upi",
-    "playerType"
+    "playerType",
+    "paymentDone"
   ].forEach(key => localStorage.removeItem(key));
 
 }
