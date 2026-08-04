@@ -17,7 +17,7 @@ let teamId = localStorage.getItem("teamId");
 
 if (!teamId) {
     teamId = "TEAM-" + Date.now();
-    localStorage.setItem("teamId", teamId);
+    localStorage.setIte⁸m("teamId", teamId);
 }
 
 // =========================
@@ -125,7 +125,7 @@ document.getElementById("registrationForm").addEventListener("submit", async (e)
 
             if (!field || field.value.trim() === "") {
 
-    alert("Please fill all required fields");
+    alert("Please fill: " + id);
 
     if(field){
         field.focus();
