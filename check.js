@@ -415,19 +415,17 @@ y+=8;
 
 
 
-const details=[
+const details = [
 
-
-["Registration ID",d.registrationId],
-["Team Name",d.teamName],
-["Captain Name",d.captainName],
-["Mobile",d.mobile],
-["Email",d.email],
-["Address",d.address],
-["Player Type",d.playerType],
-["Payment Status",d.paymentStatus],
-["Registration Status",d.status]
-
+["Registration ID", d.registrationId],
+["Team Name", d.teamName],
+["Captain Name", d.captainName],
+["Mobile", d.mobile],
+["Email", d.email],
+["Address", d.address || d.area],
+["Player Type", d.playerType],
+["Payment Status", d.paymentStatus],
+["Registration Status", d.status]
 
 ];
 

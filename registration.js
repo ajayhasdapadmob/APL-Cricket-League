@@ -150,19 +150,25 @@ console.log("Payment:", document.getElementById("paymentDone").value);
     teamId: teamId,
 
     teamName: document.getElementById("teamName").value,
-    captainName: document.getElementById("captainName").value,
-    mobile: document.getElementById("mobile").value,
-    whatsapp: document.getElementById("whatsapp").value,
-    email: document.getElementById("email").value,
-    area: document.getElementById("area").value,
-    otherArea: document.getElementById("otherArea")?.value || "",
-    address: document.getElementById("otherArea")?.value || "",
-    upi: document.getElementById("upi").value,
-    playerType: document.getElementById("playerType").value,
-    paymentDone: document.getElementById("paymentDone").value,
+captainName: document.getElementById("captainName").value,
+mobile: document.getElementById("mobile").value,
+whatsapp: document.getElementById("whatsapp").value,
+email: document.getElementById("email").value,
 
-    paymentStatus: "Unpaid",
-    status: "Pending",
+area: document.getElementById("area").value,
+otherArea: document.getElementById("otherArea")?.value || "",
+
+address:
+document.getElementById("area").value === "Other"
+? document.getElementById("otherArea").value
+: document.getElementById("area").value,
+
+upi: document.getElementById("upi").value,
+playerType: document.getElementById("playerType").value,
+paymentDone: document.getElementById("paymentDone").value,
+
+paymentStatus: "Unpaid",
+status: "Pending",
 
     createdAt: serverTimestamp()
 
