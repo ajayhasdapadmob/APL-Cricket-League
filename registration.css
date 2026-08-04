@@ -34,7 +34,8 @@ label{
 }
 
 input,
-textarea{
+textarea,
+select{
     padding:12px;
     margin-top:6px;
     border:none;
