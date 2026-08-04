@@ -190,7 +190,7 @@ console.log("Email Sent");
 
 } catch(emailError){
 
-console.log("Email Error:", emailError);
+console.log("Email Error:", emailError.text || emailError.message);
 
 }
 
