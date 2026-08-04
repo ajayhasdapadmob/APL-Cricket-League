@@ -174,7 +174,7 @@ console.log("Firebase Save Done");
 // EMAIL SEND HERE
 try {
 
-await emailjs.send(
+let response = await emailjs.send(
   "service_ipztz05",
   "template_05udsk4",
   {
@@ -186,16 +186,16 @@ await emailjs.send(
   }
 );
 
-console.log("Email Sent");
+console.log("Email Response:", response);
+
 alert("Email Sent Successfully");
+
 } catch(emailError){
 
+console.log("Email Error:", emailError);
 alert("Email Error: " + emailError.text);
 
-console.log(emailError);
-
 }
-
         alert(
 `✅ Registration Successful!
 
