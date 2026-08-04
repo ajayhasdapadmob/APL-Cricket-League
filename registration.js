@@ -112,7 +112,7 @@ document.getElementById("registrationForm").addEventListener("submit", async (e)
     e.preventDefault();
 
     try {
-
+console.log("Payment:", document.getElementById("paymentDone").value);
         const requiredFields = [
     "teamName",
     "captainName",
