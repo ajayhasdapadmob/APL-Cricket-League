@@ -178,6 +178,7 @@ let response = await emailjs.send(
   "service_ipztz05",
   "template_05udsk4",
   {
+    to_email: document.getElementById("email").value,
     captain_name: document.getElementById("captainName").value,
     registration_id: regId,
     team_name: document.getElementById("teamName").value,
@@ -186,7 +187,7 @@ let response = await emailjs.send(
   }
 );
 
-console.log("Email Response:", response);
+console.log("Email Sent", response);
 
 alert("Email Sent Successfully");
 
