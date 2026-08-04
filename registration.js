@@ -17,7 +17,7 @@ let teamId = localStorage.getItem("teamId");
 
 if (!teamId) {
     teamId = "TEAM-" + Date.now();
-    localStorage.setIte⁸m("teamId", teamId);
+    localStorage.setItem("teamId", teamId);
 }
 
 // =========================
@@ -150,7 +150,7 @@ document.getElementById("registrationForm").addEventListener("submit", async (e)
             whatsapp: document.getElementById("whatsapp").value,
             email: document.getElementById("email").value,
             area: document.getElementById("area").value,
-            otherArea: document.getElementById("otherArea").value,
+            otherArea: document.getElementById("otherArea")?.value || "",
             address: document.getElementById("otherArea")?.value || "",
             upi: document.getElementById("upi").value,
             playerType: document.getElementById("playerType").value,
@@ -171,12 +171,12 @@ ${regId}
 
 Please save your Registration ID.`
         );
-
+console.log("Registration Saved:", regId);
         document.getElementById("registrationForm").reset();
 
         clearRegistrationData();
 
-        window.location.href = "index.html";
+        
 
     } catch (error) {
 
