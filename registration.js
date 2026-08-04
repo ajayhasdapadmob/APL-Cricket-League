@@ -178,10 +178,11 @@ await emailjs.send(
   "service_ipztz05",
   "template_05udsk4",
   {
-    teamName: document.getElementById("teamName").value,
-    captainName: document.getElementById("captainName").value,
-    email: document.getElementById("email").value || "No Email",
-    registrationId: regId
+    captain_name: document.getElementById("captainName").value,
+    registration_id: regId,
+    team_name: document.getElementById("teamName").value,
+    status: "Pending",
+    remark: "Your registration is under verification"
   }
 );
 
