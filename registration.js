@@ -1,3 +1,8 @@
+import emailjs from "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/+esm";
+
+emailjs.init({
+ publicKey:"AsUiMVkBY3DFQ-DOJ"
+});
 import { db } from "./firebase.js";
 
 import {
@@ -141,27 +146,52 @@ document.getElementById("registrationForm").addEventListener("submit", async (e)
 
         await addDoc(collection(db, "registrations"), {
 
-            registrationId: regId,
-            teamId: teamId,
+    registrationId: regId,
+    teamId: teamId,
 
-            teamName: document.getElementById("teamName").value,
-            captainName: document.getElementById("captainName").value,
-            mobile: document.getElementById("mobile").value,
-            whatsapp: document.getElementById("whatsapp").value,
-            email: document.getElementById("email").value,
-            area: document.getElementById("area").value,
-            otherArea: document.getElementById("otherArea")?.value || "",
-            address: document.getElementById("otherArea")?.value || "",
-            upi: document.getElementById("upi").value,
-            playerType: document.getElementById("playerType").value,
-            paymentDone: document.getElementById("paymentDone").value,
+    teamName: document.getElementById("teamName").value,
+    captainName: document.getElementById("captainName").value,
+    mobile: document.getElementById("mobile").value,
+    whatsapp: document.getElementById("whatsapp").value,
+    email: document.getElementById("email").value,
+    area: document.getElementById("area").value,
+    otherArea: document.getElementById("otherArea")?.value || "",
+    address: document.getElementById("otherArea")?.value || "",
+    upi: document.getElementById("upi").value,
+    playerType: document.getElementById("playerType").value,
+    paymentDone: document.getElementById("paymentDone").value,
 
-            paymentStatus: "Unpaid",
-            status: "Pending",
+    paymentStatus: "Unpaid",
+    status: "Pending",
 
-            createdAt: serverTimestamp()
+    createdAt: serverTimestamp()
 
-        });
+});
+
+console.log("Firebase Save Done");
+
+
+// EMAIL SEND HERE
+try {
+
+await emailjs.send(
+  "service_ipztz05",
+  "template_05udsk4",
+  {
+    teamName: document.getElementById("teamName").value,
+    captainName: document.getElementById("captainName").value,
+    email: document.getElementById("email").value || "No Email",
+    registrationId: regId
+  }
+);
+
+console.log("Email Sent");
+
+} catch(emailError){
+
+console.log("Email Error:", emailError);
+
+}
 
         alert(
 `✅ Registration Successful!
