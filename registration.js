@@ -1,9 +1,5 @@
 import { db } from "./firebase.js";
-import emailjs from "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/+esm";
 
-emailjs.init({
-  publicKey: "AsUiMVkBY3DFQ-DOJ"
-});
 import {
   collection,
   addDoc,
@@ -20,83 +16,85 @@ import {
 let teamId = localStorage.getItem("teamId");
 
 if (!teamId) {
-  teamId = "TEAM-" + Date.now();
-  localStorage.setItem("teamId", teamId);
+    teamId = "TEAM-" + Date.now();
+    localStorage.setItem("teamId", teamId);
 }
+
+// =========================
+// LOAD SAVED DATA
+// =========================
+
 window.addEventListener("DOMContentLoaded", () => {
 
-  const fields = [
-    "teamName",
-    "captainName",
-    "mobile",
-    "whatsapp",
-    "email",
-    "area",
-    "address",
-    "upi",
-    "playerType",
-    "paymentDone"
-  ];
+    const fields = [
+        "teamName",
+        "captainName",
+        "mobile",
+        "whatsapp",
+        "email",
+        "area",
+        "address",
+        "upi",
+        "playerType",
+        "paymentDone"
+    ];
 
-  fields.forEach(id => {
-    const el = document.getElementById(id);
+    fields.forEach(id => {
 
-    if (el && localStorage.getItem(id)) {
-      el.value = localStorage.getItem(id);
+        const el = document.getElementById(id);
+
+        if (el && localStorage.getItem(id)) {
+            el.value = localStorage.getItem(id);
+        }
+
+    });
+
+    const otherArea = document.getElementById("otherArea");
+
+    if (otherArea) {
+        otherArea.value = localStorage.getItem("otherArea") || "";
     }
-  });
 
-  const otherArea = document.getElementById("otherArea");
-
-  if (otherArea) {
-    otherArea.value = localStorage.getItem("otherArea") || "";
-  }
-
-  if (typeof showOther === "function") {
-    showOther();
-  }
+    if (typeof showOther === "function") {
+        showOther();
+    }
 
 });
 
-const otherArea = document.getElementById("otherArea");
-
-if (otherArea) {
-  otherArea.value = localStorage.getItem("otherArea") || "";
-}
-if (typeof showOther === "function") {
-  showOther();
-}
 // =========================
 // SAVE FORM
 // =========================
 
 window.saveRegistrationData = function () {
 
-  const fields = [
-    "teamName",
-    "captainName",
-    "mobile",
-    "whatsapp",
-    "email",
-    "area",
-    "address",
-    "upi",
-    "playerType",
-    "paymentDone"
-  ];
+    const fields = [
+        "teamName",
+        "captainName",
+        "mobile",
+        "whatsapp",
+        "email",
+        "area",
+        "address",
+        "upi",
+        "playerType",
+        "paymentDone"
+    ];
 
-  fields.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
-      localStorage.setItem(id, el.value);
+    fields.forEach(id => {
+
+        const el = document.getElementById(id);
+
+        if (el) {
+            localStorage.setItem(id, el.value);
+        }
+
+    });
+
+    const otherArea = document.getElementById("otherArea");
+
+    if (otherArea) {
+        localStorage.setItem("otherArea", otherArea.value);
     }
-  });
-
-  const otherArea = document.getElementById("otherArea");
-
-  if (otherArea) {
-    localStorage.setItem("otherArea", otherArea.value);
-  }
 
 };
 
@@ -104,123 +102,89 @@ window.saveRegistrationData = function () {
 // REGISTRATION SUBMIT
 // =========================
 
-document
-.getElementById("registrationForm")
-.addEventListener("submit", async (e) => {
+document.getElementById("registrationForm").addEventListener("submit", async (e) => {
 
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
+    try {
 
-    
+        const requiredFields = [
+            "teamName",
+            "captainName",
+            "mobile",
+            "whatsapp",
+            "email",
+            "area",
+            "address",
+            "upi",
+            "playerType",
+            "paymentDone"
+        ];
 
-    const requiredFields = [
-  "teamName",
-  "captainName",
-  "mobile",
-  "whatsapp",
-  "email",
-  "area",
-  "address",
-  "upi",
-  "playerType",
-  "paymentDone"
-];
+        for (const id of requiredFields) {
 
-    for (const id of requiredFields) {
+            const field = document.getElementById(id);
 
-      const field = document.getElementById(id);
+            if (!field || field.value.trim() === "") {
 
-      if (!field || field.value.trim() === "") {
-        alert("Please fill all required fields");
-        field.focus();
-        return;
-      }
+                alert("Please fill all required fields");
 
-    }
+                field.focus();
 
-    const regId = "APL2026-" + Date.now();
+                return;
 
-    await addDoc(
-      collection(db, "registrations"),
-      {
+            }
 
-        registrationId: regId,
-        teamId: teamId,
+        }
 
-        teamName:
-          document.getElementById("teamName").value,
+        const regId = "APL2026-" + Date.now();
 
-        captainName:
-          document.getElementById("captainName").value,
+        await addDoc(collection(db, "registrations"), {
 
-        mobile:
-          document.getElementById("mobile").value,
+            registrationId: regId,
+            teamId: teamId,
 
-        whatsapp:
-          document.getElementById("whatsapp").value,
+            teamName: document.getElementById("teamName").value,
+            captainName: document.getElementById("captainName").value,
+            mobile: document.getElementById("mobile").value,
+            whatsapp: document.getElementById("whatsapp").value,
+            email: document.getElementById("email").value,
+            area: document.getElementById("area").value,
+            otherArea: document.getElementById("otherArea").value,
+            address: document.getElementById("address").value,
+            upi: document.getElementById("upi").value,
+            playerType: document.getElementById("playerType").value,
+            paymentDone: document.getElementById("paymentDone").value,
 
-        email:
-          document.getElementById("email").value,
+            paymentStatus: "Unpaid",
+            status: "Pending",
 
-        area:
-          document.getElementById("area").value,
+            createdAt: serverTimestamp()
 
-otherArea: document.getElementById("otherArea")?.value || "",
+        });
 
-        address:
-          document.getElementById("address").value,
-
-        upi:
-          document.getElementById("upi").value,
-
-        playerType:
-  document.getElementById("playerType").value,
-
-paymentDone:
-  document.getElementById("paymentDone").value,
-
-
-        paymentStatus: "Unpaid",
-        status: "Pending",
-
-        createdAt: serverTimestamp()
-
-      }
-    );
-await emailjs.send("service_ipztz05", "template_05udsk4", {
-  to_email: document.getElementById("email").value,
-  captain_name: document.getElementById("captainName").value,
-  team_name: document.getElementById("teamName").value,
-  registration_id: regId,
-  status: "Pending",
-  remark: "Your registration has been received. Payment verification is pending."
-});
-
-alert(`✅ Registration Successful!
+        alert(
+`✅ Registration Successful!
 
 Registration ID:
 ${regId}
 
-Status Check:
-https://ajayhasdapadmob.github.io/APL-Cricket-League/check.html
+Please save your Registration ID.`
+        );
 
-Is Registration ID ko sambhal kar rakhein.`);
-    
+        document.getElementById("registrationForm").reset();
 
-    document.getElementById("registrationForm").reset();
+        clearRegistrationData();
 
-    clearRegistrationData();
+        window.location.href = "index.html";
 
-    window.location.href = "index.html";
+    } catch (error) {
 
-  } catch (error) {
+        console.error(error);
 
-    console.error("Full Error:", error);
+        alert(error.code + "\n" + error.message);
 
-    alert(JSON.stringify(error));
-
-}
+    }
 
 });
 // =========================
@@ -229,57 +193,58 @@ Is Registration ID ko sambhal kar rakhein.`);
 
 async function loadPlayers() {
 
-  const box = document.getElementById("playersData");
+    const box = document.getElementById("playersData");
 
-  if (!box) return;
+    if (!box) return;
 
-  const id = localStorage.getItem("teamId");
+    const id = localStorage.getItem("teamId");
 
-  if (!id) {
-    box.innerHTML = "No Player Added";
-    return;
-  }
+    if (!id) {
+        box.innerHTML = "No Player Added";
+        return;
+    }
 
-  try {
+    try {
 
-    const q = query(
-      collection(db, "players"),
-      where("teamId", "==", id)
-    );
+        const q = query(
+            collection(db, "players"),
+            where("teamId", "==", id)
+        );
 
-    const snapshot = await getDocs(q);
+        const snapshot = await getDocs(q);
 
-    let players = "";
+        let players = "";
 
-    snapshot.forEach((doc) => {
+        snapshot.forEach((doc) => {
 
-      const p = doc.data();
+            const p = doc.data();
 
-      players += `
-        <b>Captain:</b> ${p.captainName || ""}<br>
-        <b>Player 2:</b> ${p.player2 || ""}<br>
-        <b>Player 3:</b> ${p.player3 || ""}<br>
-        <b>Player 4:</b> ${p.player4 || ""}<br>
-        <b>Player 5:</b> ${p.player5 || ""}<br>
-        <b>Player 6:</b> ${p.player6 || ""}<br>
-        <b>Player 7:</b> ${p.player7 || ""}<br>
-        <b>Player 8:</b> ${p.player8 || ""}<br>
-        <b>Player 9:</b> ${p.player9 || ""}<br>
-        <b>Player 10:</b> ${p.player10 || ""}<br>
-        <b>Player 11:</b> ${p.player11 || ""}<br>
-        <hr>
-      `;
+            players += `
+            <b>Captain:</b> ${p.captainName || ""}<br>
+            <b>Player 2:</b> ${p.player2 || ""}<br>
+            <b>Player 3:</b> ${p.player3 || ""}<br>
+            <b>Player 4:</b> ${p.player4 || ""}<br>
+            <b>Player 5:</b> ${p.player5 || ""}<br>
+            <b>Player 6:</b> ${p.player6 || ""}<br>
+            <b>Player 7:</b> ${p.player7 || ""}<br>
+            <b>Player 8:</b> ${p.player8 || ""}<br>
+            <b>Player 9:</b> ${p.player9 || ""}<br>
+            <b>Player 10:</b> ${p.player10 || ""}<br>
+            <b>Player 11:</b> ${p.player11 || ""}<br>
+            <hr>
+            `;
 
-    });
+        });
 
-    box.innerHTML = players || "No Player Added";
+        box.innerHTML = players || "No Player Added";
 
-  } catch (err) {
+    } catch (error) {
 
-    console.error(err);
-    box.innerHTML = "Unable to load players";
+        console.error(error);
 
-  }
+        box.innerHTML = "Unable to load players";
+
+    }
 
 }
 
@@ -287,24 +252,24 @@ loadPlayers();
 
 
 // =========================
-// CLEAR FORM AFTER SUCCESS
+// CLEAR LOCAL STORAGE
 // =========================
 
 function clearRegistrationData() {
 
-  [
-    "teamId",
-    "teamName",
-    "captainName",
-    "mobile",
-    "whatsapp",
-    "email",
-    "area",
-    "otherArea",
-    "address",
-    "upi",
-    "playerType",
-    "paymentDone"
-  ].forEach(key => localStorage.removeItem(key));
+    [
+        "teamId",
+        "teamName",
+        "captainName",
+        "mobile",
+        "whatsapp",
+        "email",
+        "area",
+        "otherArea",
+        "address",
+        "upi",
+        "playerType",
+        "paymentDone"
+    ].forEach(item => localStorage.removeItem(item));
 
 }
