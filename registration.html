@@ -1,20 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>APL 2026 Team Registration</title>
 
 <link rel="stylesheet" href="registration.css">
+
 </head>
+
 
 <body>
 
+
 <header>
-<img src="banner.jpg" alt="APL Banner" style="width:100%;max-height:250px;object-fit:cover;">
+
+<img src="banner.jpg" 
+alt="APL Banner"
+style="width:100%;max-height:250px;object-fit:cover;">
+
+
 <h1>🏆 AJAY PREMIER LEAGUE (APL) 2026</h1>
 
 <h2>Official Team Registration</h2>
+
 
 <p><b>Organized By:</b> AJAY HASDA</p>
 
@@ -24,50 +36,117 @@
 
 <p>💰 Entry Fee: ₹5,000</p>
 
-<h3>🏆 Prize Money</h3>
 
 <div class="card">
-<h2>💰 Prize Money</h2>
+
+<h2>🏆 Prize Money</h2>
 
 <p>🥇 Winner – ₹40,000</p>
+
 <p>🥈 Runner-up – ₹15,000</p>
-<h3>🏆 APL Match Winner Award</h3>
 
-<p>📞 Contact: +91 9663116089 / +91 9353689775</p>
+<p>🏆 APL Match Winner Award</p>
 
-<p>✉️ Email: ajayhasda623@gmail.com</p>
+
+<p>
+📞 Contact: +91 9663116089 / +91 9353689775
+</p>
+
+
+<p>
+✉️ Email: ajayhasda623@gmail.com
+</p>
+
+
+</div>
+
 
 </header>
 
+
+
 <div class="container">
+
 
 <form id="registrationForm">
 
+
 <h2>Team Information</h2>
 
-<label>Team Name *</label>
-<input type="text" id="teamName" autocomplete="off" required>
 
-<label>Captain Name *</label>
-<input type="text" id="captainName" autocomplete="off" required>
+<label>
+Team Name *
+</label>
 
-<label>📞 Mobile Number *</label>
-<input type="tel" id="mobile" autocomplete="off" required pattern="[0-9]{10}">
-<br>
+<input 
+type="text"
+id="teamName"
+required
+autocomplete="off">
 
 
 
-<label>WhatsApp Number *</label>
-<input type="tel" id="whatsapp">
+<label>
+Captain Name *
+</label>
 
-<label>Email</label>
-<input type="email" id="email">
+<input
+type="text"
+id="captainName"
+required
+autocomplete="off">
 
-<label>Address</label>
-<label>📍 Address / Area</label>
 
-<select id="area" onchange="showOther()" required>
-<option value="">Select Address</option>
+
+<label>
+📞 Mobile Number *
+</label>
+
+<input
+type="tel"
+id="mobile"
+pattern="[0-9]{10}"
+maxlength="10"
+required
+autocomplete="off">
+
+
+
+<label>
+WhatsApp Number *
+</label>
+
+<input
+type="tel"
+id="whatsapp"
+maxlength="10"
+required>
+
+
+
+<label>
+Email
+</label>
+
+<input
+type="email"
+id="email">
+
+
+
+<label>
+📍 Address / Area *
+</label>
+
+
+<select id="area" required>
+
+
+<option value="">
+Select Address
+</option>
+
+
 <option>Padmabil</option>
 <option>Rampukhari</option>
 <option>Balijan</option>
@@ -78,47 +157,59 @@
 <option>Singri</option>
 <option>Dhekiajuli</option>
 <option>Amguri</option>
-<option>Bhanga Mandir</option>
-<option>Tulip Bagan</option>
-<option>Arun Bagan</option>
-<option>Bhairaguri</option>
-<option>Sathipukhari</option>
-<option>Kachari Balijan</option>
-<option>Jamuguri</option>
-<option>Ghoramara</option>
-<option>Narayanpur</option>
-<option>Sirajuli</option>
-<option>Palash Basti</option>
-<option>Rahman Pur</option>
-<option>Pirhakata</option>
-<option>Bogribari</option>
-<option>Notun Sirajuli</option>
-<option>Sitalmari</option>
-<option>Singri Bagan</option>
-<option>Bhanga Mandir Chariali</option>
 <option>Other</option>
+
+
 </select>
 
-<input type="text" id="otherArea" placeholder="Enter Your Address" style="display:none;">
 
-<label>🏏 Player Type <span style="color:red">*</span></label>
 
-<select id="playerType" required>
-<option value="">Select Player Type *</option>
-<option>ALL ROUNDER</option>
-<option>BATSMAN</option>
-<option>BOWLER</option>
-<option>WICKET KEEPER</option>
-</select>
+<input
+type="text"
+id="otherArea"
+placeholder="Enter Your Address"
+style="display:none;">
+
+
+
 <label>
-<input type="checkbox" required>
-🏏 Player Name Details Filled <span style="color:red">*</span>
+🏏 Player Type *
 </label>
 
-<br>
+
+<select id="playerType" required>
 
 
-<div id="playerList" style="
+<option value="">
+Select Player Type
+</option>
+
+<option>
+ALL ROUNDER
+</option>
+
+<option>
+BATSMAN
+</option>
+
+<option>
+BOWLER
+</option>
+
+<option>
+WICKET KEEPER
+</option>
+
+
+</select>
+<label>
+<input type="checkbox" id="playerCheck" required>
+🏏 Player Name Details Filled *
+</label>
+
+
+<div id="playerList"
+style="
 background:#222;
 color:white;
 padding:15px;
@@ -126,86 +217,122 @@ margin-top:15px;
 border-radius:10px;
 ">
 
+
 <h3>🏏 Player Name Preview</h3>
 
 <p id="playersData">
 No Player Added
 </p>
 
+
 <a href="player.html"
-onclick="saveRegistrationData();"
-style="color:#00ff00;">
-🏏 Player Name
+style="color:#00ff00;"
+onclick="saveRegistrationData()">
+
+🏏 Add Player Name
+
 </a>
 
-</div>
-<label>UPI QR Code</label>
 
-<div style="text-align:center;padding:15px;background:#222;border-radius:10px;">
+</div>
+
+
+
+<label>
+UPI QR Code
+</label>
+
+
+<div style="
+text-align:center;
+padding:15px;
+background:#222;
+border-radius:10px;
+">
+
 
 <img src="upi-qr.jpg"
 width="250"
 alt="UPI QR">
 
+
 <p style="color:#00ff00;">
 💰 Scan QR & Pay ₹5,000
 </p>
 
-</div>
-
-<label>UPI Transaction ID *</label>
-<input type="text" id="upi" required>
-
-
-<div style="
-background:#222;
-color:white;
-padding:15px;
-border-radius:10px;
-margin-top:10px;
-">
-
-<p style="color:#00ff00;">
-✅ Payment karne ke baad UPI Transaction ID verify kiya jayega screenshot WhatsApp par bheje.
-</p>
-
-<p>
-📞 <b>+91 9663116089</b><br>
-📞 <b>+91 9353689775</b>
-</p>
-
-<p style="color:yellow;">
-Registration submit karne ke baad payment verification ki jayegi.
-</p>
-
-
 
 </div>
+
+
+
+
 <label>
-<input type="checkbox" required>
-I accept all APL Tournament Rules.
+UPI Transaction ID *
 </label>
 
-<h3>💳 Payment Status</h3>
 
-<label>Payment Done?</label>
+<input
+type="text"
+id="upi"
+required>
+
+
+
+
+<label>
+Payment Done? *
+</label>
+
+
 <select id="paymentDone" required>
-    <option value="">Select</option>
-    <option value="YES">YES</option>
-    <option value="NO">NO</option>
-    <option value="MAY BE LATER">MAY BE LATER</option>
+
+
+<option value="">
+Select
+</option>
+
+
+<option value="YES">
+YES
+</option>
+
+
+<option value="NO">
+NO
+</option>
+
+
+<option value="MAY BE LATER">
+MAY BE LATER
+</option>
+
+
 </select>
 
-<br><br>
 
-<h3>📜 Declaration</h3>
+
 
 <label>
-<input type="checkbox" required>
-16. I agree to all tournament rules and regulations.
+
+<input type="checkbox" id="rulesCheck" required>
+
+I accept all APL Tournament Rules.
+
 </label>
 
-<br><br>
+
+
+
+<label>
+
+<input type="checkbox" id="declaration" required>
+
+I agree to all tournament rules and regulations.
+
+</label>
+
+
+
 
 <div style="
 background:#e8f5e9;
@@ -215,28 +342,43 @@ border-radius:10px;
 color:#000;
 ">
 
-<h3>✅ Final Message (Confirmation)</h3>
+
+<h3>
+✅ Confirmation
+</h3>
+
 
 <p>
 Your registration will be confirmed only after payment verification.
 </p>
 
-<p>
-The fixture and tournament updates will be shared on WhatsApp.
-</p>
 
 <p>
-📞 Contact: <b>9663116089</b> / <b>9353689775</b>
+Fixture and tournament updates will be shared on WhatsApp.
 </p>
+
+
+<p>
+📞 9663116089 / 9353689775
+</p>
+
 
 </div>
+
+
+
+
 <button type="submit">
+
 🏏 Submit Registration
+
 </button>
+
+
 
 <button
 type="button"
-onclick="window.location.href='index.html'"
+onclick="location.href='index.html'"
 style="
 margin-top:10px;
 width:100%;
@@ -245,34 +387,98 @@ background:#007bff;
 color:white;
 border:none;
 border-radius:8px;
-font-size:16px;
-cursor:pointer;">
-⬅️ Back to Home
+">
+
+⬅️ Back To Home
+
 </button>
+
+
+
 </form>
 
+
 </div>
-<script type="module" src="registration.js"></script>
-<script>
-function showOther() {
-    const area = document.getElementById("area").value;
-    const other = document.getElementById("otherArea");
-
-    if (area === "Other") {
-        other.style.display = "block";
-        other.required = true;
-    } else {
-        other.style.display = "none";
-        other.required = false;
-        other.value = "";
-    }
-}
-</script>
-<footer style="text-align:center; margin:30px 0 20px 0; color:#666; font-size:14px;">
 
 
-<p>© 2026 AJAY PREMIER LEAGUE (APL). All Rights Reserved.</p>
+
+
+<footer style="
+text-align:center;
+margin:30px 0;
+color:#666;
+">
+
+
+<p>
+© 2026 AJAY PREMIER LEAGUE (APL). All Rights Reserved.
+</p>
+
 
 </footer>
+
+
+
+<script type="module" src="registration.js"></script>
+
+
+<script>
+
+
+function showOther(){
+
+let area=document.getElementById("area");
+
+let other=document.getElementById("otherArea");
+
+
+if(area.value==="Other"){
+
+other.style.display="block";
+
+other.required=true;
+
+}
+
+else{
+
+other.style.display="none";
+
+other.required=false;
+
+other.value="";
+
+}
+
+
+}
+
+
+
+document
+.getElementById("area")
+.addEventListener("change",showOther);
+
+
+
+function saveRegistrationData(){
+
+localStorage.setItem(
+"teamName",
+document.getElementById("teamName").value
+);
+
+localStorage.setItem(
+"captainName",
+document.getElementById("captainName").value
+);
+
+}
+
+
+</script>
+
+
 </body>
+
 </html>
