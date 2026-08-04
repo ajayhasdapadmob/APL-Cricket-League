@@ -187,10 +187,12 @@ await emailjs.send(
 );
 
 console.log("Email Sent");
-
+alert("Email Sent Successfully");
 } catch(emailError){
 
-console.log("Email Error:", emailError.text || emailError.message);
+alert("Email Error: " + emailError.text);
+
+console.log(emailError);
 
 }
 
