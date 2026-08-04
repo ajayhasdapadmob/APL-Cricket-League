@@ -1,3 +1,11 @@
+import { auth } from "./firebase.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+onAuthStateChanged(auth, (user) => {
+    if (!user) {
+        window.location.replace("admin-login.html");
+    }
+});
 import emailjs from "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/+esm";
 
 emailjs.init({
@@ -500,6 +508,19 @@ alert("✅ Match Marked Completed");
 
 });
 
+}
+
+// ===============================
+// LOGOUT
+// ===============================
+
+const logoutBtn = document.getElementById("logoutBtn");
+
+if (logoutBtn) {
+    logoutBtn.addEventListener("click", async () => {
+        await signOut(auth);
+        window.location.replace("admin-login.html");
+    });
 }
 
 // ===============================
