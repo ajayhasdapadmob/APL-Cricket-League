@@ -10,7 +10,7 @@ const password = document.getElementById("password");
 const loginBtn = document.getElementById("loginBtn");
 const msg = document.getElementById("msg");
 
-// Agar pehle se login hai to seedha admin dashboard kholo
+// Agar pehle se login hai to seedha Admin Dashboard kholo
 onAuthStateChanged(auth, (user) => {
   if (user) {
     window.location.href = "admin.html";
@@ -20,13 +20,13 @@ onAuthStateChanged(auth, (user) => {
 // Login Button
 loginBtn.addEventListener("click", async () => {
 
-  msg.innerHTML = "Logging in...";
+  msg.innerHTML = "⏳ Logging in...";
 
   try {
 
     await signInWithEmailAndPassword(
       auth,
-      email.value,
+      email.value.trim(),
       password.value
     );
 
@@ -36,7 +36,15 @@ loginBtn.addEventListener("click", async () => {
 
   } catch (error) {
 
-    msg.innerHTML = "❌ " + error.message;
+    if (
+      error.code === "auth/invalid-credential" ||
+      error.code === "auth/user-not-found" ||
+      error.code === "auth/wrong-password"
+    ) {
+      msg.innerHTML = "❌ Invalid Email or Password";
+    } else {
+      msg.innerHTML = "❌ " + error.message;
+    }
 
   }
 
