@@ -109,17 +109,15 @@ document.getElementById("registrationForm").addEventListener("submit", async (e)
     try {
 
         const requiredFields = [
-            "teamName",
-            "captainName",
-            "mobile",
-            "whatsapp",
-            "email",
-            "area",
-            "address",
-            "upi",
-            "playerType",
-            "paymentDone"
-        ];
+    "teamName",
+    "captainName",
+    "mobile",
+    "whatsapp",
+    "area",
+    "upi",
+    "playerType",
+    "paymentDone"
+];
 
         for (const id of requiredFields) {
 
@@ -127,13 +125,15 @@ document.getElementById("registrationForm").addEventListener("submit", async (e)
 
             if (!field || field.value.trim() === "") {
 
-                alert("Please fill all required fields");
+    alert("Please fill all required fields");
 
-                field.focus();
+    if(field){
+        field.focus();
+    }
 
-                return;
+    return;
 
-            }
+}
 
         }
 
@@ -151,7 +151,7 @@ document.getElementById("registrationForm").addEventListener("submit", async (e)
             email: document.getElementById("email").value,
             area: document.getElementById("area").value,
             otherArea: document.getElementById("otherArea").value,
-            address: document.getElementById("address").value,
+            address: document.getElementById("otherArea")?.value || "",
             upi: document.getElementById("upi").value,
             playerType: document.getElementById("playerType").value,
             paymentDone: document.getElementById("paymentDone").value,
