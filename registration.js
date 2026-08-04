@@ -1,4 +1,4 @@
-import { db, storage } from "./firebase.js";
+import { db } from "./firebase.js";
 import emailjs from "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/+esm";
 
 emailjs.init({
@@ -13,11 +13,6 @@ import {
   where
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-storage.js";
 // =========================
 // TEAM ID
 // =========================
@@ -144,26 +139,6 @@ document
 
     }
 
-    let screenshotURL = "";
-
-    const file =
-      document.getElementById("paymentScreenshot").files[0];
-
-    if (file) {
-
-      const storageRef = ref(
-        storage,
-        "paymentScreenshots/" +
-        Date.now() + "_" + file.name
-      );
-
-      await uploadBytes(storageRef, file);
-
-      screenshotURL =
-        await getDownloadURL(storageRef);
-
-    }
-
     const regId = "APL2026-" + Date.now();
 
     await addDoc(
@@ -205,8 +180,6 @@ otherArea: document.getElementById("otherArea")?.value || "",
 paymentDone:
   document.getElementById("paymentDone").value,
 
-paymentScreenshot:
-  screenshotURL,
 
         paymentStatus: "Unpaid",
         status: "Pending",
