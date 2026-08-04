@@ -110,6 +110,11 @@ window.saveRegistrationData = function () {
 document.getElementById("registrationForm").addEventListener("submit", async (e) => {
 
     e.preventDefault();
+    
+if (!document.getElementById("declaration").checked) {
+    alert("Please accept the APL 2026 Rules & Regulations.");
+    return;
+}
 
     try {
 console.log("Payment:", document.getElementById("paymentDone").value);
