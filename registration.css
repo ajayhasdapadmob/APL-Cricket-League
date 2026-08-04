@@ -61,3 +61,9 @@ button{
 button:hover{
     background:#e65100;
 }
+select {
+    background: white;
+    color: black;
+    display: block;
+    width: 100%;
+}
