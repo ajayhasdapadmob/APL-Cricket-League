@@ -1,10 +1,10 @@
+import { db } from "./firebase.js";
 import {
 collection,
 getDocs,
 query,
 where
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-
 // =====================================
 // AJAY PREMIER LEAGUE (APL) 2026
 // Automatic Points Table System
