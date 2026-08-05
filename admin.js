@@ -1,11 +1,15 @@
 import { auth } from "./firebase.js";
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+import {
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
 onAuthStateChanged(auth, (user) => {
     if (!user) {
         window.location.replace("admin-login.html");
     }
 });
+
 import emailjs from "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/+esm";
 
 emailjs.init({
@@ -23,6 +27,7 @@ import {
     setDoc,
     deleteDoc,
     query,
+    where,
     orderBy,
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
@@ -77,7 +82,6 @@ async function loadRegistrations() {
     }
 
 }
-
 // ===============================
 // DASHBOARD COUNT
 // ===============================
@@ -102,6 +106,7 @@ function updateDashboard() {
     rejectedTeams.textContent = rejected;
 
 }
+
 // ===============================
 // DISPLAY TABLE
 // ===============================
@@ -139,7 +144,6 @@ table.innerHTML += `
 <td>${item.area || ""}</td>
 
 <td>${item.address || ""}</td>
-
 <td>
 
 <input
@@ -193,6 +197,11 @@ onclick="sendEmail('${item.id}')">
 📧 Email
 </button>
 
+<button class="view"
+onclick="viewPlayers('${item.teamId}','${item.teamName}')">
+👥 View
+</button>
+
 <button class="recycle"
 onclick="deleteRegistration('${item.id}')">
 ♻️ Recycle
@@ -230,6 +239,88 @@ onclick="saveRemark('${item.id}')">
 });
 
 }
+// ===============================
+// VIEW PLAYERS
+// ===============================
+
+window.viewPlayers = async function(teamId, teamName){
+
+    try{
+
+        const q = query(
+            collection(db,"players"),
+            where("teamId","==",teamId)
+        );
+
+        const snapshot = await getDocs(q);
+
+        if(snapshot.empty){
+            alert("❌ No Players Found");
+            return;
+        }
+
+        let html = `
+        <h2>🏏 ${teamName}</h2>
+        <hr>
+        `;
+
+        snapshot.forEach(docSnap=>{
+
+            const p = docSnap.data();
+
+            if(p.captainName)
+                html += `<b>👑 Captain :</b> ${p.captainName}<br><br>`;
+
+            for(let i=2;i<=15;i++){
+
+                if(p["player"+i]){
+                    html += `<b>Player ${i} :</b> ${p["player"+i]}<br>`;
+                }
+
+            }
+
+        });
+
+        let win = window.open(
+            "",
+            "_blank",
+            "width=500,height=700"
+        );
+
+        win.document.write(`
+        <html>
+        <head>
+        <title>APL Players</title>
+        <style>
+        body{
+            font-family:Arial;
+            padding:20px;
+            line-height:28px;
+            font-size:18px;
+        }
+        h2{
+            color:green;
+        }
+        </style>
+        </head>
+
+        <body>
+
+        ${html}
+
+        </body>
+
+        </html>
+        `);
+
+    }catch(error){
+
+        console.log(error);
+        alert(error.message);
+
+    }
+
+};
 
 // ===============================
 // SAVE UPI TRANSACTION ID
@@ -289,6 +380,7 @@ alert(error.message);
 }
 
 };
+
 // ===============================
 // STATUS UPDATE
 // ===============================
@@ -328,7 +420,7 @@ window.saveRemark = async function(id){
 
 try{
 
-const remark = document.getElementById("remark-"+id).value;
+const remark=document.getElementById("remark-"+id).value;
 
 await updateDoc(doc(db,"registrations",id),{
 
@@ -349,7 +441,6 @@ alert(error.message);
 }
 
 };
-
 // ===============================
 // SEND EMAIL
 // ===============================
@@ -448,41 +539,41 @@ row.style.display=row.innerText.toLowerCase().includes(value)
 
 const updateBtn = document.getElementById("updateLiveBtn");
 
-if (updateBtn) {
+if(updateBtn){
 
-  updateBtn.onclick = async function () {
+updateBtn.onclick = async function(){
 
-    try {
+try{
 
-      await setDoc(doc(db, "liveMatch", "current"), {
+await setDoc(doc(db,"liveMatch","current"),{
 
-        teamA: document.getElementById("teamA").value,
-        teamB: document.getElementById("teamB").value,
+teamA:document.getElementById("teamA").value,
+teamB:document.getElementById("teamB").value,
 
-        scoreA: document.getElementById("scoreA").value,
-        scoreB: document.getElementById("scoreB").value,
+scoreA:document.getElementById("scoreA").value,
+scoreB:document.getElementById("scoreB").value,
 
-        oversA: document.getElementById("oversA").value,
-        oversB: document.getElementById("oversB").value,
+oversA:document.getElementById("oversA").value,
+oversB:document.getElementById("oversB").value,
 
-        target: document.getElementById("target").value,
+target:document.getElementById("target").value,
 
-        status: document.getElementById("status").value,
+status:document.getElementById("status").value,
 
-        updatedAt: serverTimestamp()
+updatedAt:serverTimestamp()
 
-      });
+});
 
-      alert("✅ Live Match Updated Successfully");
+alert("✅ Live Match Updated Successfully");
 
-    } catch (error) {
+}catch(error){
 
-      console.error(error);
-      alert(error.message);
+console.log(error);
+alert(error.message);
 
-    }
+}
 
-  };
+};
 
 }
 
@@ -514,14 +605,43 @@ alert("✅ Match Marked Completed");
 // LOGOUT
 // ===============================
 
-const logoutBtn = document.getElementById("logoutBtn");
+const logoutBtn=document.getElementById("logoutBtn");
 
-if (logoutBtn) {
-    logoutBtn.addEventListener("click", async () => {
-        await signOut(auth);
-        window.location.replace("admin-login.html");
-    });
+if(logoutBtn){
+
+logoutBtn.addEventListener("click",async()=>{
+
+await signOut(auth);
+
+window.location.replace("admin-login.html");
+
+});
+
 }
+// ===============================
+// HARD DELETE
+// ===============================
+
+window.hardDelete = async function(id){
+
+    if(!confirm("⚠️ Permanently Delete Registration?")) return;
+
+    try{
+
+        await deleteDoc(doc(db,"registrations",id));
+
+        alert("✅ Registration Deleted Permanently");
+
+        loadRegistrations();
+
+    }catch(error){
+
+        console.log(error);
+        alert(error.message);
+
+    }
+
+};
 
 // ===============================
 // START
