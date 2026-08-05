@@ -242,3 +242,20 @@ result.innerHTML = `
 });
 
 };
+// ===============================
+// DOWNLOAD RECEIPT
+// ===============================
+
+window.downloadReceiptById = function(){
+
+const regId = document.getElementById("checkRegistrationId").value.trim();
+
+if(!regId){
+    alert("Enter Registration ID");
+    return;
+}
+
+window.location.href =
+"receipt.html?registrationId=" + encodeURIComponent(regId);
+
+};

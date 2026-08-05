@@ -612,3 +612,14 @@ pdf.save(
 
 
 };
+// =====================
+// AUTO LOAD FROM URL
+// =====================
+
+const params = new URLSearchParams(window.location.search);
+const regId = params.get("registrationId");
+
+if (regId) {
+    document.getElementById("regId").value = regId;
+    checkRegistration();
+}
