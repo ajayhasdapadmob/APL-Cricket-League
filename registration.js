@@ -202,6 +202,26 @@ console.log("Email Sent", response);
 
 alert("Email Sent Successfully");
 
+// =========================
+// ADMIN EMAIL
+// =========================
+
+await emailjs.send(
+  "service_ipztz05",
+  "template_05udsk4",
+  {
+    to_email: "ajayhasda623@gmail.com",
+    captain_name: document.getElementById("captainName").value,
+    registration_id: regId,
+    team_name: document.getElementById("teamName").value,
+    mobile: document.getElementById("mobile").value,
+    whatsapp: document.getElementById("whatsapp").value,
+    area: document.getElementById("area").value,
+    payment: document.getElementById("paymentDone").value,
+    status: "New Registration Received",
+    remark: "A new team has submitted a registration."
+  }
+);
 } catch(emailError){
 
 console.log("Email Error:", emailError);
