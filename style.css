@@ -281,3 +281,33 @@ table{
     padding:8px 0;
     font-size:16px;
 }
+.check-status{
+max-width:500px;
+margin:30px auto;
+padding:20px;
+background:#fff;
+border-radius:10px;
+text-align:center;
+box-shadow:0 2px 10px rgba(0,0,0,.15);
+}
+
+.check-status input{
+width:90%;
+padding:10px;
+margin:10px 0;
+}
+
+.check-status button{
+padding:10px 20px;
+background:green;
+color:#fff;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+#statusResult{
+margin-top:15px;
+font-size:16px;
+line-height:28px;
+}

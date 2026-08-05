@@ -1,3 +1,10 @@
+import {
+collection,
+getDocs,
+query,
+where
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
 // =====================================
 // AJAY PREMIER LEAGUE (APL) 2026
 // Automatic Points Table System
@@ -195,3 +202,43 @@ resultTable.innerHTML=result;
 
 
 });
+window.checkStatus = async function(){
+
+const regId = document.getElementById("checkRegistrationId").value.trim();
+
+if(!regId){
+alert("Enter Registration ID");
+return;
+}
+
+const q = query(
+collection(db,"registrations"),
+where("registrationId","==",regId)
+);
+
+const snapshot = await getDocs(q);
+
+const result = document.getElementById("statusResult");
+
+if(snapshot.empty){
+
+result.innerHTML="<p style='color:red;'>❌ Registration Not Found</p>";
+return;
+
+}
+
+snapshot.forEach(doc=>{
+
+const d = doc.data();
+
+result.innerHTML = `
+<b>Team:</b> ${d.teamName}<br>
+<b>Captain:</b> ${d.captainName}<br>
+<b>Status:</b> ${d.status}<br>
+<b>Payment:</b> ${d.paymentStatus}<br>
+<b>Remark:</b> ${d.remarks || "No Remark"}
+`;
+
+});
+
+};
