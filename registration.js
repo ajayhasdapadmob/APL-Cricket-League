@@ -265,19 +265,23 @@ async function loadPlayers() {
             const p = doc.data();
 
             players += `
-            <b>Captain:</b> ${p.captainName || ""}<br>
-            <b>Player 2:</b> ${p.player2 || ""}<br>
-            <b>Player 3:</b> ${p.player3 || ""}<br>
-            <b>Player 4:</b> ${p.player4 || ""}<br>
-            <b>Player 5:</b> ${p.player5 || ""}<br>
-            <b>Player 6:</b> ${p.player6 || ""}<br>
-            <b>Player 7:</b> ${p.player7 || ""}<br>
-            <b>Player 8:</b> ${p.player8 || ""}<br>
-            <b>Player 9:</b> ${p.player9 || ""}<br>
-            <b>Player 10:</b> ${p.player10 || ""}<br>
-            <b>Player 11:</b> ${p.player11 || ""}<br>
-            <hr>
-            `;
+    <b>Captain:</b> ${p.captainName || ""}<br>
+    <b>Player 2:</b> ${p.player2 || ""}<br>
+    <b>Player 3:</b> ${p.player3 || ""}<br>
+    <b>Player 4:</b> ${p.player4 || ""}<br>
+    <b>Player 5:</b> ${p.player5 || ""}<br>
+    <b>Player 6:</b> ${p.player6 || ""}<br>
+    <b>Player 7:</b> ${p.player7 || ""}<br>
+    <b>Player 8:</b> ${p.player8 || ""}<br>
+    <b>Player 9:</b> ${p.player9 || ""}<br>
+    <b>Player 10:</b> ${p.player10 || ""}<br>
+    <b>Player 11:</b> ${p.player11 || ""}<br>
+    <b>Player 12:</b> ${p.player12 || ""}<br>
+    <b>Player 13:</b> ${p.player13 || ""}<br>
+    <b>Player 14:</b> ${p.player14 || ""}<br>
+    <b>Player 15:</b> ${p.player15 || ""}<br>
+    <hr>
+`;
 
         });
 
