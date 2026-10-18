@@ -5,14 +5,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta name="google-site-verification" content="KeS459u0rCFHhhnT3uAAjKgxG90F8PF_evd6bUUSc9Y" />
+  <!-- Google Search Console Verification -->
+  <meta name="google-site-verification" content="KeS459u0rCFHhhnT3uAAjKgxG90F8PF_evd6bUUSc9Y">
+
   <meta name="author" content="AJAY HASDA">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#087f3c">
 
   <title>AJAY PREMIER LEAGUE (APL) 2026 | Official Website</title>
 
-  <meta name="description" content="Official AJAY PREMIER LEAGUE (APL) 2026 cricket tournament website. Explore team registration, live score, points table, schedule, results and tournament updates.">
+  <meta name="description" content="Official AJAY PREMIER LEAGUE (APL) 2026 cricket tournament website organized by AJAY HASDA. Team registration, live score, points table, schedule, results and tournament updates.">
+
   <meta name="keywords" content="AJAY PREMIER LEAGUE, APL 2026, Cricket Tournament, Assam Cricket, Padmabil Cricket, Live Score, Points Table, Schedule">
 
   <link rel="canonical" href="https://ajayhasdapadmob.github.io/APL-Cricket-League/">
@@ -20,7 +23,7 @@
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="images/icon-192.png">
 
-  <!-- Open Graph -->
+  <!-- Open Graph Metadata -->
   <meta property="og:site_name" content="AJAY PREMIER LEAGUE (APL) 2026">
   <meta property="og:title" content="AJAY PREMIER LEAGUE (APL) 2026 | Official Website">
   <meta property="og:description" content="Official APL 2026 cricket tournament website. Teams, matches, registration, schedule and results.">
@@ -30,14 +33,14 @@
   <meta property="og:image:alt" content="AJAY PREMIER LEAGUE APL 2026 official cricket tournament banner">
   <meta property="og:image:type" content="image/jpeg">
 
-  <!-- Twitter / large image preview -->
+  <!-- Twitter / Large Image Preview -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="AJAY PREMIER LEAGUE (APL) 2026 | Official Website">
   <meta name="twitter:description" content="Official APL 2026 cricket tournament website. Teams, matches, schedule and results.">
   <meta name="twitter:image" content="https://ajayhasdapadmob.github.io/APL-Cricket-League/banner.jpg">
   <meta name="twitter:image:alt" content="AJAY PREMIER LEAGUE APL 2026 official cricket tournament banner">
 
-  <!-- Structured event information -->
+  <!-- Tournament Structured Data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -45,13 +48,14 @@
     "name": "AJAY PREMIER LEAGUE (APL) 2026",
     "url": "https://ajayhasdapadmob.github.io/APL-Cricket-League/",
     "image": "https://ajayhasdapadmob.github.io/APL-Cricket-League/banner.jpg",
-    "description": "AJAY PREMIER LEAGUE (APL) 2026 cricket tournament organized by AJAY HASDA.",
+    "description": "AJAY PREMIER LEAGUE (APL) 2026 cricket tournament organized by AJAY HASDA. Winner prize ₹40,000 and runner-up prize ₹15,000.",
     "startDate": "2026-12-01",
     "endDate": "2026-12-31",
     "eventStatus": "https://schema.org/EventScheduled",
     "organizer": {
       "@type": "Person",
-      "name": "AJAY HASDA"
+      "name": "AJAY HASDA",
+      "url": "https://ajayhasdapadmob.github.io/APL-Cricket-League/"
     },
     "location": {
       "@type": "Place",
@@ -76,12 +80,12 @@
     :root {
       --green: #08a045;
       --green-dark: #075b30;
-      --orange: #ff8c00;
+      --orange: #ff9800;
       --red: #e53935;
       --bg: #0b1110;
       --card: #17211d;
       --text: #ffffff;
-      --muted: #c7d3cc;
+      --muted: #d1ddd5;
     }
 
     * {
@@ -105,9 +109,9 @@
     }
 
     header {
-      background: linear-gradient(135deg, #064d2b, #087f3c);
       padding: 12px;
       text-align: center;
+      background: linear-gradient(135deg, #064d2b, #087f3c);
     }
 
     .banner {
@@ -120,14 +124,14 @@
     }
 
     header h1 {
-      margin: 8px 0;
+      margin: 10px 0;
       font-size: clamp(24px, 4vw, 40px);
-      line-height: 1.25;
+      line-height: 1.3;
     }
 
     .subtitle {
-      margin: 8px 0 18px;
       color: var(--muted);
+      margin: 8px 0 15px;
     }
 
     .container {
@@ -136,16 +140,19 @@
       padding: 18px;
     }
 
-    .card {
+    .card,
+    .check-status,
+    .rules-section {
       background: var(--card);
       border: 1px solid #2d4035;
       margin: 20px auto;
       padding: 22px;
       border-radius: 14px;
-      box-shadow: 0 5px 20px #00000025;
+      overflow-wrap: anywhere;
     }
 
     .card h2,
+    .check-status h2,
     .rules-section h2 {
       margin-top: 0;
       color: #72f3a0;
@@ -153,8 +160,8 @@
 
     .buttons {
       display: flex;
-      justify-content: center;
       flex-wrap: wrap;
+      justify-content: center;
       gap: 10px;
       margin: 18px 0;
     }
@@ -168,17 +175,16 @@
       border: 0;
       border-radius: 9px;
       background: var(--green);
-      color: white;
+      color: #fff;
       font-size: 15px;
       font-weight: bold;
       text-decoration: none;
       cursor: pointer;
-      transition: filter .2s, transform .2s;
+      transition: filter .2s;
     }
 
     .btn:hover {
       filter: brightness(1.12);
-      transform: translateY(-1px);
     }
 
     .btn-live {
@@ -187,7 +193,7 @@
 
     .btn-orange {
       background: var(--orange);
-      color: #151515;
+      color: #111;
     }
 
     .btn-secondary {
@@ -205,7 +211,6 @@
       background: #101814;
       border-radius: 9px;
       padding: 14px;
-      overflow-wrap: anywhere;
     }
 
     .detail strong {
@@ -213,19 +218,15 @@
     }
 
     .check-status {
-      margin: 24px auto;
-      padding: 22px;
-      background: var(--card);
-      border: 1px solid #2d4035;
-      border-radius: 14px;
+      text-align: center;
       max-width: 700px;
     }
 
     input[type="text"] {
       width: 100%;
-      max-width: 400px;
+      max-width: 420px;
       padding: 13px;
-      margin: 8px;
+      margin: 8px 0;
       border: 1px solid #65766b;
       border-radius: 8px;
       background: #fff;
@@ -240,11 +241,6 @@
 
     .rules-section {
       max-width: 900px;
-      margin: 24px auto;
-      padding: 22px;
-      background: #17211d;
-      border-radius: 14px;
-      text-align: left;
     }
 
     .rules-list {
@@ -278,13 +274,12 @@
         grid-template-columns: 1fr;
       }
 
-      .btn {
-        width: 100%;
-        margin: 0;
-      }
-
       .buttons {
         gap: 9px;
+      }
+
+      .btn {
+        width: 100%;
       }
 
       header {
@@ -302,7 +297,6 @@
       alt="AJAY PREMIER LEAGUE APL 2026 official cricket tournament banner"
       fetchpriority="high"
     >
-
     <h1>🏆 AJAY PREMIER LEAGUE (APL) 2026</h1>
     <p class="subtitle">Official Website of AJAY HASDA</p>
   </header>
@@ -311,15 +305,23 @@
     <section class="card">
       <h2>🏏 Welcome to APL 2026</h2>
       <p><strong>Organized by:</strong> AJAY HASDA</p>
-      <p>📞 <a href="tel:+919663116089">+91 9663116089</a> /
+      <p>
+        📞 <a href="tel:+919663116089">+91 9663116089</a> /
         <a href="tel:+919353689775">+91 9353689775</a>
       </p>
       <p>✉️ <a href="mailto:ajayhasda623@gmail.com">ajayhasda623@gmail.com</a></p>
 
       <div class="buttons">
-        <a class="btn btn-live" href="https://youtube.com/@sunitavlogsp1610" target="_blank" rel="noopener noreferrer">🎥 Watch Live</a>
+        <a class="btn btn-live"
+           href="https://youtube.com/@sunitavlogsp1610"
+           target="_blank"
+           rel="noopener noreferrer">🎥 Watch Live</a>
+
         <a class="btn" href="registration.html">📝 Register Now</a>
-        <button id="installBtn" class="btn btn-orange" type="button" hidden>📲 Install APL App</button>
+
+        <button id="installBtn" class="btn btn-orange" type="button" hidden>
+          📲 Install APL App
+        </button>
       </div>
     </section>
 
@@ -342,7 +344,7 @@
 
     <section class="check-status">
       <h2>🔍 Check Registration Status</h2>
-      <p>Apna Registration ID enter karke status check karein.</p>
+      <p>Enter your Registration ID to check the status.</p>
 
       <input
         type="text"
@@ -352,9 +354,12 @@
       >
 
       <div class="buttons">
-        <button class="btn" id="checkStatusBtn" type="button" onclick="if(typeof checkStatus==='function'){checkStatus()}else{document.getElementById('statusResult').textContent='Registration status service is not available. Please check script.js.'}">Check Status</button>
-
-        <button class="btn btn-orange" id="downloadReceiptBtn" type="button" onclick="if(typeof downloadReceiptById==='function'){downloadReceiptById()}else{document.getElementById('statusResult').textContent='Receipt service is not available. Please check script.js.'}">📄 Download Receipt</button>
+        <button class="btn" type="button" id="checkStatusBtn">
+          Check Status
+        </button>
+        <button class="btn btn-orange" type="button" id="downloadReceiptBtn">
+          📄 Download Receipt
+        </button>
       </div>
 
       <div id="statusResult" role="status" aria-live="polite"></div>
@@ -392,7 +397,7 @@
 
     <section class="card">
       <h2>📅 Match Schedule</h2>
-      <p>Full match schedule will be published soon.</p>
+      <p>Full match schedule will be updated soon.</p>
       <a class="btn" href="schedule.html">View Schedule</a>
     </section>
 
@@ -404,7 +409,10 @@
         <a class="btn" href="results.html">🏏 Match Results</a>
         <a class="btn" href="gallery.html">🖼️ Gallery</a>
         <a class="btn" href="contact.html">📞 Contact</a>
-        <a class="btn btn-secondary" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=ajayhasda623@gmail.com" target="_blank" rel="noopener noreferrer">✉️ Email Organizer</a>
+        <a class="btn btn-secondary"
+           href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=ajayhasda623@gmail.com"
+           target="_blank"
+           rel="noopener noreferrer">✉️ Email Organizer</a>
       </div>
     </section>
 
@@ -430,7 +438,7 @@
   </footer>
 
   <script>
-    // Register the existing service worker if the file is available.
+    // Register the existing service worker.
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
         navigator.serviceWorker.register("./service-worker.js")
@@ -440,8 +448,8 @@
       });
     }
 
-    // PWA install prompt. Supported browsers decide when it is available.
-    let deferredPrompt;
+    // Install prompt for supported browsers.
+    let deferredPrompt = null;
     const installBtn = document.getElementById("installBtn");
 
     window.addEventListener("beforeinstallprompt", function (event) {
@@ -452,7 +460,7 @@
 
     installBtn.addEventListener("click", async function () {
       if (!deferredPrompt) {
-        alert("Install option is not available right now. Open this website in a supported browser and try again.");
+        alert("Install option is not available right now. Please try again in a supported browser.");
         return;
       }
 
@@ -466,9 +474,28 @@
       installBtn.hidden = true;
       deferredPrompt = null;
     });
+
+    // Connect the existing registration functions if available.
+    document.getElementById("checkStatusBtn").addEventListener("click", function () {
+      if (typeof window.checkStatus === "function") {
+        window.checkStatus();
+      } else {
+        document.getElementById("statusResult").textContent =
+          "Status feature is not connected. Please check script.js.";
+      }
+    });
+
+    document.getElementById("downloadReceiptBtn").addEventListener("click", function () {
+      if (typeof window.downloadReceiptById === "function") {
+        window.downloadReceiptById();
+      } else {
+        document.getElementById("statusResult").textContent =
+          "Receipt feature is not connected. Please check script.js.";
+      }
+    });
   </script>
 
-  <!-- Existing registration/status logic -->
+  <!-- Existing registration and website logic -->
   <script type="module" src="script.js"></script>
 </body>
 </html>
