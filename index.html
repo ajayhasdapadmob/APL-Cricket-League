@@ -1,308 +1,552 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="google-site-verification" content="tqWHOGpPwfkShqEw6BiBx1-go_JWzK-RJuYg-p_ZqQA">
+  <!-- Google Search Console Verification -->
+  <meta name="google-site-verification" content="KeS459u0rCFHhhnT3uAAjKgxG90F8PF_evd6bUUSc9Y">
 
-<meta name="author" content="AJAY HASDA">
+  <meta name="author" content="AJAY HASDA">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#087f3c">
 
-<meta name="keywords" content="AJAY PREMIER LEAGUE, APL 2026, Cricket Tournament, Assam Cricket, Padmabil Cricket, Live Score, Points Table, Schedule">
+  <title>AJAY PREMIER LEAGUE (APL) 2026 | Official Website</title>
 
-<meta name="robots" content="index, follow">
+  <meta name="description" content="Official AJAY PREMIER LEAGUE (APL) 2026 cricket tournament website organized by AJAY HASDA. Team registration, live score, points table, schedule, results and tournament updates.">
 
-<title>AJAY PREMIER LEAGUE (APL) 2026 | Official Website</title>
+  <meta name="keywords" content="AJAY PREMIER LEAGUE, APL 2026, Cricket Tournament, Assam Cricket, Padmabil Cricket, Live Score, Points Table, Schedule">
 
-<meta name="description" content="AJAY PREMIER LEAGUE (APL) 2026 official cricket tournament website. Organized by AJAY HASDA. Online team registration, live score, points table, schedule and tournament updates.">
+  <link rel="canonical" href="https://ajayhasdapadmob.github.io/APL-Cricket-League/">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="images/icon-192.png">
 
-<link rel="canonical" href="https://ajayhasdapadmob.github.io/APL-Cricket-League/">
+  <!-- Open Graph Metadata -->
+  <meta property="og:site_name" content="AJAY PREMIER LEAGUE (APL) 2026">
+  <meta property="og:title" content="AJAY PREMIER LEAGUE (APL) 2026 | Official Website">
+  <meta property="og:description" content="Official APL 2026 cricket tournament website. Teams, matches, registration, schedule and results.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ajayhasdapadmob.github.io/APL-Cricket-League/">
+  <meta property="og:image" content="https://ajayhasdapadmob.github.io/APL-Cricket-League/banner.jpg">
+  <meta property="og:image:alt" content="AJAY PREMIER LEAGUE APL 2026 official cricket tournament banner">
+  <meta property="og:image:type" content="image/jpeg">
 
-<meta property="og:site_name" content="AJAY PREMIER LEAGUE (APL) 2026">
+  <!-- Twitter / Large Image Preview -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AJAY PREMIER LEAGUE (APL) 2026 | Official Website">
+  <meta name="twitter:description" content="Official APL 2026 cricket tournament website. Teams, matches, schedule and results.">
+  <meta name="twitter:image" content="https://ajayhasdapadmob.github.io/APL-Cricket-League/banner.jpg">
+  <meta name="twitter:image:alt" content="AJAY PREMIER LEAGUE APL 2026 official cricket tournament banner">
 
-<!-- Favicon -->
-<link rel="icon" href="favicon.ico" type="image/x-icon">
+  <!-- Tournament Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SportsEvent",
+    "name": "AJAY PREMIER LEAGUE (APL) 2026",
+    "url": "https://ajayhasdapadmob.github.io/APL-Cricket-League/",
+    "image": "https://ajayhasdapadmob.github.io/APL-Cricket-League/banner.jpg",
+    "description": "AJAY PREMIER LEAGUE (APL) 2026 cricket tournament organized by AJAY HASDA. Winner prize ₹40,000 and runner-up prize ₹15,000.",
+    "startDate": "2026-12-01",
+    "endDate": "2026-12-31",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "organizer": {
+      "@type": "Person",
+      "name": "AJAY HASDA",
+      "url": "https://ajayhasdapadmob.github.io/APL-Cricket-League/"
+    },
+    "location": {
+      "@type": "Place",
+      "name": "Padmabil Ground",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Padmabil",
+        "addressRegion": "Assam",
+        "addressCountry": "IN"
+      }
+    },
+    "offers": {
+      "@type": "Offer",
+      "url": "https://ajayhasdapadmob.github.io/APL-Cricket-League/registration.html",
+      "price": "5000",
+      "priceCurrency": "INR"
+    }
+  }
+  </script>
 
-<!-- Open Graph -->
-<meta property="og:title" content="AJAY PREMIER LEAGUE (APL) 2026">
-<meta property="og:description" content="Official Cricket Tournament Website">
-<meta property="og:image" content="https://ajayhasdapadmob.github.io/APL-Cricket-League/banner.jpg">
-<meta property="og:url" content="https://ajayhasdapadmob.github.io/APL-Cricket-League/">
-<meta property="og:type" content="website">
+  <style>
+    :root {
+      --green: #08a045;
+      --green-dark: #075b30;
+      --orange: #ff9800;
+      --red: #e53935;
+      --bg: #0b1110;
+      --card: #17211d;
+      --text: #ffffff;
+      --muted: #d1ddd5;
+    }
 
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="AJAY PREMIER LEAGUE (APL) 2026">
-<meta name="twitter:description" content="Official Cricket Tournament Website">
-<meta name="twitter:image" content="https://ajayhasdapadmob.github.io/APL-Cricket-League/banner.jpg">
+    * {
+      box-sizing: border-box;
+    }
 
-<!-- Schema.org -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "SportsEvent",
-  "name": "AJAY PREMIER LEAGUE (APL) 2026",
-  "url": "https://ajayhasdapadmob.github.io/APL-Cricket-League/",
-  "image": "https://ajayhasdapadmob.github.io/APL-Cricket-League/banner.jpg",
+    html {
+      scroll-behavior: smooth;
+    }
 
-  "description": "AJAY PREMIER LEAGUE (APL) 2026 Cricket Tournament organized by AJAY HASDA. Prize Money: Winner ₹40,000, Runner-up ₹15,000. Entry Fee: ₹5,000.",
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
 
-  "startDate": "2026-12-01",
-  "endDate": "2026-12-31",
-  "eventStatus": "https://schema.org/EventScheduled",
+    a {
+      color: inherit;
+    }
 
-  "organizer": {
-    "@type": "Person",
-    "name": "AJAY HASDA",
-    "url": "https://ajayhasdapadmob.github.io/APL-Cricket-League/"
-  },
+    header {
+      padding: 0;
+      text-align: center;
+      background: linear-gradient(135deg, #064d2b, #087f3c);
+    }
 
-  "location": {
-    "@type": "Place",
-    "name": "Padmabil Ground",
-    "address": {
-  "@type": "PostalAddress",
-  "addressLocality": "Padmabil",
-  "addressRegion": "Assam",
-  "addressCountry": "IN"
+    /* Old-style banner: full width and natural height */
+    .banner {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: none;
+      object-fit: initial;
+      margin: 0 auto;
+      border-radius: 12px;
+    }
+
+    header h1 {
+      margin: 10px 0;
+      padding: 10px;
+      font-size: clamp(24px, 4vw, 40px);
+      line-height: 1.3;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin: 8px 0 15px;
+    }
+
+    .container {
+      width: min(1100px, 100%);
+      margin: auto;
+      padding: 18px;
+    }
+
+    .card,
+    .check-status,
+    .rules-section {
+      background: var(--card);
+      border: 1px solid #2d4035;
+      margin: 20px auto;
+      padding: 22px;
+      border-radius: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .card h2,
+    .check-status h2,
+    .rules-section h2 {
+      margin-top: 0;
+      color: #72f3a0;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 12px 18px;
+      border: 0;
+      border-radius: 9px;
+      background: var(--green);
+      color: #fff;
+      font-size: 15px;
+      font-weight: bold;
+      text-decoration: none;
+      cursor: pointer;
+      transition: filter .2s;
+    }
+
+    .btn:hover {
+      filter: brightness(1.12);
+    }
+
+    .btn-live {
+      background: var(--red);
+    }
+
+    .btn-orange {
+      background: var(--orange);
+      color: #111;
+    }
+
+    .btn-secondary {
+      background: #34483d;
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      text-align: left;
+    }
+
+    .detail {
+      background: #101814;
+      border-radius: 9px;
+      padding: 14px;
+    }
+
+    .detail strong {
+      color: #72f3a0;
+    }
+
+    .check-status {
+      text-align: center;
+      max-width: 700px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      max-width: 420px;
+      padding: 13px;
+      margin: 8px 0;
+      border: 1px solid #65766b;
+      border-radius: 8px;
+      background: #fff;
+      color: #111;
+      font-size: 16px;
+    }
+
+    #statusResult {
+      margin-top: 15px;
+      overflow-wrap: anywhere;
+    }
+
+    .rules-section {
+      max-width: 900px;
+    }
+
+    .rules-list {
+      padding-left: 22px;
+    }
+
+    .rules-list li {
+      margin: 10px 0;
+    }
+
+    footer {
+      background: #050806;
+      color: #d1d9d4;
+      text-align: center;
+      padding: 22px 12px;
+      margin-top: 30px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 12px;
+      }
+
+      .card,
+      .check-status,
+      .rules-section {
+        padding: 16px;
+      }
+
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .buttons {
+        gap: 9px;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      header {
+        padding: 0;
+      }
+    }
+    
+    
+/* Website ke sabhi letters bade karne ke liye */
+html {
+  font-size: 20px;
 }
-  },
 
-  "offers": {
-    "@type": "Offer",
-    "url": "https://ajayhasdapadmob.github.io/APL-Cricket-League/registration.html",
-    "price": "5000",
-    "priceCurrency": "INR",
-    "availability": "https://schema.org/InStock"
-  },
-
-  "performer": {
-    "@type": "SportsTeam",
-    "name": "Participating Cricket Teams"
-  },
-
-  "sameAs": [
-    "https://www.facebook.com/share/1PnfHM8xtU/",
-    "https://youtube.com/@sunitavlogsp1610",
-    "https://www.instagram.com/hasdaarya"
-  ]
-}
-</script>
-
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0b8f3a">
-<link rel="apple-touch-icon" href="images/icon-192.png">
-<style>
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#111;
-  color:#fff;
-  text-align:center;
+body {
+  font-size: 20px;
+  line-height: 1.6;
 }
 
-header h1{
-  margin:0;
-  font-size:36px;
+h1 {
+  font-size: 36px;
 }
 
-.container{
-  padding:20px;
+h2 {
+  font-size: 30px;
 }
-.card{background:#222;margin:20px auto;padding:20px;border-radius:12px;max-width:700px}
-.btn{display:inline-block;margin:10px;padding:15px 25px;text-decoration:none;color:#fff;font-size:17px;font-weight:bold;border-radius:10px}
-.live{background:#e53935}
-.register{background:#00c853}
-table{width:100%;border-collapse:collapse}
-th,td{border:1px solid #fff;padding:10px}
-th{background:#ff6600}
-footer{background:#000;padding:15px;margin-top:30px}
-</style>
+
+h3 {
+  font-size: 25px;
+}
+
+p,
+li,
+label,
+input,
+select,
+textarea {
+  font-size: 20px;
+}
+
+button,
+.btn {
+  font-size: 20px;
+  padding: 12px 18px;
+}
+
+  </style>
 </head>
 
 <body>
+  <header>
+    <img
+      class="banner"
+      src="banner.jpg"
+      alt="AJAY PREMIER LEAGUE APL 2026 official cricket tournament banner"
+      fetchpriority="high"
+    >
+    <h1>🏆 AJAY PREMIER LEAGUE (APL) 2026</h1>
+    <p class="subtitle">Official Website of AJAY HASDA</p>
+  </header>
 
-<header>
-<img src="banner.jpg" alt="AJAY PREMIER LEAGUE (APL) 2026 Official Banner" style="width:100%;border-radius:12px;">
-<h1>🏆 AJAY PREMIER LEAGUE (APL) 2026</h1>
-</header>
+  <main class="container">
 
+    <!-- Welcome section in the simple old-style layout -->
+    <section class="card">
+      
+<section class="card" style="text-align: center;">
+  <h2>🏏 Welcome to APL 2026</h2>
 
+  <p><strong>Organized by:</strong> AJAY HASDA</p>
 
-<div class="container">
+  <p>📞 +91 9663116089 / +91 9353689775</p>
 
-<h2>Official Website of AJAY HASDA</h2>
+  <p>✉️ <a href="mailto:ajayhasda623@gmail.com">ajayhasda623@gmail.com</a></p>
 
-<p><b>Organized by:</b> AJAY HASDA</p>
+  <div class="buttons">
+    <a class="btn btn-live"
+       href="https://youtube.com/@sunitavlogsp1610"
+       target="_blank"
+       rel="noopener noreferrer">🎥 Watch Live</a>
 
-<p>📞 +91 9663116089 / +91 9353689775</p>
+    <a class="btn" href="registration.html">📝 Register Now</a>
 
-<p>✉️ ajayhasda623@gmail.com</p>
-
-<a class="btn live" href="https://youtube.com/@sunitavlogsp1610" target="_blank">🎥 Watch Live</a>
-
-<a class="btn register" href="registration.html">
-📝 Register Now
-</a>
-
-<button id="installBtn" class="btn register" style="display:none;">
-📲 Install APL App
-</button>
-
-<div class="card">
-<h2>🔗 APL 2026 Menu</h2>
-
-<a class="btn register" href="dashboard.html">📊 Dashboard</a>
-<a class="btn register" href="points.html">🏏 Points Table</a>
-<a class="btn register" href="schedule.html">📅 Schedule</a>
-<a class="btn register" href="results.html">🏆 Results</a>
-<a class="btn register" href="gallery.html">🖼 Gallery</a>
-<a class="btn register" href="prize.html">🥇 Prize & Rules</a>
-<a class="btn register" href="contact.html">📞 Contact</a>
-<a class="btn register" href="live.html">🔴 Live Score</a>
-<a class="btn register" href="orangecap.html">🟠 Orange Cap</a>
-<a class="btn register" href="purplecap.html">🟣 Purple Cap</a>
-<a class="btn register" href="awards.html">🏆 Awards</a>
-
-</div>
-<section class="check-status">
-
-<h2>🔍 Check Registration Status</h2>
-
-<input
-type="text"
-id="checkRegistrationId"
-placeholder="Enter Registration ID">
-
-<button onclick="checkStatus()">
-Check Status
-</button>
-
-<button onclick="downloadReceiptById()">
-📄 Download Receipt
-</button>
-
-<div id="statusResult"></div>
-
+    <button id="installBtn" class="btn btn-green" type="button" hidden>
+      📲 Install APL App
+    </button>
+  </div>
 </section>
 
-<div class="card">
-<h2>🏏 About APL</h2>
-<p>AJAY PREMIER LEAGUE (APL) 2026 is an official cricket tournament organized by AJAY HASDA. Total 23 teams will participate.</p>
-</div>
 
+    <section class="card">
+      <h2>🔗 APL 2026 Menu</h2>
+      <div class="buttons">
+        <a class="btn" href="dashboard.html">📊 Dashboard</a>
+        <a class="btn" href="points.html">🏏 Points Table</a>
+        <a class="btn" href="schedule.html">📅 Schedule</a>
+        <a class="btn" href="results.html">🏆 Results</a>
+        <a class="btn" href="gallery.html">🖼️ Gallery</a>
+        <a class="btn" href="prize.html">🥇 Prize &amp; Rules</a>
+        <a class="btn" href="contact.html">📞 Contact</a>
+        <a class="btn btn-live" href="live.html">🔴 Live Score</a>
+        <a class="btn btn-orange" href="orangecap.html">🟠 Orange Cap</a>
+        <a class="btn" href="purplecap.html">🟣 Purple Cap</a>
+        <a class="btn" href="awards.html">🏆 Awards</a>
+      </div>
+    </section>
 
-<div class="card">
-<h2>💰 Prize Money</h2>
+    <section class="check-status">
+      <h2>🔍 Check Registration Status</h2>
+      <p>Enter your Registration ID to check the status.</p>
 
-<p>🥇 Winner – ₹40,000</p>
+      <input
+        type="text"
+        id="checkRegistrationId"
+        placeholder="Enter Registration ID"
+        aria-label="Registration ID"
+      >
 
-<p>🥈 Runner-up – ₹15,000</p>
+      <div class="buttons">
+        <button class="btn" type="button" id="checkStatusBtn">
+          Check Status
+        </button>
+        <button class="btn btn-orange" type="button" id="downloadReceiptBtn">
+          📄 Download Receipt
+        </button>
+      </div>
 
-</div>
+      <div id="statusResult" role="status" aria-live="polite"></div>
+    </section>
 
-<div class="card">
-<h2>💰 Entry Fee</h2>
-<p>💰 Entry Fee: ₹5000</p>
-</div>
+    <section class="card">
+      <h2>ℹ️ About APL</h2>
+      <p>AJAY PREMIER LEAGUE (APL) 2026 is a cricket tournament organized by AJAY HASDA.</p>
+      <p>Total participating teams: <strong>23</strong></p>
+    </section>
 
-<div class="card">
-<h2>📊 Tournament Details</h2>
-<p>👥 Total Teams: 23</p>
-<p>📍 Venue: Padmabil Ground</p>
-<p>🏏 Status: Coming Soon</p>
-</div>
+    <section class="card">
+      <h2>💰 Prize Money</h2>
+      <div class="details-grid">
+        <div class="detail">🥇 <strong>Winner</strong><br>₹40,000</div>
+        <div class="detail">🥈 <strong>Runner-up</strong><br>₹15,000</div>
+      </div>
+    </section>
 
+    <section class="card">
+      <h2>💳 Entry Fee</h2>
+      <p><strong>₹5,000 per team</strong></p>
+      <a class="btn" href="registration.html">Register Your Team</a>
+    </section>
 
-<div class="card">
-<h2>📅 Match Schedule</h2>
-<p>Full Schedule Will Be Updated Soon...</p>
-</div>
+    <section class="card">
+      <h2>📊 Tournament Details</h2>
+      <div class="details-grid">
+        <div class="detail">👥 <strong>Total Teams</strong><br>23</div>
+        <div class="detail">📍 <strong>Venue</strong><br>Padmabil Ground</div>
+        <div class="detail">📅 <strong>Year</strong><br>2026</div>
+        <div class="detail">🏏 <strong>Status</strong><br>Coming Soon</div>
+      </div>
+    </section>
 
-<h2>🔗 Quick Links</h2>
-<a class="btn register" href="points.html">
-📊 Points Table
-</a>
+    <section class="card">
+      <h2>📅 Match Schedule</h2>
+      <p>Full match schedule will be updated soon.</p>
+      <a class="btn"
+         href="https://run.spck.io/APL-Cricket-League-main/schedule.html"
+         target="_blank"
+         rel="noopener noreferrer">📅 View Schedule</a>
+    </section>
 
-<a class="btn register" href="schedule.html">
-📅 Match Schedule
-</a>
+    <section class="card">
+      <h2>🔗 Quick Links</h2>
+      <div class="buttons">
+        <a class="btn" href="points.html">📊 Points Table</a>
+        <a class="btn" href="schedule.html">📅 Match Schedule</a>
+        <a class="btn" href="results.html">🏏 Match Results</a>
+        <a class="btn" href="gallery.html">🖼️ Gallery</a>
+        <a class="btn" href="contact.html">📞 Contact</a>
+        <a class="btn btn-secondary"
+           href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=ajayhasda623@gmail.com"
+           target="_blank"
+           rel="noopener noreferrer">✉️ Email Organizer</a>
+      </div>
+    </section>
 
-<a class="btn register" href="results.html">
-🏏 Match Results
-</a>
+    <section class="rules-section">
+      <h2>📋 Important Notice</h2>
+      <p>All players must wear matching team jerseys. The name and jersey number submitted during registration must match the details printed on the player's jersey. Any mismatch may result in disqualification or the player not being allowed to participate.</p>
 
-<a class="btn register" href="gallery.html">
-🖼 Gallery
-</a>
-
-<a class="btn register" href="contact.html">
-📞 Contact
-</a>
-
-<a class="btn register" href="https://mail.google.com/mail/?view=cm&fs=1&to=ajayhasda623@gmail.com">
-✉️ Email
-</a>
-</div>
-<section class="rules-section">
-    <h2>📋 Important Notice</h2>
-
-    <div class="notice-box">
-        <p><strong>All players must wear matching team jerseys.</strong> The name and jersey number submitted during registration must match the name and number printed on the player's jersey. Any mismatch may result in disqualification or the player not being allowed to participate.</p>
-    </div>
-
-    <h3>🏏 Tournament Rules</h3>
-
-    <ul class="rules-list">
-        <li>✅ Tennis Ball Cricket Tournament.</li>
+      <h2>🏏 Tournament Rules</h2>
+      <ul class="rules-list">
+        <li>✅ Tennis ball cricket tournament.</li>
         <li>✅ Umpire's decision will be final.</li>
         <li>✅ Every team must report 30 minutes before the match.</li>
         <li>✅ Misbehaviour with officials may lead to disqualification.</li>
         <li>✅ Fixtures once published cannot be changed.</li>
         <li>✅ Organizer has the final authority in any dispute.</li>
-    </ul>
-</section>
-<footer>
-  
-© 2026 AJAY PREMIER LEAGUE (APL)<br>
-All Rights Reserved.
-</footer>
+      </ul>
+    </section>
+  </main>
 
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./service-worker.js");
-  });
-}
-</script>
-<script>
-let deferredPrompt;
+  <footer>
+    <p>© 2026 AJAY PREMIER LEAGUE (APL)</p>
+    <p>All Rights Reserved.</p>
+  </footer>
 
-const installBtn = document.getElementById("installBtn");
-
-window.addEventListener("beforeinstallprompt", (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    installBtn.style.display = "inline-block";
-});
-
-installBtn.addEventListener("click", async () => {
-
-    installBtn.style.display = "none";
-
-    deferredPrompt.prompt();
-
-    const { outcome } = await deferredPrompt.userChoice;
-
-    if (outcome === "accepted") {
-        console.log("APL App Installed");
+  <script>
+    // Register the existing service worker.
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js")
+          .catch(function (error) {
+            console.error("Service worker registration failed:", error);
+          });
+      });
     }
 
-    deferredPrompt = null;
+    // Install prompt for supported browsers.
+    let deferredPrompt = null;
+    const installBtn = document.getElementById("installBtn");
 
-});
-</script>
-<script type="module" src="script.js"></script>
+    window.addEventListener("beforeinstallprompt", function (event) {
+      event.preventDefault();
+      deferredPrompt = event;
+      installBtn.hidden = false;
+    });
 
+    installBtn.addEventListener("click", async function () {
+      if (!deferredPrompt) {
+        alert("Install option is not available right now. Please try again in a supported browser.");
+        return;
+      }
+
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      installBtn.hidden = true;
+    });
+
+    window.addEventListener("appinstalled", function () {
+      installBtn.hidden = true;
+      deferredPrompt = null;
+    });
+
+    // Connect registration status feature if available in script.js.
+    document.getElementById("checkStatusBtn").addEventListener("click", function () {
+      if (typeof window.checkStatus === "function") {
+        window.checkStatus();
+      } else {
+        document.getElementById("statusResult").textContent =
+          "Status feature is not connected. Please check script.js.";
+      }
+    });
+
+    // Connect receipt feature if available in script.js.
+    document.getElementById("downloadReceiptBtn").addEventListener("click", function () {
+      if (typeof window.downloadReceiptById === "function") {
+        window.downloadReceiptById();
+      } else {
+        document.getElementById("statusResult").textContent =
+          "Receipt feature is not connected. Please check script.js.";
+      }
+    });
+  </script>
+
+  <!-- Existing registration and website logic -->
+  <script type="module" src="script.js"></script>
 </body>
 </html>
