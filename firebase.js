@@ -1,12 +1,11 @@
-// firebase.js
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+import { getFirestore, enableNetwork } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-storage.js";
 
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
+// OLD APL FIREBASE — preserve existing registration data
+const legacyConfig = {
   apiKey: "AIzaSyC5sHNe2gV3vJYA1F2-JQsNbZrU5DTLcPw",
   authDomain: "ajay-premier-league-apl.firebaseapp.com",
   projectId: "ajay-premier-league-apl",
@@ -16,8 +15,34 @@ const firebaseConfig = {
   measurementId: "G-8VMTN4PPQZ"
 };
 
-const app = initializeApp(firebaseConfig);
+// NEW TOURNAMENT PLATFORM FIREBASE
+const tournamentConfig = {
+  apiKey: "AIzaSyCEkiHDayUu5NF9g5EOsQL-Dwyg6XYz57k",
+  authDomain: "apl-tournament-platform.firebaseapp.com",
+  projectId: "apl-tournament-platform",
+  storageBucket: "apl-tournament-platform.firebasestorage.app",
+  messagingSenderId: "915381266456",
+  appId: "1:915381266456:web:947236a5a210fa11bfbb6d",
+  measurementId: "G-J3YWBRWVN0"
+};
+
+// Keep the old app as the default connection.
+const app = initializeApp(legacyConfig);
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+
+// Connect to the same Firebase project used by APL Tournament Platform.
+const tournamentApp = initializeApp(
+  tournamentConfig,
+  "aplTournamentPlatform"
+);
+
+export const tournamentDb = getFirestore(tournamentApp);
+
+enableNetwork(db).catch(console.error);
+enableNetwork(tournamentDb).catch(console.error);
+
+console.log("✅ Legacy APL Firebase:", legacyConfig.projectId);
+console.log("🏆 Tournament Firebase:", tournamentConfig.projectId);
