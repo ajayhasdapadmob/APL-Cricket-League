@@ -1,70 +1,385 @@
-body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#111;
-    color:#fff;
+
+/* =====================================
+   APL 2026 - PROFESSIONAL REGISTRATION
+   RB / APL Orange, Black & Gold Theme
+===================================== */
+
+:root {
+  --apl-orange: #ff6500;
+  --apl-gold: #ffc928;
+  --apl-dark: #111318;
+  --apl-card: #1d222b;
+  --apl-white: #ffffff;
+  --apl-muted: #c5cad3;
+  --apl-green: #11a85b;
+  --apl-blue: #0879e8;
 }
 
-header{
-    text-align:center;
-    background:#ff6600;
-    padding:15px;
+* {
+  box-sizing: border-box;
 }
 
-header h1{
-    margin:10px 0 5px;
+html {
+  scroll-behavior: smooth;
+  font-size: 18px;
 }
 
-.container{
-    max-width:700px;
-    margin:20px auto;
-    background:#222;
-    padding:20px;
-    border-radius:12px;
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--apl-dark);
+  color: var(--apl-white);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  line-height: 1.65;
 }
 
-form{
-    display:flex;
-    flex-direction:column;
+/* FULL BANNER - NO CROP */
+header {
+  width: 100%;
+  margin: 0;
+  padding: 0 0 28px;
+  text-align: center;
+  color: white;
+  background: linear-gradient(
+    180deg,
+    #ff7900 0%,
+    #ff6500 65%,
+    #e94b00 100%
+  );
 }
 
-label{
-    margin-top:15px;
-    font-weight:bold;
+.apl-banner,
+header img:first-child {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: none;
+  object-fit: contain;
+  object-position: center;
+  margin: 0 auto 20px;
+  border: none;
+  border-radius: 0;
 }
 
-input,
-textarea,
-select{
-    padding:12px;
-    margin-top:6px;
-    border:none;
-    border-radius:8px;
-    font-size:16px;
+header h1 {
+  margin: 16px 12px 8px;
+  font-size: clamp(25px, 4vw, 40px);
+  line-height: 1.25;
+  font-weight: 900;
+  color: white;
+  text-shadow: 1px 2px 3px #8a2c00;
 }
 
-textarea{
-    min-height:80px;
+header h2 {
+  margin: 12px 10px;
+  font-size: clamp(22px, 3vw, 30px);
+  color: white;
 }
 
-button{
-    margin-top:15px;
-    padding:14px;
-    border:none;
-    border-radius:8px;
-    background:#ff6600;
-    color:#fff;
-    font-size:17px;
-    font-weight:bold;
-    cursor:pointer;
+header p {
+  margin: 8px 12px;
+  font-size: 19px;
+  font-weight: 600;
 }
 
-button:hover{
-    background:#e65100;
+header a {
+  color: white;
+  font-weight: bold;
+  overflow-wrap: anywhere;
 }
-select {
-    background: white;
-    color: black;
-    display: block;
+
+/* PRIZE AND CONTACT CARD */
+.card {
+  width: calc(100% - 30px);
+  max-width: 720px;
+  margin: 25px auto 0;
+  padding: 22px;
+  background: rgba(35, 22, 10, 0.2);
+  border: 2px solid rgba(255, 201, 40, 0.9);
+  border-radius: 18px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
+}
+
+.card h2 {
+  color: #fff5c4;
+  margin-top: 0;
+}
+
+.card p {
+  margin: 10px 0;
+}
+
+/* MAIN FORM CONTAINER */
+.container {
+  width: 100%;
+  max-width: 850px;
+  margin: 28px auto;
+  padding: 0 18px;
+}
+
+#registrationForm {
+  width: 100%;
+  padding: 28px;
+  background: var(--apl-card);
+  border: 1px solid #373e49;
+  border-top: 5px solid var(--apl-orange);
+  border-radius: 18px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+}
+
+#registrationForm h2 {
+  margin: 8px 0 20px;
+  padding-bottom: 12px;
+  color: var(--apl-gold);
+  font-size: 28px;
+  border-bottom: 2px solid #424955;
+}
+
+#registrationForm h3 {
+  font-size: 22px;
+  line-height: 1.4;
+}
+
+/* LABELS */
+#registrationForm label {
+  display: block;
+  margin-top: 20px;
+  margin-bottom: 7px;
+  color: #f4f5f7;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+/* INPUTS AND SELECTS */
+#registrationForm input:not([type="checkbox"]),
+#registrationForm select,
+#registrationForm textarea {
+  display: block;
+  width: 100%;
+  min-height: 50px;
+  margin-top: 6px;
+  padding: 12px 14px;
+  color: #ffffff;
+  background: #11151c;
+  border: 1px solid #505866;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 18px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#registrationForm select {
+  cursor: pointer;
+}
+
+#registrationForm input:focus,
+#registrationForm select:focus,
+#registrationForm textarea:focus {
+  border-color: var(--apl-gold);
+  box-shadow: 0 0 0 3px rgba(255, 201, 40, 0.15);
+}
+
+#registrationForm input::placeholder,
+#registrationForm textarea::placeholder {
+  color: #aeb5c0;
+  opacity: 1;
+}
+
+/* CHECKBOXES */
+#registrationForm input[type="checkbox"] {
+  width: 21px;
+  height: 21px;
+  margin-right: 8px;
+  accent-color: var(--apl-orange);
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+#registrationForm label:has(input[type="checkbox"]) {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  line-height: 1.5;
+}
+
+/* PLAYER PREVIEW */
+#playerList {
+  margin-top: 18px;
+  padding: 20px;
+  background: #11151c !important;
+  color: white !important;
+  border: 1px solid #4a5260;
+  border-left: 4px solid var(--apl-gold);
+  border-radius: 12px;
+  overflow-wrap: anywhere;
+}
+
+#playerList h3 {
+  color: var(--apl-gold);
+  margin-top: 0;
+}
+
+#playerList a {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 9px 14px;
+  color: #111 !important;
+  background: var(--apl-gold);
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* UPI QR IMAGE */
+#registrationForm img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* RULES AND CONFIRMATION BOXES */
+#registrationForm ol {
+  padding-left: 26px;
+}
+
+#registrationForm li {
+  margin-bottom: 10px;
+}
+
+#registrationForm h3 {
+  overflow-wrap: anywhere;
+}
+
+/* BUTTONS */
+#registrationForm button {
+  display: block;
+  width: 100%;
+  min-height: 52px;
+  margin-top: 18px;
+  padding: 13px 18px;
+  color: white;
+  background: linear-gradient(135deg, #ff7900, #e84a00);
+  border: none;
+  border-radius: 11px;
+  font-family: inherit;
+  font-size: 19px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.15s, filter 0.15s;
+}
+
+#registrationForm button:hover {
+  filter: brightness(1.1);
+}
+
+#registrationForm button:active {
+  transform: scale(0.98);
+}
+
+#registrationForm button[type="submit"] {
+  color: #151515;
+  background: linear-gradient(135deg, #ffd84a, #ffad00);
+}
+
+/* FOOTER */
+footer {
+  padding: 20px 12px;
+  color: var(--apl-muted) !important;
+  text-align: center;
+  border-top: 1px solid #303640;
+}
+
+footer p {
+  margin: 0;
+  font-size: 15px;
+}
+
+/* TABLET */
+@media (max-width: 768px) {
+  html {
+    font-size: 17px;
+  }
+
+  .container {
+    padding: 0 12px;
+    margin: 20px auto;
+  }
+
+  #registrationForm {
+    padding: 20px;
+  }
+
+  #registrationForm h2 {
+    font-size: 25px;
+  }
+
+  .card {
+    padding: 18px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+  body {
+    font-size: 16px;
+  }
+
+  .apl-banner,
+  header img:first-child {
     width: 100%;
+    height: auto;
+    max-height: none;
+  }
+
+  header {
+    padding-bottom: 20px;
+  }
+
+  header h1 {
+    font-size: 25px;
+  }
+
+  header h2 {
+    font-size: 22px;
+  }
+
+  header p {
+    font-size: 17px;
+    overflow-wrap: anywhere;
+  }
+
+  .container {
+    padding: 0 10px;
+  }
+
+  #registrationForm {
+    padding: 15px;
+    border-radius: 13px;
+  }
+
+  #registrationForm h2 {
+    font-size: 23px;
+  }
+
+  #registrationForm label {
+    font-size: 17px;
+  }
+
+  #registrationForm input:not([type="checkbox"]),
+  #registrationForm select,
+  #registrationForm textarea {
+    font-size: 17px;
+    min-height: 48px;
+  }
+
+  #registrationForm button {
+    font-size: 18px;
+  }
+
+  .card {
+    width: calc(100% - 20px);
+    padding: 15px;
+  }
 }
