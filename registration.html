@@ -1,519 +1,348 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>APL 2026 Team Registration</title>
 
+<meta name="description" content="Official Ajay Premier League APL 2026 team registration. Register your team for the Padmabil cricket tournament.">
+
 <link rel="stylesheet" href="registration.css">
 
-</head>
+<style>
+/* FULL BANNER - NO CROPPING */
+header {
+  text-align: center;
+  background: #ff6500;
+  color: white;
+  padding-bottom: 20px;
+}
 
+.apl-banner {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: none;
+  object-fit: contain;
+  object-position: center;
+  margin: 0 auto;
+}
+
+/* Larger, readable text */
+body {
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+header h1 {
+  font-size: clamp(25px, 4vw, 38px);
+  margin: 12px 8px;
+}
+
+header h2 {
+  font-size: clamp(22px, 3vw, 30px);
+}
+
+header p {
+  font-size: 19px;
+}
+
+.container {
+  width: 100%;
+  max-width: 850px;
+  margin: 20px auto;
+  padding: 0 15px;
+  box-sizing: border-box;
+}
+
+#registrationForm {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+#registrationForm label {
+  display: block;
+  margin-top: 15px;
+  font-size: 19px;
+  font-weight: 600;
+}
+
+#registrationForm input:not([type="checkbox"]),
+#registrationForm select {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 48px;
+  padding: 10px;
+  margin-top: 6px;
+  font-size: 18px;
+}
+
+#registrationForm input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+
+#registrationForm button {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px;
+  margin-top: 18px;
+  font-size: 19px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.card {
+  padding: 10px;
+}
+
+@media (max-width: 600px) {
+  body {
+    font-size: 17px;
+  }
+
+  .apl-banner {
+    width: 100%;
+    height: auto;
+  }
+
+  header p {
+    font-size: 17px;
+  }
+
+  .container {
+    padding: 0 10px;
+  }
+}
+</style>
+</head>
 
 <body>
 
-
 <header>
 
-<img src="banner.jpg" 
-alt="APL Banner"
-style="width:100%;max-height:250px;object-fit:cover;">
-
+<img
+  src="banner.jpg"
+  alt="Ajay Premier League APL 2026 Banner"
+  class="apl-banner"
+>
 
 <h1>🏆 AJAY PREMIER LEAGUE (APL) 2026</h1>
-
 <h2>Official Team Registration</h2>
 
-
 <p><b>Organized By:</b> AJAY HASDA</p>
-
 <p>📍 Venue: Padmabil Ground</p>
-
 <p>👥 Total Teams: 23</p>
-
 <p>💰 Entry Fee: ₹5,000</p>
 
-
 <div class="card">
+  <h2>🏆 Prize Money</h2>
+  <p>🥇 Winner – ₹40,000</p>
+  <p>🥈 Runner-up – ₹15,000</p>
+  <p>🏆 APL Match Winner Award</p>
 
-<h2>🏆 Prize Money</h2>
+  <p>📞 Contact:
+    <a href="tel:+919663116089" style="color:white;">+91 9663116089</a> /
+    <a href="tel:+919353689775" style="color:white;">+91 9353689775</a>
+  </p>
 
-<p>🥇 Winner – ₹40,000</p>
-
-<p>🥈 Runner-up – ₹15,000</p>
-
-<p>🏆 APL Match Winner Award</p>
-
-
-<p>
-📞 Contact: +91 9663116089 / +91 9353689775
-</p>
-
-
-<p>
-✉️ Email: ajayhasda623@gmail.com
-</p>
-
-
+  <p>✉️ Email:
+    <a href="mailto:ajayhasda623@gmail.com" style="color:white;">
+      ajayhasda623@gmail.com
+    </a>
+  </p>
 </div>
-
 
 </header>
 
-
-
 <div class="container">
-
 
 <form id="registrationForm">
 
-
 <h2>Team Information</h2>
 
+<label for="teamName">Team Name *</label>
+<input type="text" id="teamName" required autocomplete="off">
 
-<label>
-Team Name *
-</label>
+<label for="captainName">Captain Name *</label>
+<input type="text" id="captainName" required autocomplete="off">
 
-<input 
-type="text"
-id="teamName"
-required
-autocomplete="off">
+<label for="mobile">📞 Mobile Number *</label>
+<input type="tel" id="mobile" pattern="[0-9]{10}" maxlength="10" required autocomplete="off">
 
+<label for="whatsapp">WhatsApp Number *</label>
+<input type="tel" id="whatsapp" pattern="[0-9]{10}" maxlength="10" required>
 
+<label for="email">Email</label>
+<input type="email" id="email">
 
-<label>
-Captain Name *
-</label>
-
-<input
-type="text"
-id="captainName"
-required
-autocomplete="off">
-
-
-
-<label>
-📞 Mobile Number *
-</label>
-
-<input
-type="tel"
-id="mobile"
-pattern="[0-9]{10}"
-maxlength="10"
-required
-autocomplete="off">
-
-
-
-<label>
-WhatsApp Number *
-</label>
-
-<input
-type="tel"
-id="whatsapp"
-maxlength="10"
-required>
-
-
-
-<label>
-Email
-</label>
-
-<input
-type="email"
-id="email">
-
-
-
-<label>
-📍 Address / Area *
-</label>
-
-
+<label for="area">📍 Address / Area *</label>
 <select id="area" required>
-
-
-<option value="">
-Select Address
-</option>
-
-
-<option>Padmabil</option>
-<option>Rampukhari</option>
-<option>Balijan</option>
-<option>Bernath Basti</option>
-<option>Orinatoli</option>
-<option>Borchola</option>
-<option>Dholaguri</option>
-<option>Singri</option>
-<option>Dhekiajuli</option>
-<option>Amguri</option>
-<option>Other</option>
-
-
+  <option value="">Select Address</option>
+  <option>Padmabil</option>
+  <option>Rampukhari</option>
+  <option>Balijan</option>
+  <option>Bernath Basti</option>
+  <option>Orinatoli</option>
+  <option>Borchola</option>
+  <option>Dholaguri</option>
+  <option>Singri</option>
+  <option>Dhekiajuli</option>
+  <option>Amguri</option>
+  <option>Other</option>
 </select>
 
-
-
 <input
-type="text"
-id="otherArea"
-placeholder="Enter Your Address"
-style="display:none;">
+  type="text"
+  id="otherArea"
+  placeholder="Enter Your Address"
+  style="display:none;"
+>
 
-
-
-<label>
-🏏 Player Type *
-</label>
-
-
+<label for="playerType">🏏 Player Type *</label>
 <select id="playerType" required>
-
-
-<option value="">
-Select Player Type
-</option>
-
-<option>
-ALL ROUNDER
-</option>
-
-<option>
-BATSMAN
-</option>
-
-<option>
-BOWLER
-</option>
-
-<option>
-WICKET KEEPER
-</option>
-
-
+  <option value="">Select Player Type</option>
+  <option>ALL ROUNDER</option>
+  <option>BATSMAN</option>
+  <option>BOWLER</option>
+  <option>WICKET KEEPER</option>
 </select>
+
 <label>
-<input type="checkbox" id="playerCheck" required>
-🏏 Player Name Details Filled *
+  <input type="checkbox" id="playerCheck" required>
+  🏏 Player Name Details Filled *
 </label>
 
-
-<div id="playerList"
-style="
-background:#222;
-color:white;
-padding:15px;
-margin-top:15px;
-border-radius:10px;
+<div id="playerList" style="
+  background:#222;
+  color:white;
+  padding:15px;
+  margin-top:15px;
+  border-radius:10px;
 ">
+  <h3>🏏 Player Name Preview</h3>
+  <p id="playersData">No Player Added</p>
 
-
-<h3>🏏 Player Name Preview</h3>
-
-<p id="playersData">
-No Player Added
-</p>
-
-
-<a href="player.html"
-style="color:#00ff00;"
-onclick="saveRegistrationData()">
-
-🏏 Add Player Name
-
-</a>
-
-
+  <a href="player.html"
+     style="color:#00ff00;"
+     onclick="saveRegistrationData()">
+    🏏 Add Player Name
+  </a>
 </div>
 
-
-
-<label>
-UPI QR Code
-</label>
-
+<label>UPI QR Code</label>
 
 <div style="
-text-align:center;
-padding:15px;
-background:#222;
-border-radius:10px;
+  text-align:center;
+  padding:15px;
+  background:#222;
+  border-radius:10px;
 ">
+  <img src="upi-qr.jpg" width="250" alt="UPI QR Code"
+       style="max-width:100%;height:auto;">
 
-
-<img src="upi-qr.jpg"
-width="250"
-alt="UPI QR">
-
-
-<p style="color:#00ff00;">
-💰 Scan QR & Pay ₹5,000
-</p>
-
-
+  <p style="color:#00ff00;">💰 Scan QR &amp; Pay ₹5,000</p>
 </div>
 
+<label for="upi">UPI Transaction ID *</label>
+<input type="text" id="upi" required>
 
-
-
-<label>
-UPI Transaction ID *
-</label>
-
-
-<input
-type="text"
-id="upi"
-required>
-
-
-
-
-<label>
-Payment Done? *
-</label>
-
-
+<label for="paymentDone">Payment Done? *</label>
 <select id="paymentDone" required>
-
-
-<option value="">
-Select
-</option>
-
-
-<option value="YES">
-YES
-</option>
-
-
-<option value="NO">
-NO
-</option>
-
-
-<option value="MAY BE LATER">
-MAY BE LATER
-</option>
-
-
+  <option value="">Select</option>
+  <option value="YES">YES</option>
+  <option value="NO">NO</option>
+  <option value="MAY BE LATER">MAY BE LATER</option>
 </select>
 
-
-
-
 <label>
-
-<input type="checkbox" id="rulesCheck" required>
-
-I accept all APL Tournament Rules.
-
+  <input type="checkbox" id="rulesCheck" required>
+  I accept all APL Tournament Rules.
 </label>
-
-
-
-
-<label>
-
-<input type="checkbox" id="declaration" required>
-
-I agree to all tournament rules and regulations.
-
-</label>
-
-
-
 
 <div style="
-background:#e8f5e9;
-border:2px solid #4CAF50;
-padding:15px;
-border-radius:10px;
-color:#000;
+  background:#e8f5e9;
+  border:2px solid #4CAF50;
+  padding:15px;
+  border-radius:10px;
+  color:#000;
 ">
-
-
-<h3>
-✅ Confirmation
-</h3>
-
-
-<p>
-Your registration will be confirmed only after payment verification.
-</p>
-
-
-<p>
-Fixture and tournament updates will be shared on WhatsApp.
-</p>
-
-
-<p>
-📞 9663116089 / 9353689775
-</p>
-
-
+  <h3>✅ Confirmation</h3>
+  <p>Your registration will be confirmed only after payment verification.</p>
+  <p>Fixture and tournament updates will be shared on WhatsApp.</p>
+  <p>📞 9663116089 / 9353689775</p>
 </div>
 
 <div style="
-background:#fff3cd;
-color:#000;
-padding:15px;
-border-radius:10px;
-margin-top:20px;
+  background:#fff3cd;
+  color:#000;
+  padding:15px;
+  border-radius:10px;
+  margin-top:20px;
 ">
-
-<h3>📜 APL 2026 Rules & Regulations</h3>
-
-<ol>
+  <h3>📜 APL 2026 Rules &amp; Regulations</h3>
+  <ol>
     <li>Entry Fee: ₹5,000 (Non-refundable).</li>
-
-    <li>
-        Each team may have a maximum of 11 players,
-        along with allowed substitutes.
-    </li>
-
-    <li>
-        The decision of the Tournament Committee shall be final and binding.
-    </li>
-
-    <li>
-        Every player must present a valid ID proof before the match.
-    </li>
-
-    <li>
-        Any team may be disqualified for misconduct, cheating,
-        or violation of tournament rules.
-    </li>
-
-    <li>
-        Fixtures and match timings may be changed if necessary
-        by the Tournament Committee.
-    </li>
-
-    <li>
-        Registration will be confirmed only after successful
-        verification of the payment.
-    </li>
-
-    <li>
-        All players and teams must strictly follow
-        all tournament rules and regulations.
-    </li>
-</ol>
-
+    <li>Each team may have a maximum of 11 players, along with allowed substitutes.</li>
+    <li>The decision of the Tournament Committee shall be final and binding.</li>
+    <li>Every player must present a valid ID proof before the match.</li>
+    <li>Any team may be disqualified for misconduct, cheating, or violation of tournament rules.</li>
+    <li>Fixtures and match timings may be changed if necessary by the Tournament Committee.</li>
+    <li>Registration will be confirmed only after successful verification of the payment.</li>
+    <li>All players and teams must strictly follow all tournament rules and regulations.</li>
+  </ol>
 </div>
+
 <label>
-<input type="checkbox" id="declaration" required>
-I have read and agree to all APL 2026 Rules & Regulations.
+  <input type="checkbox" id="declaration" required>
+  I have read and agree to all APL 2026 Rules &amp; Regulations.
 </label>
 
-<button type="submit">
-
-🏏 Submit Registration
-
-</button>
-
-
+<button type="submit">🏏 Submit Registration</button>
 
 <button
-type="button"
-onclick="location.href='index.html'"
-style="
-margin-top:10px;
-width:100%;
-padding:12px;
-background:#007bff;
-color:white;
-border:none;
-border-radius:8px;
-">
-
-⬅️ Back To Home
-
+  type="button"
+  onclick="location.href='index.html'"
+  style="
+    margin-top:10px;
+    background:#007bff;
+    color:white;
+    border:none;
+    border-radius:8px;
+  "
+>
+  ⬅️ Back To Home
 </button>
 
-
-
 </form>
-
-
 </div>
 
-
-
-
-<footer style="
-text-align:center;
-margin:30px 0;
-color:#666;
-">
-
-
-<p>
-© 2026 AJAY PREMIER LEAGUE (APL). All Rights Reserved.
-</p>
-
-
+<footer style="text-align:center;margin:30px 0;color:#666;">
+  <p>© 2026 AJAY PREMIER LEAGUE (APL). All Rights Reserved.</p>
 </footer>
-
-
 
 <script type="module" src="registration.js"></script>
 
-
 <script>
+function showOther() {
+  const area = document.getElementById("area");
+  const other = document.getElementById("otherArea");
 
-
-function showOther(){
-
-let area=document.getElementById("area");
-
-let other=document.getElementById("otherArea");
-
-
-if(area.value==="Other"){
-
-other.style.display="block";
-
-other.required=true;
-
+  if (area.value === "Other") {
+    other.style.display = "block";
+    other.required = true;
+  } else {
+    other.style.display = "none";
+    other.required = false;
+    other.value = "";
+  }
 }
 
-else{
-
-other.style.display="none";
-
-other.required=false;
-
-other.value="";
-
-}
-
-
-}
-
-
-
-document
-.getElementById("area")
-.addEventListener("change",showOther);
-
-
-
+document.getElementById("area").addEventListener("change", showOther);
 </script>
 
-
 </body>
-
 </html>
