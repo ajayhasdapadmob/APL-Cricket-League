@@ -1,10 +1,24 @@
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-import { getFirestore, enableNetwork } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-import { getStorage } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-storage.js";
+import {
+  initializeApp,
+  getApps,
+  getApp
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
-// OLD APL FIREBASE — preserve existing registration data
+import {
+  getAuth
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  enableNetwork
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+import {
+  getStorage
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-storage.js";
+
+// OLD APL FIREBASE — preserve registration and receipt data
 const legacyConfig = {
   apiKey: "AIzaSyC5sHNe2gV3vJYA1F2-JQsNbZrU5DTLcPw",
   authDomain: "ajay-premier-league-apl.firebaseapp.com",
@@ -15,7 +29,7 @@ const legacyConfig = {
   measurementId: "G-8VMTN4PPQZ"
 };
 
-// NEW TOURNAMENT PLATFORM FIREBASE
+// APL TOURNAMENT PLATFORM FIREBASE — public score data
 const tournamentConfig = {
   apiKey: "AIzaSyCEkiHDayUu5NF9g5EOsQL-Dwyg6XYz57k",
   authDomain: "apl-tournament-platform.firebaseapp.com",
@@ -26,23 +40,28 @@ const tournamentConfig = {
   measurementId: "G-J3YWBRWVN0"
 };
 
-// Keep the old app as the default connection.
-const app = initializeApp(legacyConfig);
+// Preserve the existing APL Firebase connection
+const app = getApps().some(
+  item => item.name === "[DEFAULT]"
+)
+  ? getApp()
+  : initializeApp(legacyConfig);
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 
-// Connect to the same Firebase project used by APL Tournament Platform.
-const tournamentApp = initializeApp(
-  tournamentConfig,
-  "aplTournamentPlatform"
-);
+// Connect to the Tournament Platform Firebase project
+const tournamentApp = getApps().some(
+  item => item.name === "aplTournamentPlatform"
+)
+  ? getApp("aplTournamentPlatform")
+  : initializeApp(tournamentConfig, "aplTournamentPlatform");
 
 export const tournamentDb = getFirestore(tournamentApp);
 
 enableNetwork(db).catch(console.error);
 enableNetwork(tournamentDb).catch(console.error);
 
-console.log("✅ Legacy APL Firebase:", legacyConfig.projectId);
-console.log("🏆 Tournament Firebase:", tournamentConfig.projectId);
+console.log("APL registration Firebase:", legacyConfig.projectId);
+console.log("APL Tournament Firebase:", tournamentConfig.projectId);
