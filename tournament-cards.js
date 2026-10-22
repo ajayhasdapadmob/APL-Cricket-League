@@ -1,6 +1,5 @@
 
 import { tournamentDb } from "./firebase.js";
-
 import {
   collection,
   onSnapshot
@@ -8,15 +7,14 @@ import {
 
 const cardsRoot = document.getElementById("tournamentCards");
 
-const platformBase =
-  "https://ajayhasdapadmob.github.io/APL-Tournament-Platform/";
+const leagueBase =
+  "https://ajayhasdapadmob.github.io/APL-Cricket-League/";
 
 function safeText(value, fallback = "Not provided") {
-  return value === undefined ||
-    value === null ||
-    String(value).trim() === ""
-    ? fallback
-    : String(value);
+  if (value === undefined || value === null || String(value).trim() === "") {
+    return fallback;
+  }
+  return String(value);
 }
 
 function escapeHTML(value) {
@@ -38,12 +36,20 @@ function dateText(value) {
     return value.toDate().toLocaleDateString("en-IN");
   }
 
+  if (value instanceof Date) {
+    return value.toLocaleDateString("en-IN");
+  }
+
+  if (typeof value === "object" && value.seconds) {
+    return new Date(value.seconds * 1000).toLocaleDateString("en-IN");
+  }
+
   return String(value);
 }
 
 function makeCard(docSnap) {
   const t = docSnap.data();
-  const id = encodeURIComponent(docSnap.id);
+  const id = docSnap.id;
 
   const name = safeText(
     t.tournamentName || t.name || t.title,
@@ -57,21 +63,26 @@ function makeCard(docSnap) {
   const status = safeText(t.status, "Upcoming");
 
   const pages = [
-    ["📅 Schedule", "schedule.html"],
-    ["👥 Teams", "teams.html"],
-    ["📊 Points Table", "points.html"],
-    ["🏆 Results", "results.html"],
-    ["🔴 Live Score", "live-score.html"]
+    ["📅 Schedule", "schedule"],
+    ["👥 Teams", "teams"],
+    ["📊 Points Table", "points"],
+    ["🏆 Results", "results"],
+    ["🔴 Live Score", "live"]
   ];
 
-  const actions = pages.map(([label, page]) => {
-    const url =
-      `${platformBase}${page}?id=${id}&tournamentId=${id}`;
+  const actions = pages.map(([label, tab]) => {
+    const params = new URLSearchParams({
+      id,
+      tournamentId: id,
+      tab
+    });
+
+    const url = `${leagueBase}tournament-details.html?${params.toString()}`;
 
     return `
       <a class="btn"
          href="${url}"
-         aria-label="${label} — ${escapeHTML(name)}">
+         aria-label="${escapeHTML(label)} — ${escapeHTML(name)}">
         ${label}
       </a>
     `;
@@ -109,7 +120,9 @@ function makeCard(docSnap) {
 }
 
 if (!cardsRoot) {
-  console.error("Tournament cards container #tournamentCards not found.");
+  console.error(
+    "Tournament cards container #tournamentCards not found in index.html."
+  );
 } else {
   onSnapshot(
     collection(tournamentDb, "tournaments"),
