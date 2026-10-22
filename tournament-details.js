@@ -1,5 +1,6 @@
 
 import { tournamentDb } from "./firebase.js";
+
 import {
   collection,
   doc,
@@ -8,558 +9,573 @@ import {
 
 const $ = id => document.getElementById(id);
 
-const state = {
-  tournamentId: "",
-  tournament: {},
-  teams: [],
-  matches: [],
-  unsubscribers: []
-};
+const params = new URLSearchParams(window.location.search);
+const requestedId = params.get("id") || params.get("tournamentId");
+const requestedTab = params.get("tab") || "teams";
 
-function esc(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
+const infoRoot = $("tournamentInfo");
+const teamsRoot = $("teamsList");
+const scheduleRoot = $("scheduleList");
+const liveRoot = $("liveList");
+const resultsRoot = $("resultsList");
+const scoreRoot = $("scorecardDetails");
+const pointsRoot = $("pointsBody");
+const messageRoot = $("pageMessage");
+const selectRoot = $("tournamentSelect");
+
+let selectedTournamentId = requestedId || "";
+let allTournaments = [];
+let allTeams = [];
+let allMatches = [];
+let unsubscribeTeams = null;
+let unsubscribeMatches = null;
+let unsubscribeTournament = null;
+
+const unsubscribers = [];
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
     "&": "&amp;",
     "<": "&lt;",
     ">": "&gt;",
     '"': "&quot;",
     "'": "&#39;"
-  }[c]));
+  }[char]));
 }
 
-function val(...values) {
-  return values.find(v =>
-    v !== undefined && v !== null && String(v).trim() !== ""
-  ) ?? "";
-}
-
-function dateText(value) {
-  if (!value) return "To be announced";
-  if (typeof value.toDate === "function") {
-    return value.toDate().toLocaleString("en-IN");
-  }
-  if (typeof value === "object" && value.seconds) {
-    return new Date(value.seconds * 1000).toLocaleString("en-IN");
+function text(value, fallback = "Not provided") {
+  if (value === undefined || value === null || String(value).trim() === "") {
+    return fallback;
   }
   return String(value);
 }
 
-function setMessage(message) {
-  $("pageMessage").textContent = message;
-}
+function getDate(value) {
+  if (!value) return "Date to be announced";
 
-function clearListeners() {
-  state.unsubscribers.forEach(unsubscribe => unsubscribe());
-  state.unsubscribers = [];
-}
+  if (typeof value === "string") return value;
 
-function tournamentName(t) {
-  return val(t.tournamentName, t.name, t.title, "Tournament");
-}
-
-function teamNames(match) {
-  return {
-    a: val(
-      match.teamA, match.team1Name, match.team1,
-      match.homeTeam, "Team A"
-    ),
-    b: val(
-      match.teamB, match.team2Name, match.team2,
-      match.awayTeam, "Team B"
-    )
-  };
-}
-
-function inningsFor(match, side) {
-  const direct = side === "A"
-    ? (match.innings1 || match.firstInnings)
-    : (match.innings2 || match.secondInnings);
-
-  if (direct && typeof direct === "object") return direct;
-
-  const card = match.scorecard;
-  if (card && typeof card === "object") {
-    const batting = String(card.battingTeam || "").toUpperCase();
-    if (batting === side) return card;
+  if (typeof value.toDate === "function") {
+    return value.toDate().toLocaleString("en-IN");
   }
 
-  return null;
-}
-
-function scoreText(match, side) {
-  const innings = inningsFor(match, side);
-  const raw = side === "A" ? match.scoreA : match.scoreB;
-
-  if (innings) {
-    return `${val(innings.runs, raw, 0)}/${val(innings.wickets, 0)} (${val(innings.overs, "0.0")} ov)`;
+  if (value instanceof Date) {
+    return value.toLocaleString("en-IN");
   }
 
-  if (raw !== undefined && raw !== null && raw !== "") {
-    return String(raw);
+  if (typeof value === "object" && value.seconds) {
+    return new Date(value.seconds * 1000).toLocaleString("en-IN");
   }
 
-  const card = match.scorecard;
-  if (card && typeof card === "object") {
-    const batting = String(card.battingTeam || "").toUpperCase();
-    if (batting === side) {
-      return `${val(card.runs, 0)}/${val(card.wickets, 0)} (${val(card.overs, "0.0")} ov)`;
-    }
+  return String(value);
+}
+
+function getMatchDate(match) {
+  return getDate(match.date || match.matchDate || match.startDate);
+}
+
+function getMatchStatus(match) {
+  return String(match.status || match.matchStatus || "Scheduled");
+}
+
+function getTeamName(match, side) {
+  if (side === 1) {
+    return text(
+      match.team1Name ||
+      match.team1 ||
+      match.homeTeam ||
+      match.teamA ||
+      match.teamOne,
+      "Team 1"
+    );
   }
 
-  return "—";
+  return text(
+    match.team2Name ||
+    match.team2 ||
+    match.awayTeam ||
+    match.teamB ||
+    match.teamTwo,
+    "Team 2"
+  );
 }
 
-function statusOf(match) {
-  return String(match.status || "Upcoming").trim();
+function getMatchTitle(match, index) {
+  const number =
+    match.matchNumber || match.matchNo || match.number || index + 1;
+
+  return `Match ${number}: ${getTeamName(match, 1)} vs ${getTeamName(match, 2)}`;
 }
 
-function matchCard(match, id, showScore = true) {
-  const teams = teamNames(match);
-  const number = val(match.matchNumber, match.matchNo, match.number, id);
-
-  return `
-    <article class="match-card">
-      <span class="pill">${esc(statusOf(match))}</span>
-      <h3 style="margin-top:10px">Match ${esc(number)}</h3>
-      <strong>${esc(teams.a)} vs ${esc(teams.b)}</strong>
-      ${showScore ? `
-        <div class="score">
-          ${esc(scoreText(match, "A"))}
-          <span class="muted"> / </span>
-          ${esc(scoreText(match, "B"))}
-        </div>` : ""}
-      <p class="muted">📅 ${esc(dateText(val(match.matchDate, match.date)))}</p>
-      <p class="muted">⏰ ${esc(val(match.time, match.matchTime, "Time TBA"))}</p>
-      <p class="muted">📍 ${esc(val(match.venue, state.tournament.venue, "Venue TBA"))}</p>
-      ${match.result ? `<p><strong>🏆 ${esc(match.result)}</strong></p>` : ""}
-      <button type="button" data-scorecard="${esc(id)}">View Scorecard</button>
-    </article>`;
+function showMessage(message) {
+  if (messageRoot) {
+    messageRoot.textContent = message;
+  }
 }
 
-function renderTournamentInfo() {
-  const t = state.tournament;
+function clearMessage() {
+  if (messageRoot) {
+    messageRoot.textContent = "";
+  }
+}
 
-  $("tournamentInfo").innerHTML = `
-    <h2>${esc(tournamentName(t))}</h2>
-    <p>📍 <strong>Venue:</strong> ${esc(val(t.venue, t.location, "To be announced"))}</p>
-    <p>🏏 <strong>Format:</strong> ${esc(val(t.format, "To be announced"))}</p>
-    <p>📅 <strong>Start:</strong> ${esc(dateText(t.startDate))}</p>
-    <p>📅 <strong>End:</strong> ${esc(dateText(t.endDate))}</p>
-    <p><strong>Status:</strong> ${esc(val(t.status, "Upcoming"))}</p>`;
+function renderTournamentInfo(tournament) {
+  if (!infoRoot) return;
+
+  infoRoot.innerHTML = `
+    <h2>${escapeHTML(text(
+      tournament.tournamentName || tournament.name || tournament.title,
+      "Tournament Details"
+    ))}</h2>
+    <p><strong>Venue:</strong> ${escapeHTML(text(tournament.venue || tournament.location, "To be announced"))}</p>
+    <p><strong>Format:</strong> ${escapeHTML(text(tournament.format, "To be announced"))}</p>
+    <p><strong>Start:</strong> ${escapeHTML(getDate(tournament.startDate))}</p>
+    <p><strong>End:</strong> ${escapeHTML(getDate(tournament.endDate))}</p>
+    <p><strong>Status:</strong> ${escapeHTML(text(tournament.status, "Upcoming"))}</p>
+  `;
 }
 
 function renderTeams() {
-  $("teamsList").innerHTML = state.teams.length
-    ? state.teams.map(team => {
-        const name = val(team.teamName, team.name, team.team, "Team");
-        const players = Array.isArray(team.players) ? team.players : [];
-        const names = players.map(p =>
-          typeof p === "string" ? p : val(p.name, p.playerName, "")
-        ).filter(Boolean);
+  if (!teamsRoot) return;
 
-        return `
-          <article class="team-card">
-            <h3>${esc(name)}</h3>
-            <p class="muted">Captain: ${esc(val(team.captainName, team.captain, "Not listed"))}</p>
-            <p class="muted">Location: ${esc(val(team.city, team.area, "Not listed"))}</p>
-            <p class="muted">Registered players: ${names.length}</p>
-            ${names.length ? `<p>${names.map(esc).join(", ")}</p>` : ""}
-          </article>`;
-      }).join("")
-    : `<p class="empty">No teams found for this tournament.</p>`;
-}
-
-function renderMatches() {
-  const all = state.matches;
-
-  $("scheduleList").innerHTML = all.length
-    ? all.map(m => matchCard(m.data, m.id, false)).join("")
-    : `<p class="empty">No matches have been added yet.</p>`;
-
-  const live = all.filter(({ data }) => {
-    const s = statusOf(data).toLowerCase();
-    return s.includes("live") || s.includes("in progress") ||
-      s.includes("innings");
-  });
-
-  $("liveList").innerHTML = live.length
-    ? live.map(m => matchCard(m.data, m.id, true)).join("")
-    : `<p class="empty">No live matches right now.</p>`;
-
-  const completed = all.filter(({ data }) => {
-    const s = statusOf(data).toLowerCase();
-    return s === "completed" || Boolean(data.result);
-  });
-
-  $("resultsList").innerHTML = completed.length
-    ? completed.map(m => matchCard(m.data, m.id, true)).join("")
-    : `<p class="empty">No completed results yet.</p>`;
-}
-
-function parseRuns(value) {
-  const match = String(value ?? "0").match(/^\s*(\d+)/);
-  return match ? Number(match[1]) : 0;
-}
-
-function oversToBalls(value) {
-  if (value === undefined || value === null || value === "") return null;
-
-  const text = String(value).trim();
-
-  if (/^\d+\.\d+$/.test(text)) {
-    const [overs, balls] = text.split(".").map(Number);
-    if (balls > 5) return null;
-    return overs * 6 + balls;
+  if (!allTeams.length) {
+    teamsRoot.innerHTML = "<p>No teams have been added to this tournament yet.</p>";
+    return;
   }
 
-  const n = Number(text);
-  return Number.isFinite(n) && n >= 0 ? Math.round(n * 6) : null;
+  teamsRoot.innerHTML = allTeams.map((team, index) => {
+    const name = team.teamName || team.name || team.team || `Team ${index + 1}`;
+    const captain = team.captainName || team.captain || "";
+    const city = team.city || team.area || "";
+    const players = Array.isArray(team.players) ? team.players : [];
+
+    const playerList = players.length
+      ? `<ul>${players.map(player => {
+          const playerName = typeof player === "string"
+            ? player
+            : player.name || player.playerName || "Player";
+          return `<li>${escapeHTML(playerName)}</li>`;
+        }).join("")}</ul>`
+      : "";
+
+    return `
+      <article class="team-card">
+        <h3>${escapeHTML(name)}</h3>
+        ${captain ? `<p><strong>Captain:</strong> ${escapeHTML(captain)}</p>` : ""}
+        ${city ? `<p><strong>Area:</strong> ${escapeHTML(city)}</p>` : ""}
+        ${playerList}
+      </article>
+    `;
+  }).join("");
 }
 
-function sideBalls(match, side) {
-  const direct = side === "A"
-    ? val(match.oversA, match.teamAOvers, match.innings1Overs, match.overs1)
-    : val(match.oversB, match.teamBOvers, match.innings2Overs, match.overs2);
+function renderSchedule() {
+  if (!scheduleRoot) return;
 
-  if (direct !== "") return oversToBalls(direct);
+  const scheduled = allMatches.filter(match => {
+    const status = getMatchStatus(match).toLowerCase();
+    return !status.includes("complete") &&
+           !status.includes("finished") &&
+           !status.includes("result") &&
+           !status.includes("live");
+  });
 
-  const innings = inningsFor(match, side);
-  if (innings) {
-    if (innings.balls !== undefined) return Number(innings.balls) || 0;
-    if (innings.overs !== undefined) return oversToBalls(innings.overs);
+  if (!scheduled.length) {
+    scheduleRoot.innerHTML = "<p>No upcoming schedule is available yet.</p>";
+    return;
   }
 
-  return null;
+  scheduleRoot.innerHTML = scheduled.map(match => {
+    const index = allMatches.indexOf(match);
+    return `
+      <article class="match-card">
+        <h3>${escapeHTML(getMatchTitle(match, index))}</h3>
+        <p><strong>Date:</strong> ${escapeHTML(getMatchDate(match))}</p>
+        <p><strong>Time:</strong> ${escapeHTML(text(match.time || match.matchTime, "To be announced"))}</p>
+        <p><strong>Venue:</strong> ${escapeHTML(text(match.venue, "To be announced"))}</p>
+        <p><strong>Status:</strong> ${escapeHTML(getMatchStatus(match))}</p>
+      </article>
+    `;
+  }).join("");
 }
 
-function oversLabel(balls) {
-  if (balls === null || balls === undefined) return "—";
-  return `${Math.floor(balls / 6)}.${balls % 6}`;
+function renderLive() {
+  if (!liveRoot) return;
+
+  const liveMatches = allMatches.filter(match => {
+    const status = getMatchStatus(match).toLowerCase();
+    return status.includes("live") || status.includes("progress");
+  });
+
+  if (!liveMatches.length) {
+    liveRoot.innerHTML = "<p>No live matches at the moment.</p>";
+    return;
+  }
+
+  liveRoot.innerHTML = liveMatches.map(match => {
+    const index = allMatches.indexOf(match);
+    const score = match.scorecard || {};
+    const scoreText = score.runs !== undefined
+      ? `${score.runs}/${score.wickets ?? 0}`
+      : text(match.currentScore || match.score, "Score not available");
+
+    const overs = score.overs ?? match.currentOvers;
+
+    return `
+      <article class="match-card">
+        <h3>🔴 ${escapeHTML(getMatchTitle(match, index))}</h3>
+        <p><strong>Score:</strong> ${escapeHTML(scoreText)}</p>
+        ${overs !== undefined ? `<p><strong>Overs:</strong> ${escapeHTML(overs)}</p>` : ""}
+        <p><strong>Status:</strong> ${escapeHTML(getMatchStatus(match))}</p>
+        ${renderScorecardHTML(match)}
+      </article>
+    `;
+  }).join("");
+}
+
+function renderResults() {
+  if (!resultsRoot) return;
+
+  const finished = allMatches.filter(match => {
+    const status = getMatchStatus(match).toLowerCase();
+    return status.includes("complete") ||
+           status.includes("finished") ||
+           status.includes("result") ||
+           Boolean(match.winner || match.result);
+  });
+
+  if (!finished.length) {
+    resultsRoot.innerHTML = "<p>No match results are available yet.</p>";
+    return;
+  }
+
+  resultsRoot.innerHTML = finished.map(match => {
+    const index = allMatches.indexOf(match);
+    const scoreA = match.scoreA || match.team1Score || "";
+    const scoreB = match.scoreB || match.team2Score || "";
+    const winner = match.winner || "";
+    const result = match.result || match.resultText || "";
+
+    return `
+      <article class="match-card">
+        <h3>${escapeHTML(getMatchTitle(match, index))}</h3>
+        ${scoreA ? `<p><strong>${escapeHTML(getTeamName(match, 1))}:</strong> ${escapeHTML(scoreA)}</p>` : ""}
+        ${scoreB ? `<p><strong>${escapeHTML(getTeamName(match, 2))}:</strong> ${escapeHTML(scoreB)}</p>` : ""}
+        ${winner ? `<p><strong>Winner:</strong> ${escapeHTML(winner)}</p>` : ""}
+        ${result ? `<p>${escapeHTML(result)}</p>` : ""}
+        <p><strong>Status:</strong> ${escapeHTML(getMatchStatus(match))}</p>
+        ${renderScorecardHTML(match)}
+      </article>
+    `;
+  }).join("");
+}
+
+function renderScorecardHTML(match) {
+  const scorecard = match.scorecard || {};
+  const innings = scorecard.innings || match.innings;
+
+  if (!innings) return "";
+
+  const striker = scorecard.striker || {};
+  const nonStriker = scorecard.nonStriker || {};
+  const bowler = scorecard.bowler || {};
+
+  return `
+    <div class="scorecard">
+      <h4>Scorecard</h4>
+      <p><strong>Batting:</strong> ${escapeHTML(text(scorecard.battingTeam, "Not provided"))}</p>
+      <p><strong>Striker:</strong> ${escapeHTML(text(striker.name, "Not available"))}
+        — ${escapeHTML(striker.runs ?? 0)} runs (${escapeHTML(striker.balls ?? 0)} balls)</p>
+      <p><strong>Non-striker:</strong> ${escapeHTML(text(nonStriker.name, "Not available"))}
+        — ${escapeHTML(nonStriker.runs ?? 0)} runs (${escapeHTML(nonStriker.balls ?? 0)} balls)</p>
+      <p><strong>Bowler:</strong> ${escapeHTML(text(bowler.name, "Not available"))}
+        — ${escapeHTML(bowler.wickets ?? 0)} wickets</p>
+    </div>
+  `;
 }
 
 function calculatePoints() {
   const table = new Map();
 
-  state.teams.forEach(team => {
-    const name = val(team.teamName, team.name, team.team, team.id);
-    table.set(name.trim().toLowerCase(), {
-      name, played: 0, won: 0, lost: 0, nr: 0, points: 0,
-      runsFor: 0, runsAgainst: 0, ballsFor: 0, ballsAgainst: 0,
-      hasBallsFor: true, hasBallsAgainst: true
-    });
+  function ensureTeam(name) {
+    if (!table.has(name)) {
+      table.set(name, {
+        name,
+        played: 0,
+        won: 0,
+        lost: 0,
+        tied: 0,
+        points: 0,
+        runsFor: 0,
+        runsAgainst: 0
+      });
+    }
+    return table.get(name);
+  }
+
+  allTeams.forEach((team, index) => {
+    ensureTeam(team.teamName || team.name || team.team || `Team ${index + 1}`);
   });
 
-  state.matches.forEach(({ data: m }) => {
-    const status = statusOf(m).toLowerCase();
-    const result = String(m.result || "").trim();
-    if (status !== "completed" && !result) return;
+  allMatches.forEach(match => {
+    const status = getMatchStatus(match).toLowerCase();
+    const isFinished =
+      status.includes("complete") ||
+      status.includes("finished") ||
+      status.includes("result") ||
+      Boolean(match.winner || match.result);
 
-    const names = teamNames(m);
-    const a = table.get(names.a.trim().toLowerCase());
-    const b = table.get(names.b.trim().toLowerCase());
-    if (!a || !b || a === b) return;
+    if (!isFinished) return;
 
-    const ra = parseRuns(val(
-      m.scoreA, inningsFor(m, "A")?.runs, m.firstInnings?.runs, 0
-    ));
-    const rb = parseRuns(val(
-      m.scoreB, inningsFor(m, "B")?.runs, m.secondInnings?.runs, 0
-    ));
-    const ba = sideBalls(m, "A");
-    const bb = sideBalls(m, "B");
+    const nameA = getTeamName(match, 1);
+    const nameB = getTeamName(match, 2);
+    const a = ensureTeam(nameA);
+    const b = ensureTeam(nameB);
 
     a.played++;
     b.played++;
-    a.runsFor += ra;
-    a.runsAgainst += rb;
-    b.runsFor += rb;
-    b.runsAgainst += ra;
 
-    if (ba !== null) a.ballsFor += ba;
-    else a.hasBallsFor = false;
+    const scoreA = Number(match.scoreA ?? match.team1Score ?? 0);
+    const scoreB = Number(match.scoreB ?? match.team2Score ?? 0);
 
-    if (bb !== null) a.ballsAgainst += bb;
-    else a.hasBallsAgainst = false;
+    if (Number.isFinite(scoreA)) a.runsFor += scoreA;
+    if (Number.isFinite(scoreB)) b.runsFor += scoreB;
 
-    if (bb !== null) b.ballsFor += bb;
-    else b.hasBallsFor = false;
+    const winner = String(match.winner || "").trim();
 
-    if (ba !== null) b.ballsAgainst += ba;
-    else b.hasBallsAgainst = false;
-
-    const r = result.toLowerCase();
-    const winner = String(m.winner || "").trim().toLowerCase();
-
-    if (r.includes("no result") || r === "nr" || r.includes("abandoned")) {
-      a.nr++; b.nr++;
-      a.points++; b.points++;
-      return;
-    }
-
-    if (r.includes("tie") || r.includes("draw")) {
-      a.points++; b.points++;
-      return;
-    }
-
-    if (winner === a.name.toLowerCase() || r.includes(a.name.toLowerCase() + " won")) {
-      a.won++; a.points += 2; b.lost++;
-      return;
-    }
-
-    if (winner === b.name.toLowerCase() || r.includes(b.name.toLowerCase() + " won")) {
-      b.won++; b.points += 2; a.lost++;
+    if (winner && winner === nameA) {
+      a.won++;
+      a.points += 2;
+      b.lost++;
+    } else if (winner && winner === nameB) {
+      b.won++;
+      b.points += 2;
+      a.lost++;
+    } else if (match.result && /tie|tied/i.test(String(match.result))) {
+      a.tied++;
+      b.tied++;
+      a.points++;
+      b.points++;
+    } else if (scoreA !== scoreB) {
+      if (scoreA > scoreB) {
+        a.won++;
+        a.points += 2;
+        b.lost++;
+      } else {
+        b.won++;
+        b.points += 2;
+        a.lost++;
+      }
     }
   });
 
-  return [...table.values()].map(t => {
-    const available = t.hasBallsFor && t.hasBallsAgainst &&
-      t.ballsFor > 0 && t.ballsAgainst > 0;
-
-    const nrr = available
-      ? Number((
-          t.runsFor / (t.ballsFor / 6) -
-          t.runsAgainst / (t.ballsAgainst / 6)
-        ).toFixed(3))
-      : null;
-
-    return { ...t, nrr };
-  }).sort((a, b) =>
+  return [...table.values()].sort((a, b) =>
     b.points - a.points ||
-    (b.nrr ?? -999) - (a.nrr ?? -999) ||
-    b.won - a.won
+    b.won - a.won ||
+    a.name.localeCompare(b.name)
   );
 }
 
 function renderPoints() {
-  const teams = calculatePoints();
+  if (!pointsRoot) return;
 
-  $("pointsBody").innerHTML = teams.length
-    ? teams.map((t, i) => `
-        <tr>
-          <td>${i + 1}</td>
-          <td><strong>${esc(t.name)}</strong></td>
-          <td>${t.played}</td>
-          <td>${t.won}</td>
-          <td>${t.lost}</td>
-          <td>${t.nr}</td>
-          <td>${t.nrr === null ? "—" : (t.nrr >= 0 ? "+" : "") + t.nrr.toFixed(3)}</td>
-          <td><strong>${t.points}</strong></td>
-          <td>${oversLabel(t.hasBallsFor ? t.ballsFor : null)}</td>
-          <td>${oversLabel(t.hasBallsAgainst ? t.ballsAgainst : null)}</td>
-        </tr>`).join("")
-    : `<tr><td colspan="10" class="empty">No teams found.</td></tr>`;
+  const rows = calculatePoints();
+
+  if (!rows.length) {
+    pointsRoot.innerHTML =
+      '<tr><td colspan="6">Points table is not available yet.</td></tr>';
+    return;
+  }
+
+  pointsRoot.innerHTML = rows.map((team, index) => `
+    <tr>
+      <td>${index + 1}</td>
+      <td>${escapeHTML(team.name)}</td>
+      <td>${team.played}</td>
+      <td>${team.won}</td>
+      <td>${team.lost}</td>
+      <td>${team.points}</td>
+    </tr>
+  `).join("");
 }
 
 function renderAll() {
-  renderTournamentInfo();
   renderTeams();
-  renderMatches();
+  renderSchedule();
+  renderLive();
+  renderResults();
   renderPoints();
 }
 
-function showScorecard(matchId) {
-  const entry = state.matches.find(m => m.id === matchId);
-  if (!entry) return;
+function activateTab(tabName) {
+  const allowed = ["teams", "schedule", "live", "results", "points"];
+  const tab = allowed.includes(tabName) ? tabName : "teams";
 
-  const m = entry.data;
-  const innings = [
-    m.innings1 || m.firstInnings,
-    m.innings2 || m.secondInnings
-  ].filter(v => v && typeof v === "object");
+  document.querySelectorAll("[data-tab]").forEach(button => {
+    const active = button.dataset.tab === tab;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-selected", active ? "true" : "false");
+  });
 
-  if (!innings.length && m.scorecard && typeof m.scorecard === "object") {
-    innings.push(m.scorecard);
-  }
-
-  const details = innings.length
-    ? innings.map((inn, index) => {
-        const striker = inn.striker || {};
-        const non = inn.nonStriker || {};
-        const bowler = inn.bowler || {};
-        const extras = inn.extras || {};
-        const dismissals = Array.isArray(inn.dismissals) ? inn.dismissals : [];
-
-        return `
-          <article class="match-card">
-            <h3>Innings ${esc(val(inn.innings, index + 1))} — ${esc(val(inn.battingTeam, ""))}</h3>
-            <div class="score">${esc(val(inn.runs, 0))}/${esc(val(inn.wickets, 0))}</div>
-            <p class="muted">Overs: ${esc(val(inn.overs, "—"))} · Balls: ${esc(val(inn.balls, "—"))}</p>
-
-            <h3>Batters recorded</h3>
-            <p>${esc(val(striker.name, "Striker"))}: ${esc(val(striker.runs, 0))} runs, ${esc(val(striker.balls, 0))} balls</p>
-            <p>${esc(val(non.name, "Non-striker"))}: ${esc(val(non.runs, 0))} runs, ${esc(val(non.balls, 0))} balls</p>
-
-            <h3>Bowler recorded</h3>
-            <p>${esc(val(bowler.name, "Bowler"))} — ${esc(val(bowler.runs, 0))} runs, ${esc(val(bowler.wickets, 0))} wickets</p>
-
-            <h3>Extras</h3>
-            <p>Wides ${esc(val(extras.wides, 0))}, No-balls ${esc(val(extras.noBalls, 0))}, Byes ${esc(val(extras.byes, 0))}, Leg-byes ${esc(val(extras.legByes, 0))}, Total ${esc(val(extras.total, 0))}</p>
-
-            ${dismissals.length ? `
-              <h3>Wickets</h3>
-              <ul>${dismissals.map(d => `
-                <li>${esc(val(d.batterName, "Batter"))} — ${esc(val(d.type, "Dismissal"))}</li>
-              `).join("")}</ul>` : ""}
-          </article>`;
-      }).join("")
-    : `<p class="empty">No saved innings scorecard is available for this match yet.</p>`;
-
-  $("scorecardDetails").innerHTML = `
-    <section class="panel">
-      <h2>📋 Match ${esc(val(m.matchNumber, m.matchNo, matchId))}</h2>
-      <h3>${esc(teamNames(m).a)} vs ${esc(teamNames(m).b)}</h3>
-      <p><strong>Result:</strong> ${esc(val(m.result, "Not available"))}</p>
-      ${details}
-      <p class="muted">Scorecard mein wahi player details dikhengi jo scoring system ne save ki hain.</p>
-    </section>`;
-
-  $("scorecardDetails").scrollIntoView({
-    behavior: "smooth",
-    block: "start"
+  allowed.forEach(name => {
+    const section = $(name);
+    if (section) {
+      section.hidden = name !== tab;
+      section.style.display = name === tab ? "" : "none";
+    }
   });
 }
 
-function switchTournament(id) {
-  if (!id) return;
+function startTournamentListeners(id) {
+  if (unsubscribeTeams) unsubscribeTeams();
+  if (unsubscribeMatches) unsubscribeMatches();
+  if (unsubscribeTournament) unsubscribeTournament();
 
-  clearListeners();
-  state.tournamentId = id;
-  state.tournament = {};
-  state.teams = [];
-  state.matches = [];
+  allTeams = [];
+  allMatches = [];
+  renderAll();
 
-  $("scorecardDetails").innerHTML = "";
-  $("teamsList").innerHTML = `<p class="empty">Loading teams...</p>`;
-  $("scheduleList").innerHTML = `<p class="empty">Loading schedule...</p>`;
-  $("liveList").innerHTML = `<p class="empty">Loading live matches...</p>`;
-  $("resultsList").innerHTML = `<p class="empty">Loading results...</p>`;
-  $("pointsBody").innerHTML = `<tr><td colspan="10">Loading...</td></tr>`;
-  setMessage("Loading tournament data...");
-
-  state.unsubscribers.push(onSnapshot(
+  unsubscribeTournament = onSnapshot(
     doc(tournamentDb, "tournaments", id),
-    snap => {
-      if (!snap.exists()) {
-        $("tournamentInfo").textContent = "Tournament not found.";
-        setMessage("This tournament could not be found.");
+    snapshot => {
+      if (!snapshot.exists()) {
+        showMessage("This tournament was not found. Please check the tournament link.");
+        if (infoRoot) infoRoot.innerHTML = "";
         return;
       }
-      state.tournament = snap.data();
-      renderTournamentInfo();
-      renderMatches();
+
+      clearMessage();
+      renderTournamentInfo(snapshot.data());
     },
     error => {
-      console.error(error);
-      setMessage("Could not read tournament. Check Firestore read permissions.");
+      console.error("Tournament details error:", error);
+      showMessage("Could not load tournament details. Check Firebase read permissions.");
     }
-  ));
+  );
 
-  state.unsubscribers.push(onSnapshot(
+  unsubscribeTeams = onSnapshot(
     collection(tournamentDb, "tournaments", id, "teams"),
-    snap => {
-      state.teams = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    snapshot => {
+      allTeams = snapshot.docs.map(item => ({
+        id: item.id,
+        ...item.data()
+      }));
       renderAll();
     },
     error => {
-      console.error(error);
-      $("teamsList").textContent = "Unable to load teams.";
-      setMessage("Unable to load teams. Check Firestore read permissions.");
+      console.error("Teams listener error:", error);
+      if (teamsRoot) {
+        teamsRoot.innerHTML =
+          "<p>Teams could not be loaded. Check Firebase read permissions.</p>";
+      }
     }
-  ));
+  );
 
-  state.unsubscribers.push(onSnapshot(
+  unsubscribeMatches = onSnapshot(
     collection(tournamentDb, "tournaments", id, "matches"),
-    snap => {
-      state.matches = snap.docs.map(d => ({ id: d.id, data: d.data() }));
-      state.matches.sort((a, b) =>
-        String(val(a.data.matchDate, a.data.date, ""))
-          .localeCompare(String(val(b.data.matchDate, b.data.date, "")))
-      );
+    snapshot => {
+      allMatches = snapshot.docs.map(item => ({
+        id: item.id,
+        ...item.data()
+      }));
       renderAll();
-      setMessage("Tournament data updated. This page is view-only.");
     },
     error => {
-      console.error(error);
-      setMessage("Unable to load matches. Check Firestore read permissions.");
+      console.error("Matches listener error:", error);
+      const message = "Match data could not be loaded. Check Firebase read permissions.";
+      if (scheduleRoot) scheduleRoot.innerHTML = `<p>${message}</p>`;
+      if (liveRoot) liveRoot.innerHTML = `<p>${message}</p>`;
+      if (resultsRoot) resultsRoot.innerHTML = `<p>${message}</p>`;
     }
-  ));
+  );
+}
+
+function renderTournamentOptions() {
+  if (!selectRoot) return;
+
+  selectRoot.innerHTML = allTournaments.map(tournament => {
+    const name = tournament.tournamentName ||
+      tournament.name ||
+      tournament.title ||
+      "Tournament";
+
+    return `
+      <option value="${escapeHTML(tournament.id)}">
+        ${escapeHTML(name)}
+      </option>
+    `;
+  }).join("");
+
+  if (selectedTournamentId) {
+    selectRoot.value = selectedTournamentId;
+  }
+}
+
+function selectTournament(id) {
+  if (!id) return;
+
+  selectedTournamentId = id;
+
+  const url = new URL(window.location.href);
+  url.searchParams.set("id", id);
+  url.searchParams.set("tournamentId", id);
+  window.history.replaceState({}, "", url);
+
+  if (selectRoot) selectRoot.value = id;
+
+  startTournamentListeners(id);
 }
 
 document.querySelectorAll("[data-tab]").forEach(button => {
   button.addEventListener("click", () => {
-    document.querySelectorAll("[data-tab]").forEach(b =>
-      b.classList.toggle("active", b === button)
-    );
-    document.querySelectorAll(".section").forEach(section =>
-      section.classList.toggle("active", section.id === button.dataset.tab)
-    );
+    const tab = button.dataset.tab;
+    activateTab(tab);
+
+    const url = new URL(window.location.href);
+    url.searchParams.set("tab", tab);
+    window.history.replaceState({}, "", url);
   });
 });
 
-document.addEventListener("click", event => {
-  const button = event.target.closest("[data-scorecard]");
-  if (button) showScorecard(button.dataset.scorecard);
-});
+if (selectRoot) {
+  selectRoot.addEventListener("change", () => {
+    selectTournament(selectRoot.value);
+  });
+}
 
-$("tournamentSelect").addEventListener("change", event => {
-  const id = event.target.value;
-  if (!id) return;
-
-  try {
-    localStorage.setItem("selectedTournamentId", id);
-  } catch {}
-  switchTournament(id);
-});
+activateTab(requestedTab);
 
 onSnapshot(
   collection(tournamentDb, "tournaments"),
-  snap => {
-    const select = $("tournamentSelect");
-    const tournaments = snap.docs.map(d => ({ id: d.id, data: d.data() }));
+  snapshot => {
+    allTournaments = snapshot.docs.map(item => ({
+      id: item.id,
+      ...item.data()
+    }));
 
-    tournaments.sort((a, b) =>
-      (b.data.createdAt?.toMillis?.() || 0) -
-      (a.data.createdAt?.toMillis?.() || 0)
-    );
+    renderTournamentOptions();
 
-    const params = new URLSearchParams(location.search);
-    let savedId = "";
-    try {
-      savedId = localStorage.getItem("selectedTournamentId") || "";
-    } catch {}
-
-    const requestedId = params.get("id") ||
-      params.get("tournamentId") || savedId || select.value;
-
-    select.innerHTML = "";
-
-    if (!tournaments.length) {
-      select.innerHTML = `<option value="">No tournaments found</option>`;
-      $("tournamentInfo").textContent = "No tournaments have been created yet.";
-      setMessage("No tournaments found.");
+    if (!allTournaments.length) {
+      showMessage("No tournaments have been created yet.");
       return;
     }
 
-    tournaments.forEach(t => {
-      const option = document.createElement("option");
-      option.value = t.id;
-      option.textContent = tournamentName(t.data);
-      select.appendChild(option);
-    });
+    const exists = allTournaments.some(t => t.id === selectedTournamentId);
 
-    const chosen = tournaments.some(t => t.id === requestedId)
-      ? requestedId
-      : tournaments[0].id;
+    if (!selectedTournamentId || !exists) {
+      selectedTournamentId = allTournaments[0].id;
+    }
 
-    select.value = chosen;
+    if (selectRoot) selectRoot.value = selectedTournamentId;
 
-    if (state.tournamentId !== chosen) {
-      switchTournament(chosen);
+    // Start listeners only when the selected tournament changes.
+    if (window.__aplDetailsSelectedId !== selectedTournamentId) {
+      window.__aplDetailsSelectedId = selectedTournamentId;
+      startTournamentListeners(selectedTournamentId);
     }
   },
   error => {
-    console.error(error);
-    $("tournamentSelect").innerHTML =
-      `<option value="">Unable to load tournaments</option>`;
-    setMessage("Could not load tournaments. Check Firebase read permissions.");
+    console.error("Tournament list error:", error);
+    showMessage("Tournaments could not be loaded. Check Firebase read permissions.");
   }
 );
