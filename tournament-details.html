@@ -1,547 +1,482 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#087f3c">
-  <title>APL Tournament Details | APL Cricket League</title>
+
+  <title>Tournament Details | APL Cricket League</title>
+  <meta name="description" content="View tournament teams, match schedule, live scores, results and points table on APL Cricket League.">
+
   <style>
     :root {
-      --green: #087f3c;
-      --dark: #0b1110;
-      --panel: #151e1a;
-      --muted: #b8c7bf;
-      --line: #304139;
+      --green: #08a045;
+      --green-dark: #075b30;
+      --background: #0b1110;
+      --surface: #121c18;
+      --surface-light: #192720;
+      --text: #f5fff8;
+      --muted: #b5c8bc;
+      --border: #2b4034;
+      --danger: #ff7777;
+      --gold: #ffd166;
     }
-    * { box-sizing: border-box; }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: var(--dark);
-      color: #f8faf9;
+      background: var(--background);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.6;
     }
-    header {
-      padding: 22px 16px;
-      background: #075b30;
-      border-bottom: 3px solid #08a045;
+
+    a {
+      color: #7deba5;
+      text-decoration: none;
     }
-    header h1 { margin: 0 0 6px; font-size: 25px; }
-    header p { margin: 0; color: #d9f5e4; font-size: 14px; }
-    main { max-width: 1050px; margin: auto; padding: 16px; }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .topbar {
+      background: linear-gradient(135deg, #075b30, #087f3c);
+      padding: 18px 16px;
+      border-bottom: 2px solid #19b85a;
+    }
+
+    .topbar-inner {
+      max-width: 1150px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-size: 23px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: 0.3px;
+    }
+
+    .brand small {
+      display: block;
+      font-size: 12px;
+      font-weight: normal;
+      letter-spacing: 1px;
+      opacity: 0.9;
+    }
+
+    .back-link {
+      color: white;
+      padding: 9px 14px;
+      border: 1px solid #ffffff80;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 1150px;
+      margin: 0 auto;
+      padding: 22px 15px 40px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #123c27, #10251b);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: clamp(25px, 5vw, 36px);
+      line-height: 1.25;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+    }
+
     .panel {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 15px;
-    }
-    h2 { margin: 0 0 12px; font-size: 20px; }
-    h3 { margin: 0 0 8px; }
-    .muted { color: var(--muted); }
-    .notice { padding: 12px; border-radius: 9px; background: #202b25; }
-    .tournament-grid, .match-grid, .team-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 12px;
-    }
-    .tournament-card, .match-card, .team-card {
-      padding: 14px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: #101713;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 18px;
+      margin-bottom: 20px;
       min-width: 0;
     }
-    button, select {
-      font: inherit;
-      border-radius: 8px;
-      padding: 11px 13px;
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 22px;
     }
-    button {
-      border: 0;
+
+    h3 {
+      margin-top: 0;
+    }
+
+    .select-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    select {
+      width: 100%;
+      max-width: 600px;
+      min-height: 46px;
+      background: #0b1510;
       color: white;
-      background: var(--green);
+      border: 1px solid #42644e;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 16px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 4px 0 12px;
+      margin-bottom: 10px;
+      scrollbar-width: thin;
+    }
+
+    .tab-button {
+      flex: 0 0 auto;
+      border: 1px solid #365342;
+      border-radius: 9px;
+      background: var(--surface-light);
+      color: var(--text);
+      padding: 11px 15px;
+      font-size: 14px;
       font-weight: bold;
       cursor: pointer;
     }
-    button:hover { filter: brightness(1.12); }
-    select {
-      width: 100%;
+
+    .tab-button:hover,
+    .tab-button.active {
+      background: var(--green);
       color: #fff;
-      background: #101713;
-      border: 1px solid #52665a;
+      border-color: var(--green);
     }
-    .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0; }
-    .tabs button { background: #26372d; }
-    .tabs button.active { background: var(--green); }
-    .section { display: none; }
-    .section.active { display: block; }
-    .score { font-size: 25px; font-weight: 800; margin: 8px 0; }
-    .pill {
-      display: inline-block; padding: 5px 9px; border-radius: 20px;
-      background: #23392c; color: #baf5cc; font-size: 12px;
+
+    .tab-panel {
+      display: none;
+      animation: fadeIn 0.2s ease-in;
     }
-    .table-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; min-width: 580px; }
-    th, td { text-align: left; padding: 10px 9px; border-bottom: 1px solid var(--line); }
-    th { color: #c4e9d0; background: #1c2b22; }
-    .empty { color: var(--muted); padding: 14px 0; }
-    footer { text-align: center; color: var(--muted); padding: 24px 12px; font-size: 13px; }
-    a { color: #9ee7b8; }
-    @media(max-width: 480px) {
-      header h1 { font-size: 21px; }
-      main { padding: 10px; }
-      .panel { padding: 12px; }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0.5; }
+      to { opacity: 1; }
+    }
+
+    .data-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr));
+      gap: 14px;
+    }
+
+    .data-card {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      background: var(--surface-light);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 16px;
+    }
+
+    .data-card h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .data-card p {
+      color: var(--muted);
+      margin: 5px 0;
+    }
+
+    .status {
+      display: inline-block;
+      border-radius: 20px;
+      background: #174a2d;
+      color: #9cffbc;
+      padding: 3px 10px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .action-button {
+      display: inline-block;
+      border: 0;
+      border-radius: 7px;
+      background: var(--green);
+      color: white;
+      padding: 10px 13px;
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .action-button:hover {
+      background: #0bb957;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 560px;
+      border-collapse: collapse;
+      background: var(--surface-light);
+    }
+
+    th,
+    td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #174a2d;
+      color: #fff;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .empty {
+      padding: 20px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed #365342;
+      border-radius: 9px;
+      grid-column: 1 / -1;
+    }
+
+    .message {
+      padding: 12px 14px;
+      margin: 12px 0;
+      border-radius: 8px;
+      background: #17271e;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      overflow-wrap: anywhere;
+    }
+
+    .message.error {
+      border-color: #8e3c3c;
+      color: #ffb3b3;
+    }
+
+    .scorecard {
+      margin-top: 16px;
+      padding: 16px;
+      background: #0c1711;
+      border: 1px solid #365342;
+      border-radius: 10px;
+      overflow-wrap: anywhere;
+    }
+
+    .scorecard h3 {
+      color: var(--gold);
+    }
+
+    .scorecard p {
+      margin: 7px 0;
+    }
+
+    .footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--muted);
+      padding: 22px 15px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 15px 10px 28px;
+      }
+
+      .hero {
+        padding: 18px;
+      }
+
+      .panel {
+        padding: 13px;
+      }
+
+      .brand {
+        font-size: 20px;
+      }
+
+      .tab-button {
+        padding: 10px 12px;
+      }
     }
   </style>
 </head>
+
 <body>
-<header>
-  <h1>🏏 APL Cricket League</h1>
-  <p>Public Tournament Centre · Teams · Schedule · Live Scores · Results</p>
-</header>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="./index.html">
+        🏏 APL Cricket League
+        <small>AJAY PREMIER LEAGUE · OFFICIAL WEBSITE</small>
+      </a>
 
-<main>
-  <section class="panel">
-    <h2>🏆 Select Tournament</h2>
-    <p class="muted">Tournament Platform में बनाए गए tournaments यहाँ दिखेंगे।</p>
-    <select id="tournamentSelect" aria-label="Select tournament">
-      <option value="">Loading tournaments...</option>
-    </select>
-    <div id="tournamentInfo" style="margin-top:14px" class="muted">
-      Tournament data loading...
+      <a class="back-link" href="./index.html">← Back to Home</a>
     </div>
-  </section>
+  </header>
 
-  <nav class="tabs" aria-label="Tournament sections">
-    <button class="active" data-tab="teams">👥 Teams</button>
-    <button data-tab="schedule">📅 Schedule</button>
-    <button data-tab="live">🔴 Live Score</button>
-    <button data-tab="results">🏆 Results</button>
-    <button data-tab="points">📊 Points Table</button>
-  </nav>
+  <main class="container">
+    <section class="hero">
+      <h1 id="pageTitle">Tournament Details</h1>
+      <p>Teams, match schedule, live scores, results and points table.</p>
+    </section>
 
-  <section id="teams" class="panel section active">
-    <h2>👥 Tournament Teams</h2>
-    <div id="teamsList" class="team-grid"><p class="empty">Loading teams...</p></div>
-  </section>
-
-  <section id="schedule" class="panel section">
-    <h2>📅 Match Schedule</h2>
-    <div id="scheduleList" class="match-grid"><p class="empty">Loading schedule...</p></div>
-  </section>
-
-  <section id="live" class="panel section">
-    <h2>🔴 Live Matches</h2>
-    <div id="liveList" class="match-grid"><p class="empty">Loading live matches...</p></div>
-  </section>
-
-  <section id="results" class="panel section">
-    <h2>🏆 Results & Scorecards</h2>
-    <div id="resultsList" class="match-grid"><p class="empty">Loading results...</p></div>
-    <div id="scorecardDetails" style="margin-top:16px"></div>
-  </section>
-
-  <section id="points" class="panel section">
-    <h2>📊 Points Table</h2>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th><th>Team</th><th>P</th><th>W</th><th>L</th>
-            <th>NR</th><th>NRR</th><th>Pts</th><th>Overs For</th><th>Overs Against</th>
-          </tr>
-        </thead>
-        <tbody id="pointsBody">
-          <tr><td colspan="10" class="empty">Loading points table...</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="muted">Points: Win = 2, Tie/No Result = 1, Loss = 0.</p>
-  </section>
-
-  <p id="pageMessage" class="notice" role="status">Connecting to tournament data...</p>
-</main>
-
-<footer>APL Cricket League · Public viewing page</footer>
-
-<script type="module">
-import { tournamentDb } from "./firebase.js";
-import {
-  collection, doc, onSnapshot
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-
-const $ = id => document.getElementById(id);
-const state = {
-  tournamentId: "",
-  tournament: {},
-  teams: [],
-  matches: [],
-  unsubscribers: []
-};
-
-function esc(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
-  }[c]));
-}
-function val(...values) {
-  return values.find(v => v !== undefined && v !== null && String(v).trim() !== "") ?? "";
-}
-function dateText(value) {
-  if (!value) return "To be announced";
-  if (typeof value === "string") return value;
-  if (typeof value.toDate === "function") return value.toDate().toLocaleString("en-IN");
-  return String(value);
-}
-function setMessage(message) { $("pageMessage").textContent = message; }
-function clearListeners() {
-  state.unsubscribers.forEach(unsubscribe => unsubscribe());
-  state.unsubscribers = [];
-}
-function getTournamentName(t) {
-  return val(t.tournamentName, t.name, t.title, "Tournament");
-}
-function teamNames(match) {
-  return {
-    a: val(match.teamA, match.team1Name, match.team1, match.homeTeam, "Team A"),
-    b: val(match.teamB, match.team2Name, match.team2, match.awayTeam, "Team B")
-  };
-}
-function scoreText(match, side) {
-  const raw = side === "A" ? match.scoreA : match.scoreB;
-  if (raw !== undefined && raw !== null && raw !== "") return String(raw);
-  const innings = side === "A" ? match.innings1 : match.innings2;
-  if (innings && typeof innings === "object") {
-    return `${val(innings.runs, 0)}/${val(innings.wickets, 0)} (${val(innings.overs, "0.0")} ov)`;
-  }
-  const card = match.scorecard;
-  if (card && typeof card === "object" && card.battingTeam === side) {
-    return `${val(card.runs, 0)}/${val(card.wickets, 0)} (${val(card.overs, "0.0")} ov)`;
-  }
-  return "—";
-}
-function statusOf(match) {
-  return String(match.status || "Upcoming").trim();
-}
-function matchCard(match, id, showScore = true) {
-  const teams = teamNames(match);
-  const number = val(match.matchNumber, match.matchNo, match.number, id);
-  const status = statusOf(match);
-  return `<article class="match-card">
-    <span class="pill">${esc(status)}</span>
-    <h3 style="margin-top:10px">Match ${esc(number)}</h3>
-    <strong>${esc(teams.a)} vs ${esc(teams.b)}</strong>
-    ${showScore ? `<div class="score">${esc(scoreText(match,"A"))} <span class="muted">/</span> ${esc(scoreText(match,"B"))}</div>` : ""}
-    <p class="muted">📅 ${esc(dateText(val(match.matchDate, match.date)))}</p>
-    <p class="muted">⏰ ${esc(val(match.time, match.matchTime, "Time TBA"))}</p>
-    <p class="muted">📍 ${esc(val(match.venue, state.tournament.venue, "Venue TBA"))}</p>
-    ${match.result ? `<p><strong>🏆 ${esc(match.result)}</strong></p>` : ""}
-    <button type="button" data-scorecard="${esc(id)}">View Scorecard</button>
-  </article>`;
-}
-function renderTournamentInfo() {
-  const t = state.tournament;
-  $("tournamentInfo").innerHTML = `
-    <h2>${esc(getTournamentName(t))}</h2>
-    <p>📍 <strong>Venue:</strong> ${esc(val(t.venue,t.location,"To be announced"))}</p>
-    <p>🏏 <strong>Format:</strong> ${esc(val(t.format,"To be announced"))}</p>
-    <p>📅 <strong>Start:</strong> ${esc(dateText(t.startDate))}</p>
-    <p>📅 <strong>End:</strong> ${esc(dateText(t.endDate))}</p>
-    <p><strong>Status:</strong> ${esc(val(t.status,"Upcoming"))}</p>`;
-}
-function renderTeams() {
-  $("teamsList").innerHTML = state.teams.length ? state.teams.map(team => {
-    const name = val(team.teamName, team.name, team.team, "Team");
-    const players = Array.isArray(team.players) ? team.players : [];
-    const playerNames = players.map(p => typeof p === "string" ? p : val(p.name,p.playerName,"")).filter(Boolean);
-    return `<article class="team-card"><h3>${esc(name)}</h3>
-      <p class="muted">Captain: ${esc(val(team.captainName,team.captain,"Not listed"))}</p>
-      ${playerNames.length ? `<p class="muted">Players: ${playerNames.map(esc).join(", ")}</p>` : ""}
-      </article>`;
-  }).join("") : `<p class="empty">No teams found for this tournament.</p>`;
-}
-function renderMatches() {
-  const all = state.matches;
-  $("scheduleList").innerHTML = all.length
-    ? all.map(m => matchCard(m.data,m.id,false)).join("")
-    : `<p class="empty">No matches have been added yet.</p>`;
-
-  const live = all.filter(m => {
-    const s = statusOf(m.data).toLowerCase();
-    return s.includes("live") || s.includes("innings");
-  });
-  $("liveList").innerHTML = live.length
-    ? live.map(m => matchCard(m.data,m.id,true)).join("")
-    : `<p class="empty">No live matches right now.</p>`;
-
-  const completed = all.filter(m => {
-    const s = statusOf(m.data).toLowerCase();
-    return s === "completed" || Boolean(m.data.result);
-  });
-  $("resultsList").innerHTML = completed.length
-    ? completed.map(m => matchCard(m.data,m.id,true)).join("")
-    : `<p class="empty">No completed results yet.</p>`;
-}
-function parseRuns(value) {
-  const match = String(value ?? "0").match(/^\s*(\d+)/);
-  return match ? Number(match[1]) : 0;
-}
-function oversToBalls(value) {
-  if (value === undefined || value === null || value === "") return null;
-  const text = String(value).trim();
-  if (/^\d+\.\d+$/.test(text)) {
-    const [overs, balls] = text.split(".").map(Number);
-    return overs * 6 + balls;
-  }
-  const n = Number(text);
-  return Number.isFinite(n) ? Math.round(n * 6) : null;
-}
-function getSideOvers(match, side) {
-  const direct = side === "A"
-    ? val(match.oversA, match.teamAOvers, match.innings1Overs, match.overs1)
-    : val(match.oversB, match.teamBOvers, match.innings2Overs, match.overs2);
-  if (direct !== "") return oversToBalls(direct);
-  const innings = side === "A" ? match.innings1 : match.innings2;
-  if (innings && typeof innings === "object") {
-    if (innings.balls !== undefined) return Number(innings.balls) || 0;
-    if (innings.overs !== undefined) return oversToBalls(innings.overs);
-  }
-  const card = match.scorecard;
-  if (card && typeof card === "object" && card.battingTeam === side) {
-    if (card.balls !== undefined) return Number(card.balls) || 0;
-    if (card.overs !== undefined) return oversToBalls(card.overs);
-  }
-  return null;
-}
-function formatOversFromBalls(balls) {
-  if (balls === null || balls === undefined) return "—";
-  return `${Math.floor(balls / 6)}.${balls % 6}`;
-}
-function calculatePoints() {
-  const table = new Map();
-  state.teams.forEach((team, id) => {
-    table.set(id, {
-      id, name: val(team.teamName,team.name,team.team,id),
-      played:0, won:0, lost:0, nr:0, points:0,
-      runsFor:0, runsAgainst:0, ballsFor:0, ballsAgainst:0
-    });
-  });
-  function findTeam(name) {
-    const key = String(name).trim().toLowerCase();
-    return [...table.values()].find(t => t.name.trim().toLowerCase() === key);
-  }
-  state.matches.forEach(({data:m}) => {
-    const status = statusOf(m).toLowerCase();
-    const result = String(m.result || "").trim();
-    if (status !== "completed" && !result) return;
-
-    const names = teamNames(m);
-    const a = findTeam(names.a), b = findTeam(names.b);
-    if (!a || !b || a.id === b.id) return;
-
-    const ra = parseRuns(val(m.scoreA, m.innings1?.runs, m.firstInnings?.runs, "0"));
-    const rb = parseRuns(val(m.scoreB, m.innings2?.runs, m.secondInnings?.runs, "0"));
-    const ba = getSideOvers(m,"A"), bb = getSideOvers(m,"B");
-
-    a.played++; b.played++;
-    a.runsFor += ra; a.runsAgainst += rb;
-    b.runsFor += rb; b.runsAgainst += ra;
-    if (ba !== null) a.ballsFor += ba;
-    if (bb !== null) a.ballsAgainst += bb;
-    if (bb !== null) b.ballsFor += bb;
-    if (ba !== null) b.ballsAgainst += ba;
-
-    const lowerResult = result.toLowerCase();
-    const winner = String(m.winner || "").trim().toLowerCase();
-    if (lowerResult.includes("no result") || lowerResult === "nr" || lowerResult.includes("abandoned")) {
-      a.nr++; b.nr++; a.points++; b.points++; return;
-    }
-    if (lowerResult.includes("tie") || lowerResult.includes("draw")) {
-      a.points++; b.points++; return;
-    }
-    if (winner && winner === a.name.trim().toLowerCase() || lowerResult.includes(a.name.toLowerCase() + " won")) {
-      a.won++; a.points += 2; b.lost++; return;
-    }
-    if (winner && winner === b.name.trim().toLowerCase() || lowerResult.includes(b.name.toLowerCase() + " won")) {
-      b.won++; b.points += 2; a.lost++; return;
-    }
-  });
-  return [...table.values()].map(t => {
-    const nrrAvailable = t.ballsFor > 0 && t.ballsAgainst > 0;
-    const nrr = nrrAvailable
-      ? Number((t.runsFor / (t.ballsFor / 6) - t.runsAgainst / (t.ballsAgainst / 6)).toFixed(3))
-      : null;
-    return {...t,nrr};
-  }).sort((a,b) =>
-    b.points-a.points ||
-    (b.nrr ?? -999)-(a.nrr ?? -999) ||
-    b.won-a.won
-  );
-}
-function renderPoints() {
-  const teams = calculatePoints();
-  $("pointsBody").innerHTML = teams.length ? teams.map((t,i) => `
-    <tr>
-      <td>${i+1}</td><td><strong>${esc(t.name)}</strong></td>
-      <td>${t.played}</td><td>${t.won}</td><td>${t.lost}</td>
-      <td>${t.nr}</td><td>${t.nrr === null ? "—" : (t.nrr >= 0 ? "+" : "") + t.nrr.toFixed(3)}</td>
-      <td><strong>${t.points}</strong></td>
-      <td>${formatOversFromBalls(t.ballsFor)}</td>
-      <td>${formatOversFromBalls(t.ballsAgainst)}</td>
-    </tr>`).join("")
-    : `<tr><td colspan="10" class="empty">No teams found.</td></tr>`;
-}
-function renderAll() {
-  renderTournamentInfo();
-  renderTeams();
-  renderMatches();
-  renderPoints();
-}
-function showScorecard(matchId) {
-  const entry = state.matches.find(m => m.id === matchId);
-  if (!entry) return;
-  const m = entry.data;
-  const innings = [m.innings1, m.innings2].filter(v => v && typeof v === "object");
-  if (!innings.length && m.scorecard && typeof m.scorecard === "object") innings.push(m.scorecard);
-  const details = innings.length ? innings.map((inn,index) => {
-    const striker = inn.striker || {};
-    const non = inn.nonStriker || {};
-    const bowler = inn.bowler || {};
-    const extras = inn.extras || {};
-    const dismissals = Array.isArray(inn.dismissals) ? inn.dismissals : [];
-    return `<article class="match-card">
-      <h3>Innings ${esc(inn.innings || index+1)} — ${esc(inn.battingTeam || "")}</h3>
-      <div class="score">${esc(val(inn.runs,0))}/${esc(val(inn.wickets,0))}</div>
-      <p class="muted">Overs: ${esc(val(inn.overs,"—"))} · Balls: ${esc(val(inn.balls,"—"))}</p>
-      <h3>Batters recorded in this innings</h3>
-      <p>${esc(val(striker.name,"Striker"))}: ${esc(val(striker.runs,0)} runs, ${esc(val(striker.balls,0))} balls · ${esc(val(non.name,"Non-striker"))}: ${esc(val(non.runs,0))} runs, ${esc(val(non.balls,0))} balls</p>
-      <h3>Bowler recorded</h3>
-      <p>${esc(val(bowler.name,"Bowler"))} — ${esc(val(bowler.runs,0))} runs, ${esc(val(bowler.wickets,0))} wickets</p>
-      <h3>Extras</h3>
-      <p>Wides ${esc(val(extras.wides,0))}, No-balls ${esc(val(extras.noBalls,0))}, Byes ${esc(val(extras.byes,0))}, Leg-byes ${esc(val(extras.legByes,0))}, Total ${esc(val(extras.total,0))}</p>
-      ${dismissals.length ? `<h3>Wickets</h3><ul>${dismissals.map(d=>`<li>${esc(val(d.batterName,"Batter"))} — ${esc(val(d.type,"Dismissal"))}</li>`).join("")}</ul>` : ""}
-    </article>`;
-  }).join("") : `<p class="empty">No saved innings scorecard is available for this match yet.</p>`;
-  $("scorecardDetails").innerHTML = `
     <section class="panel">
-      <h2>📋 ${esc(val(m.matchNumber,m.matchNo,matchId))} — ${esc(teamNames(m).a)} vs ${esc(teamNames(m).b)}</h2>
-      <p><strong>Result:</strong> ${esc(val(m.result,"Not available"))}</p>
-      ${details}
-    </section>`;
-  $("scorecardDetails").scrollIntoView({behavior:"smooth",block:"start"});
-}
-function bindMatchButtons() {
-  document.querySelectorAll("[data-scorecard]").forEach(button => {
-    button.addEventListener("click", () => showScorecard(button.dataset.scorecard));
-  });
-}
-function switchTournament(id) {
-  if (!id) return;
-  clearListeners();
-  state.tournamentId = id;
-  state.teams = [];
-  state.matches = [];
-  $("teamsList").innerHTML = `<p class="empty">Loading teams...</p>`;
-  $("scheduleList").innerHTML = `<p class="empty">Loading schedule...</p>`;
-  $("liveList").innerHTML = `<p class="empty">Loading live matches...</p>`;
-  $("resultsList").innerHTML = `<p class="empty">Loading results...</p>`;
-  $("pointsBody").innerHTML = `<tr><td colspan="10">Loading...</td></tr>`;
-  setMessage("Loading tournament data...");
+      <label class="select-label" for="tournamentSelect">
+        Select Tournament
+      </label>
 
-  const tournamentRef = doc(tournamentDb,"tournaments",id);
-  state.unsubscribers.push(onSnapshot(tournamentRef, snap => {
-    if (!snap.exists()) {
-      $("tournamentInfo").textContent = "Tournament not found.";
-      setMessage("This tournament could not be found.");
-      return;
-    }
-    state.tournament = snap.data();
-    renderTournamentInfo();
-  }, err => {
-    console.error(err);
-    setMessage("Could not read tournament. Check Firestore read permissions.");
-  }));
+      <select id="tournamentSelect">
+        <option value="">Loading tournaments...</option>
+      </select>
 
-  state.unsubscribers.push(onSnapshot(collection(tournamentDb,"tournaments",id,"teams"), snap => {
-    state.teams = snap.docs.map(d => ({id:d.id,...d.data()}));
-    renderAll();
-  }, err => {
-    console.error(err);
-    $("teamsList").textContent = "Unable to load teams.";
-  }));
+      <div id="pageMessage" class="message" role="status" aria-live="polite">
+        Loading tournament information...
+      </div>
 
-  state.unsubscribers.push(onSnapshot(collection(tournamentDb,"tournaments",id,"matches"), snap => {
-    state.matches = snap.docs.map(d => ({id:d.id,data:d.data()}));
-    state.matches.sort((a,b) => {
-      const aa = val(a.data.matchDate,a.data.date,"");
-      const bb = val(b.data.matchDate,b.data.date,"");
-      return String(aa).localeCompare(String(bb));
-    });
-    renderAll();
-    bindMatchButtons();
-    setMessage("Tournament data updated. This page is view-only.");
-  }, err => {
-    console.error(err);
-    setMessage("Unable to load matches. Check Firestore read permissions.");
-  }));
-}
-document.querySelectorAll("[data-tab]").forEach(button => {
-  button.addEventListener("click", () => {
-    document.querySelectorAll("[data-tab]").forEach(b => b.classList.toggle("active",b===button));
-    document.querySelectorAll(".section").forEach(s => s.classList.toggle("active",s.id===button.dataset.tab));
-  });
-});
-$("tournamentSelect").addEventListener("change", e => {
-  const id = e.target.value;
-  if (id) {
-    localStorage.setItem("selectedTournamentId",id);
-    switchTournament(id);
-  }
-});
-$("resultsList").addEventListener("click", e => {
-  const button = e.target.closest("[data-scorecard]");
-  if (button) showScorecard(button.dataset.scorecard);
-});
-$("scheduleList").addEventListener("click", e => {
-  const button = e.target.closest("[data-scorecard]");
-  if (button) showScorecard(button.dataset.scorecard);
-});
-$("liveList").addEventListener("click", e => {
-  const button = e.target.closest("[data-scorecard]");
-  if (button) showScorecard(button.dataset.scorecard);
-});
-onSnapshot(collection(tournamentDb,"tournaments"), snap => {
-  const select = $("tournamentSelect");
-  const tournaments = snap.docs.map(d => ({id:d.id,data:d.data()}));
-  tournaments.sort((a,b) => {
-    const at = a.data.createdAt?.toMillis?.() || 0;
-    const bt = b.data.createdAt?.toMillis?.() || 0;
-    return bt-at;
-  });
-  const previous = select.value;
-  select.innerHTML = "";
-  if (!tournaments.length) {
-    select.innerHTML = `<option value="">No tournaments found</option>`;
-    $("tournamentInfo").textContent = "No tournaments have been created yet.";
-    return;
-  }
-  tournaments.forEach(t => {
-    const option = document.createElement("option");
-    option.value = t.id;
-    option.textContent = getTournamentName(t.data);
-    select.appendChild(option);
-  });
-  const params = new URLSearchParams(location.search);
-  const requestedId = params.get("id") || params.get("tournamentId") ||
-    localStorage.getItem("selectedTournamentId") || previous;
-  select.value = tournaments.some(t => t.id===requestedId) ? requestedId : tournaments[0].id;
-  if (state.tournamentId !== select.value) switchTournament(select.value);
-}, error => {
-  console.error(error);
-  setMessage("Could not load tournaments. Check Firebase read permissions.");
-});
-</script>
+      <div id="tournamentInfo"></div>
+    </section>
+
+    <nav class="tabs" aria-label="Tournament sections">
+      <button type="button" class="tab-button active" data-tab="teams">
+        👥 Teams
+      </button>
+      <button type="button" class="tab-button" data-tab="schedule">
+        📅 Schedule
+      </button>
+      <button type="button" class="tab-button" data-tab="live">
+        🔴 Live Score
+      </button>
+      <button type="button" class="tab-button" data-tab="results">
+        🏆 Results
+      </button>
+      <button type="button" class="tab-button" data-tab="points">
+        📊 Points Table
+      </button>
+    </nav>
+
+    <section id="teams" class="tab-panel active">
+      <div class="panel">
+        <h2>👥 Participating Teams</h2>
+        <div id="teamsList" class="data-list">
+          <div class="empty">Loading teams...</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="schedule" class="tab-panel">
+      <div class="panel">
+        <h2>📅 Match Schedule</h2>
+        <div id="scheduleList" class="data-list">
+          <div class="empty">Loading match schedule...</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="live" class="tab-panel">
+      <div class="panel">
+        <h2>🔴 Live Matches</h2>
+        <div id="liveList" class="data-list">
+          <div class="empty">Loading live matches...</div>
+        </div>
+
+        <div id="scorecardDetails" class="scorecard" hidden></div>
+      </div>
+    </section>
+
+    <section id="results" class="tab-panel">
+      <div class="panel">
+        <h2>🏆 Match Results</h2>
+        <div id="resultsList" class="data-list">
+          <div class="empty">Loading results...</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="points" class="tab-panel">
+      <div class="panel">
+        <h2>📊 Points Table</h2>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Pos.</th>
+                <th>Team</th>
+                <th>Mat</th>
+                <th>Won</th>
+                <th>Lost</th>
+                <th>Tied</th>
+                <th>Pts</th>
+                <th>NRR</th>
+              </tr>
+            </thead>
+
+            <tbody id="pointsBody">
+              <tr>
+                <td colspan="8">Loading points table...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p style="color:var(--muted);font-size:13px;margin-top:12px">
+          Points and Net Run Rate depend on the match data saved by the tournament scoring system.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    © 2026 APL Cricket League · AJAY HASDA
+    <br>
+    All rights reserved.
+  </footer>
+
+  <!-- Tournament data and rendering are handled by the separate JavaScript file. -->
+  <script type="module" src="./tournament-details.js"></script>
 </body>
 </html>
-
