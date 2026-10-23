@@ -1,5 +1,6 @@
 
 import { tournamentDb } from "./firebase.js";
+
 import {
   collection,
   onSnapshot
@@ -77,7 +78,8 @@ function makeCard(docSnap) {
       tab
     });
 
-    const url = `${leagueBase}tournament-details.html?${params.toString()}`;
+    const url =
+      `${leagueBase}tournament-details.html?${params.toString()}`;
 
     return `
       <a class="btn"
@@ -120,29 +122,32 @@ function makeCard(docSnap) {
 }
 
 if (!cardsRoot) {
-  console.error(
-    "Tournament cards container #tournamentCards not found in index.html."
-  );
+  console.error("Container #tournamentCards was not found.");
 } else {
   onSnapshot(
     collection(tournamentDb, "tournaments"),
-
     snapshot => {
-      if (snapshot.empty) {
+      const docs = snapshot.docs
+        .filter(docSnap => {
+          const t = docSnap.data();
+
+          // Hide soft-deleted tournaments from public cards.
+          return t.isDeleted !== true && t.deleted !== true;
+        })
+        .sort((a, b) => {
+          const aDate = a.data().createdAt?.toMillis?.() || 0;
+          const bDate = b.data().createdAt?.toMillis?.() || 0;
+          return bDate - aDate;
+        });
+
+      if (docs.length === 0) {
         cardsRoot.textContent =
-          "No tournaments found yet. Create one in APL Tournament Platform.";
+          "No active tournaments are available right now.";
         return;
       }
 
-      const docs = [...snapshot.docs].sort((a, b) => {
-        const aDate = a.data().createdAt?.toMillis?.() || 0;
-        const bDate = b.data().createdAt?.toMillis?.() || 0;
-        return bDate - aDate;
-      });
-
       cardsRoot.innerHTML = docs.map(makeCard).join("");
     },
-
     error => {
       console.error("Tournament listener failed:", error);
       cardsRoot.textContent =
