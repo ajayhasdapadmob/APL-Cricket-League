@@ -1,3 +1,4 @@
+
 import { db } from "./firebase.js";
 
 import {
@@ -6,59 +7,102 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-alert("player.js loaded");
-console.log("Player JS Loaded");
+console.log("APL League player.js loaded");
 
-document.getElementById("playerForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
+const playerForm = document.getElementById("playerForm");
+
+if (!playerForm) {
+  console.error("playerForm not found. Check player.html.");
+} else {
+  playerForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const submitButton = playerForm.querySelector(
+      'button[type="submit"]'
+    );
+
+    if (submitButton?.disabled) return;
 
     try {
-alert("Submit Clicked");
-        let teamId = localStorage.getItem("teamId");
+      if (!playerForm.reportValidity()) return;
 
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Saving Players...";
+      }
 
-        if(!teamId){
+      // Use the same team identity saved by registration.js.
+      let teamId = localStorage.getItem("teamId");
 
-            teamId = "APL-" + Date.now();
+      if (!teamId) {
+        teamId =
+          "TEAM-" +
+          Date.now() +
+          "-" +
+          Math.random().toString(36).slice(2, 8);
 
-            localStorage.setItem("teamId", teamId);
+        localStorage.setItem("teamId", teamId);
+      }
 
+      const teamName =
+        localStorage.getItem("teamName")?.trim() || "";
+
+      const registeredCaptain =
+        localStorage.getItem("captainName")?.trim() || "";
+
+      const captainInput =
+        document.getElementById("captainName");
+
+      const captainName =
+        captainInput?.value?.trim() || registeredCaptain;
+
+      // Read all player names.
+      const playerData = {};
+
+      for (let number = 2; number <= 15; number++) {
+        const input = document.getElementById(`player${number}`);
+
+        playerData[`player${number}`] =
+          input?.value?.trim() || "";
+      }
+
+      // Save the existing player fields and add team mapping fields.
+      // This creates a new document; it does not delete old records.
+      const savedDocument = await addDoc(
+        collection(db, "players"),
+        {
+          teamId: teamId,
+          teamName: teamName,
+          registrationTeamId: teamId,
+          captainName: captainName,
+          ...playerData,
+          createdAt: serverTimestamp()
         }
+      );
 
-console.log("Saving to Firestore...");
-        await addDoc(collection(db, "players"), {
+      console.log("Players saved successfully:", savedDocument.id);
 
-    teamId: teamId,
+      alert(
+        "Players saved successfully!\n\n" +
+        "Team: " + (teamName || "Team name not found") +
+        "\nCaptain: " + (captainName || "Not entered")
+      );
 
-    captainName: document.getElementById("captainName").value,
+      window.location.replace("registration.html");
 
-    player2: document.getElementById("player2").value,
-    player3: document.getElementById("player3").value,
-    player4: document.getElementById("player4").value,
-    player5: document.getElementById("player5").value,
-    player6: document.getElementById("player6").value,
-    player7: document.getElementById("player7").value,
-    player8: document.getElementById("player8").value,
-    player9: document.getElementById("player9").value,
-    player10: document.getElementById("player10").value,
-    player11: document.getElementById("player11").value,
-    player12: document.getElementById("player12").value,
-    player13: document.getElementById("player13").value,
-    player14: document.getElementById("player14").value,
-    player15: document.getElementById("player15").value,
+    } catch (error) {
+      console.error("Firestore player save error:", error);
 
-    createdAt: serverTimestamp()
-});
+      alert(
+        "Players could not be saved.\n\n" +
+        (error.message || "Please try again.")
+      );
 
-alert("Data Saved");
-alert("✅ Players Saved Successfully!");
-
-console.log("Redirecting...");
-window.location.replace("registration.html");
-
-} catch (error) {
-    console.error("Firestore Error:", error);
-    alert("Error: " + error.message);
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = "Save Players";
+      }
+    }
+  });
 }
-
-});
