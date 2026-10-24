@@ -1,8 +1,5 @@
-import emailjs from "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/+esm";
 
-emailjs.init({
- publicKey:"AsUiMVkBY3DFQ-DOJ"
-});
+import emailjs from "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/+esm";
 import { db } from "./firebase.js";
 
 import {
@@ -11,323 +8,429 @@ import {
   serverTimestamp,
   getDocs,
   query,
-  where
+  where,
+  updateDoc
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-// =========================
-// TEAM ID
-// =========================
+// =====================================
+// EMAILJS CONFIGURATION
+// =====================================
 
-let teamId = localStorage.getItem("teamId");
-
-if (!teamId) {
-    teamId = "TEAM-" + Date.now();
-    localStorage.setItem("teamId", teamId);
-}
-
-// =========================
-// LOAD SAVED DATA
-// =========================
-
-window.addEventListener("DOMContentLoaded", () => {
-
-    const fields = [
-        "teamName",
-        "captainName",
-        "mobile",
-        "whatsapp",
-        "email",
-        "area",
-        "address",
-        "upi",
-        "playerType",
-        "paymentDone"
-    ];
-
-    fields.forEach(id => {
-
-        const el = document.getElementById(id);
-
-        if (el && localStorage.getItem(id)) {
-            el.value = localStorage.getItem(id);
-        }
-
-    });
-
-    const otherArea = document.getElementById("otherArea");
-
-    if (otherArea) {
-        otherArea.value = localStorage.getItem("otherArea") || "";
-    }
-
-    if (typeof showOther === "function") {
-        showOther();
-    }
-
+emailjs.init({
+  publicKey: "AsUiMVkBY3DFQ-DOJ"
 });
 
-// =========================
-// SAVE FORM
-// =========================
+const EMAIL_SERVICE_ID = "service_ipztz05";
+const EMAIL_TEMPLATE_ID = "template_05udsk4";
 
-window.saveRegistrationData = function () {
+// =====================================
+// TEAM ID
+// =====================================
 
-    const fields = [
-        "teamName",
-        "captainName",
-        "mobile",
-        "whatsapp",
-        "email",
-        "area",
-        "address",
-        "upi",
-        "playerType",
-        "paymentDone"
-    ];
+function getOrCreateTeamId() {
+  let id = localStorage.getItem("teamId");
 
-    fields.forEach(id => {
+  if (!id) {
+    id = "TEAM-" + Date.now() + "-" +
+      Math.random().toString(36).slice(2, 8);
 
-        const el = document.getElementById(id);
+    localStorage.setItem("teamId", id);
+  }
 
-        if (el) {
-            localStorage.setItem(id, el.value);
-        }
-
-    });
-
-    const otherArea = document.getElementById("otherArea");
-
-    if (otherArea) {
-        localStorage.setItem("otherArea", otherArea.value);
-    }
-
-};
-
-// =========================
-// REGISTRATION SUBMIT
-// =========================
-
-document.getElementById("registrationForm").addEventListener("submit", async (e) => {
-
-    e.preventDefault();
-    
-if (!document.getElementById("declaration").checked) {
-    alert("Please accept the APL 2026 Rules & Regulations.");
-    return;
+  return id;
 }
 
-    try {
-console.log("Payment:", document.getElementById("paymentDone").value);
-        const requiredFields = [
+let teamId = getOrCreateTeamId();
+
+// =====================================
+// HELPER FUNCTIONS
+// =====================================
+
+function getValue(id) {
+  return document.getElementById(id)?.value?.trim() || "";
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[char]);
+}
+
+function saveFieldsToLocalStorage() {
+  const fields = [
     "teamName",
     "captainName",
     "mobile",
     "whatsapp",
+    "email",
     "area",
+    "address",
     "upi",
     "playerType",
     "paymentDone"
-];
+  ];
 
-        for (const id of requiredFields) {
+  fields.forEach(id => {
+    const element = document.getElementById(id);
 
-            const field = document.getElementById(id);
-
-            if (!field || field.value.trim() === "") {
-
-    alert("Please fill: " + id);
-
-    if(field){
-        field.focus();
+    if (element) {
+      localStorage.setItem(id, element.value);
     }
+  });
 
-    return;
+  const otherArea = document.getElementById("otherArea");
 
+  if (otherArea) {
+    localStorage.setItem("otherArea", otherArea.value);
+  }
+
+  // Make the team identity available to player.html/player.js.
+  localStorage.setItem("teamId", teamId);
+  localStorage.setItem("teamName", getValue("teamName"));
+  localStorage.setItem("captainName", getValue("captainName"));
 }
 
-        }
+// =====================================
+// LOAD SAVED FORM DATA
+// =====================================
 
-        const regId = "APL2026-" + Date.now();
+window.addEventListener("DOMContentLoaded", async () => {
+  const fields = [
+    "teamName",
+    "captainName",
+    "mobile",
+    "whatsapp",
+    "email",
+    "area",
+    "address",
+    "upi",
+    "playerType",
+    "paymentDone"
+  ];
 
-        await addDoc(collection(db, "registrations"), {
+  fields.forEach(id => {
+    const element = document.getElementById(id);
+    const saved = localStorage.getItem(id);
 
-    registrationId: regId,
-    teamId: teamId,
-
-    teamName: document.getElementById("teamName").value,
-captainName: document.getElementById("captainName").value,
-mobile: document.getElementById("mobile").value,
-whatsapp: document.getElementById("whatsapp").value,
-email: document.getElementById("email").value,
-
-area: document.getElementById("area").value,
-otherArea: document.getElementById("otherArea")?.value || "",
-
-address:
-document.getElementById("area").value === "Other"
-? document.getElementById("otherArea").value
-: document.getElementById("area").value,
-
-upi: document.getElementById("upi").value,
-playerType: document.getElementById("playerType").value,
-paymentDone: document.getElementById("paymentDone").value,
-
-paymentStatus: "Unpaid",
-status: "Pending",
-
-    createdAt: serverTimestamp()
-
-});
-
-console.log("Firebase Save Done");
-
-
-// EMAIL SEND HERE
-try {
-
-let response = await emailjs.send(
-  "service_ipztz05",
-  "template_05udsk4",
-  {
-    to_email: document.getElementById("email").value,
-    captain_name: document.getElementById("captainName").value,
-    registration_id: regId,
-    team_name: document.getElementById("teamName").value,
-    status: "Pending",
-    remark: "Your registration is under verification"
-  }
-);
-
-console.log("Email Sent", response);
-
-alert("Email Sent Successfully");
-
-// =========================
-// ADMIN EMAIL
-// =========================
-
-await emailjs.send(
-  "service_ipztz05",
-  "template_05udsk4",
-  {
-    to_email: "ajayhasda623@gmail.com",
-    captain_name: document.getElementById("captainName").value,
-    registration_id: regId,
-    team_name: document.getElementById("teamName").value,
-    mobile: document.getElementById("mobile").value,
-    whatsapp: document.getElementById("whatsapp").value,
-    area: document.getElementById("area").value,
-    payment: document.getElementById("paymentDone").value,
-    status: "New Registration Received",
-    remark: "A new team has submitted a registration."
-  }
-);
-} catch(emailError){
-
-console.log("Email Error:", emailError);
-alert("Email Error: " + emailError.text);
-
-}
-        alert(
-`✅ Registration Successful!
-
-Registration ID:
-${regId}
-
-Please save your Registration ID.`
-        );
-console.log("Registration Saved:", regId);
-        document.getElementById("registrationForm").reset();
-
-        clearRegistrationData();
-
-        
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert(error.code + "\n" + error.message);
-
+    if (element && saved !== null) {
+      element.value = saved;
     }
+  });
 
+  const otherArea = document.getElementById("otherArea");
+
+  if (otherArea) {
+    otherArea.value = localStorage.getItem("otherArea") || "";
+  }
+
+  if (typeof window.showOther === "function") {
+    window.showOther();
+  }
+
+  // Keep saved team details updated while the form is edited.
+  fields.forEach(id => {
+    document.getElementById(id)?.addEventListener("input", () => {
+      const element = document.getElementById(id);
+      localStorage.setItem(id, element.value);
+
+      if (id === "teamName") {
+        localStorage.setItem("teamName", element.value.trim());
+      }
+
+      if (id === "captainName") {
+        localStorage.setItem("captainName", element.value.trim());
+      }
+    });
+
+    document.getElementById(id)?.addEventListener("change", () => {
+      const element = document.getElementById(id);
+      localStorage.setItem(id, element.value);
+    });
+  });
+
+  otherArea?.addEventListener("input", () => {
+    localStorage.setItem("otherArea", otherArea.value);
+  });
+
+  await loadPlayers();
 });
-// =========================
-// PLAYER PREVIEW
-// =========================
+
+// =====================================
+// SAVE BEFORE OPENING PLAYER PAGE
+// =====================================
+
+window.saveRegistrationData = function () {
+  saveFieldsToLocalStorage();
+};
+
+// =====================================
+// LOAD PLAYER PREVIEW
+// =====================================
 
 async function loadPlayers() {
+  const box = document.getElementById("playersData");
 
-    const box = document.getElementById("playersData");
+  if (!box) return;
 
-    if (!box) return;
+  const currentTeamId = localStorage.getItem("teamId");
 
-    const id = localStorage.getItem("teamId");
+  if (!currentTeamId) {
+    box.textContent = "No Player Added";
+    return;
+  }
 
-    if (!id) {
-        box.innerHTML = "No Player Added";
+  try {
+    const playersQuery = query(
+      collection(db, "players"),
+      where("teamId", "==", currentTeamId)
+    );
+
+    const snapshot = await getDocs(playersQuery);
+
+    if (snapshot.empty) {
+      box.textContent = "No Player Added";
+      return;
+    }
+
+    let html = "";
+
+    snapshot.forEach(playerDoc => {
+      const player = playerDoc.data();
+
+      const names = [
+        ["Captain", player.captainName],
+        ["Player 2", player.player2],
+        ["Player 3", player.player3],
+        ["Player 4", player.player4],
+        ["Player 5", player.player5],
+        ["Player 6", player.player6],
+        ["Player 7", player.player7],
+        ["Player 8", player.player8],
+        ["Player 9", player.player9],
+        ["Player 10", player.player10],
+        ["Player 11", player.player11],
+        ["Player 12", player.player12],
+        ["Player 13", player.player13],
+        ["Player 14", player.player14],
+        ["Player 15", player.player15]
+      ];
+
+      const validNames = names.filter(([, name]) =>
+        String(name || "").trim()
+      );
+
+      if (!validNames.length) {
+        html += "<p>No player names entered yet.</p>";
         return;
-    }
+      }
 
-    try {
+      validNames.forEach(([label, name]) => {
+        html += `<b>${escapeHTML(label)}:</b> ${escapeHTML(name)}<br>`;
+      });
 
-        const q = query(
-            collection(db, "players"),
-            where("teamId", "==", id)
-        );
+      html += "<hr>";
+    });
 
-        const snapshot = await getDocs(q);
-
-        let players = "";
-
-        snapshot.forEach((doc) => {
-
-            const p = doc.data();
-
-            players += `
-    <b>Captain:</b> ${p.captainName || ""}<br>
-    <b>Player 2:</b> ${p.player2 || ""}<br>
-    <b>Player 3:</b> ${p.player3 || ""}<br>
-    <b>Player 4:</b> ${p.player4 || ""}<br>
-    <b>Player 5:</b> ${p.player5 || ""}<br>
-    <b>Player 6:</b> ${p.player6 || ""}<br>
-    <b>Player 7:</b> ${p.player7 || ""}<br>
-    <b>Player 8:</b> ${p.player8 || ""}<br>
-    <b>Player 9:</b> ${p.player9 || ""}<br>
-    <b>Player 10:</b> ${p.player10 || ""}<br>
-    <b>Player 11:</b> ${p.player11 || ""}<br>
-    <b>Player 12:</b> ${p.player12 || ""}<br>
-    <b>Player 13:</b> ${p.player13 || ""}<br>
-    <b>Player 14:</b> ${p.player14 || ""}<br>
-    <b>Player 15:</b> ${p.player15 || ""}<br>
-    <hr>
-`;
-
-        });
-
-        box.innerHTML = players || "No Player Added";
-
-    } catch (error) {
-
-        console.error(error);
-
-        box.innerHTML = "Unable to load players";
-
-    }
-
+    box.innerHTML = html || "No Player Added";
+  } catch (error) {
+    console.error("Player preview error:", error);
+    box.textContent = "Unable to load players. Please refresh the page.";
+  }
 }
 
-loadPlayers();
+// =====================================
+// LINK PLAYER RECORDS TO TEAM NAME
+// =====================================
 
+async function attachTeamNameToPlayers(currentTeamId, teamName, captainName) {
+  const playersQuery = query(
+    collection(db, "players"),
+    where("teamId", "==", currentTeamId)
+  );
 
-// =========================
-// CLEAR LOCAL STORAGE
-// =========================
+  const snapshot = await getDocs(playersQuery);
 
-function clearRegistrationData() {
+  const jobs = snapshot.docs.map(playerDoc => {
+    const data = {
+      teamName: teamName,
+      registrationTeamId: currentTeamId
+    };
 
-    [
-        "teamId",
+    if (captainName) {
+      data.registeredCaptainName = captainName;
+    }
+
+    return updateDoc(playerDoc.ref, data);
+  });
+
+  await Promise.all(jobs);
+
+  console.log(
+    "Player records linked to team:",
+    teamName,
+    "Players documents:",
+    snapshot.size
+  );
+}
+
+// =====================================
+// REGISTRATION SUBMIT
+// =====================================
+
+const registrationForm = document.getElementById("registrationForm");
+
+if (registrationForm) {
+  registrationForm.addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const submitButton = registrationForm.querySelector(
+      'button[type="submit"]'
+    );
+
+    if (submitButton?.disabled) return;
+
+    if (!registrationForm.reportValidity()) return;
+
+    if (!document.getElementById("playerCheck")?.checked) {
+      alert("Please confirm that player name details have been filled.");
+      return;
+    }
+
+    if (!document.getElementById("rulesCheck")?.checked) {
+      alert("Please accept the APL Tournament Rules.");
+      return;
+    }
+
+    if (!document.getElementById("declaration")?.checked) {
+      alert("Please accept the APL 2026 Rules & Regulations.");
+      return;
+    }
+
+    const currentTeamId = teamId;
+    const teamName = getValue("teamName");
+    const captainName = getValue("captainName");
+    const mobile = getValue("mobile");
+    const whatsapp = getValue("whatsapp");
+    const email = getValue("email");
+    const area = getValue("area");
+    const otherArea = getValue("otherArea");
+    const upi = getValue("upi");
+    const playerType = getValue("playerType");
+    const paymentDone = getValue("paymentDone");
+
+    if (area === "Other" && !otherArea) {
+      alert("Please enter your address.");
+      document.getElementById("otherArea")?.focus();
+      return;
+    }
+
+    const registrationId = "APL2026-" + Date.now();
+
+    try {
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Submitting...";
+      }
+
+      // Preserve the existing registrations collection and field structure.
+      const registrationData = {
+        registrationId: registrationId,
+        teamId: currentTeamId,
+        teamName: teamName,
+        captainName: captainName,
+        mobile: mobile,
+        whatsapp: whatsapp,
+        email: email,
+        area: area,
+        otherArea: area === "Other" ? otherArea : "",
+        address: area === "Other" ? otherArea : area,
+        upi: upi,
+        playerType: playerType,
+        paymentDone: paymentDone,
+        paymentStatus: "Unpaid",
+        status: "Pending",
+        createdAt: serverTimestamp()
+      };
+
+      await addDoc(
+        collection(db, "registrations"),
+        registrationData
+      );
+
+      console.log("Registration saved:", registrationId);
+
+      // Add team name to the player's existing documents.
+      // If this step fails, the registration itself is still saved.
+      try {
+        await attachTeamNameToPlayers(
+          currentTeamId,
+          teamName,
+          captainName
+        );
+      } catch (playerLinkError) {
+        console.error("Player-team linking error:", playerLinkError);
+
+        alert(
+          "Your team registration was saved, but player records " +
+          "could not all be linked automatically. Please contact " +
+          "the administrator before submitting another registration."
+        );
+      }
+
+      // Email notifications are separate from registration saving.
+      try {
+        if (email) {
+          await emailjs.send(
+            EMAIL_SERVICE_ID,
+            EMAIL_TEMPLATE_ID,
+            {
+              to_email: email,
+              captain_name: captainName,
+              registration_id: registrationId,
+              team_name: teamName,
+              status: "Pending",
+              remark: "Your registration is under verification"
+            }
+          );
+        }
+
+        await emailjs.send(
+          EMAIL_SERVICE_ID,
+          EMAIL_TEMPLATE_ID,
+          {
+            to_email: "ajayhasda623@gmail.com",
+            captain_name: captainName,
+            registration_id: registrationId,
+            team_name: teamName,
+            mobile: mobile,
+            whatsapp: whatsapp,
+            area: area === "Other" ? otherArea : area,
+            payment: paymentDone,
+            status: "New Registration Received",
+            remark: "A new team has submitted a registration."
+          }
+        );
+
+        console.log("Email notifications sent.");
+      } catch (emailError) {
+        console.error("Email notification error:", emailError);
+      }
+
+      alert(
+        "Registration submitted successfully!\n\n" +
+        "Registration ID:\n" + registrationId +
+        "\n\nPayment verification is still required."
+      );
+
+      registrationForm.reset();
+
+      // Clear the completed form's temporary details.
+      // Existing Firestore registration/player records remain intact.
+      [
         "teamName",
         "captainName",
         "mobile",
@@ -339,6 +442,33 @@ function clearRegistrationData() {
         "upi",
         "playerType",
         "paymentDone"
-    ].forEach(item => localStorage.removeItem(item));
+      ].forEach(key => localStorage.removeItem(key));
 
+      // Start a fresh team identity for a future registration
+      // on the same browser.
+      teamId = "TEAM-" + Date.now() + "-" +
+        Math.random().toString(36).slice(2, 8);
+
+      localStorage.setItem("teamId", teamId);
+
+      const playerPreview = document.getElementById("playersData");
+      if (playerPreview) {
+        playerPreview.textContent = "No Player Added";
+      }
+
+    } catch (error) {
+      console.error("Registration error:", error);
+
+      alert(
+        "Registration could not be saved.\n\n" +
+        (error.code || "Error") + "\n" +
+        (error.message || "Please try again.")
+      );
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = "🏏 Submit Registration";
+      }
+    }
+  });
 }
