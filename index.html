@@ -349,27 +349,122 @@ button,
     .tournament-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
     .tournament-actions .btn { font-size: 15px; padding: 10px 12px; min-height: 40px; }
     .tournament-message { color: var(--muted); text-align: center; padding: 12px; }
+/* APL Photo Slideshow — isolated styles */
+.apl-slideshow {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #101814;
+  border-radius: 12px;
+  margin: 16px auto;
+  isolation: isolate;
+}
 
+.apl-banner-slideshow {
+  margin: 0 auto;
+  border-radius: 0;
+}
+
+.apl-slide-image {
+  display: block;
+  width: 100%;
+  height: clamp(220px, 42vw, 520px);
+  object-fit: contain;
+  background: #050806;
+}
+
+.apl-banner-slideshow .apl-slide-image {
+  height: auto;
+  min-height: 220px;
+  max-height: 520px;
+  object-fit: contain;
+}
+
+.apl-slide-prev,
+.apl-slide-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid rgba(255,255,255,.5);
+  border-radius: 50%;
+  background: rgba(0,0,0,.65);
+  color: #fff;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.apl-slide-prev { left: 12px; }
+.apl-slide-next { right: 12px; }
+
+.apl-slide-dots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  z-index: 2;
+}
+
+.apl-slide-dot {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border: 1px solid white;
+  border-radius: 50%;
+  background: rgba(255,255,255,.5);
+  cursor: pointer;
+}
+
+.apl-slide-dot.active {
+  background: #08a045;
+  transform: scale(1.2);
+}
+
+@media (max-width: 600px) {
+  .apl-slide-image {
+    height: 250px;
+  }
+
+  .apl-banner-slideshow .apl-slide-image {
+    min-height: 180px;
+    max-height: 300px;
+  }
+
+  .apl-slide-prev,
+  .apl-slide-next {
+    width: 38px;
+    height: 38px;
+  }
+}
   </style>
 </head>
 
 <body>
   <header>
-    <img
-      class="banner"
-      src="banner.jpg"
-      alt="AJAY PREMIER LEAGUE APL 2026 official cricket tournament banner"
-      fetchpriority="high"
-    >
-    <h1>🏆 AJAY PREMIER LEAGUE (APL) 2026</h1>
+    <div class="apl-slideshow apl-banner-slideshow" data-apl-slideshow>
+  <img
+    class="apl-slide-image"
+    src="banner.jpg"
+    alt="AJAY PREMIER LEAGUE APL 2026"
+    fetchpriority="high"
+  >
+  <button class="apl-slide-prev" type="button" aria-label="Previous photo">❮</button>
+  <button class="apl-slide-next" type="button" aria-label="Next photo">❯</button>
+  <div class="apl-slide-dots"></div>
+</div>    <h1>🏆 AJAY PREMIER LEAGUE (APL) 2026</h1>
     <p class="subtitle">Official Website of AJAY HASDA</p>
   </header>
 
   <main class="container">
 
     <!-- Welcome section in the simple old-style layout -->
-    <section class="card">
-      
+   <!-- Welcome section -->
 <section class="card" style="text-align: center;">
   <h2>🏏 Welcome to APL 2026</h2>
 
@@ -446,6 +541,17 @@ button,
 
     <section class="card">
       <h2>ℹ️ About APL</h2>
+      <div class="apl-slideshow" data-apl-slideshow>
+  <img
+    class="apl-slide-image"
+    src="banner.jpg"
+    alt="APL cricket tournament photos"
+    loading="lazy"
+  >
+  <button class="apl-slide-prev" type="button" aria-label="Previous photo">❮</button>
+  <button class="apl-slide-next" type="button" aria-label="Next photo">❯</button>
+  <div class="apl-slide-dots"></div>
+</div>
       <p>AJAY PREMIER LEAGUE (APL) 2026 is a cricket tournament organized by AJAY HASDA.</p>
       <p>Total participating teams: <strong>23</strong></p>
     </section>
@@ -581,5 +687,165 @@ button,
   <script type="module" src="script.js"></script>
   <script type="module" src="tournament-cards.js"></script>
   <script type="module" src="public-live.js"></script>
+  <script>
+(function () {
+  "use strict";
+
+  const REPO = "ajayhasdapadmob/APL-Cricket-League";
+  const SITE = "https://ajayhasdapadmob.github.io/APL-Cricket-League/";
+  const FALLBACK = [SITE + "banner.jpg"];
+
+ function isPhoto(path) {
+  const p = path.toLowerCase();
+  if (!/\.(jpg|jpeg|png|webp|gif)$/i.test(p)) return false;
+  
+  const name = p.split("/").pop();
+  
+  // Exclude app icons, logos and default profile pictures.
+  if (/^(favicon|icon[-_]|logo|default-player|default-team)/i.test(name)) {
+    return false;
+  }
+  
+  // Exclude signature, receipt and stamp images.
+  if (/(signature|signeture|sign|autograph|signing|e-sign|esign|receipt|stamp)/i.test(name)) {
+    return false;
+  }
+  
+  if (/\/(node_modules|\.git)\//i.test(p)) return false;
+  
+  return true;
+}
+
+  function makeUrl(path) {
+    return SITE + path.split("/").map(encodeURIComponent).join("/");
+  }
+
+  async function getPhotos() {
+    try {
+      const repoResponse = await fetch(
+        "https://api.github.com/repos/" + REPO,
+        { headers: { Accept: "application/vnd.github+json" } }
+      );
+
+      if (!repoResponse.ok) throw new Error("Repository lookup failed");
+
+      const repo = await repoResponse.json();
+      const branch = repo.default_branch || "main";
+
+      const treeResponse = await fetch(
+        "https://api.github.com/repos/" + REPO +
+        "/git/trees/" + encodeURIComponent(branch) + "?recursive=1",
+        { headers: { Accept: "application/vnd.github+json" } }
+      );
+
+      if (!treeResponse.ok) throw new Error("Photo list unavailable");
+
+      const tree = await treeResponse.json();
+      const paths = (tree.tree || [])
+        .filter(item => item.type === "blob" && isPhoto(item.path))
+        .map(item => item.path);
+
+      const urls = paths.map(makeUrl);
+
+      if (!urls.length) throw new Error("No photos found");
+
+      // Put the existing main banner first.
+      urls.sort((a, b) => {
+        const aBanner = /\/banner\.(jpg|jpeg|png|webp)$/i.test(a);
+        const bBanner = /\/banner\.(jpg|jpeg|png|webp)$/i.test(b);
+        return Number(bBanner) - Number(aBanner);
+      });
+
+      return [...new Set(urls)];
+    } catch (error) {
+      console.warn("APL slideshow using fallback photo:", error);
+      return FALLBACK;
+    }
+  }
+
+  function setupSlideshow(container, photos, index) {
+    const img = container.querySelector(".apl-slide-image");
+    const prev = container.querySelector(".apl-slide-prev");
+    const next = container.querySelector(".apl-slide-next");
+    const dots = container.querySelector(".apl-slide-dots");
+
+    if (!img || !prev || !next || !dots) return;
+
+    let current = Math.max(0, index);
+    let timer = null;
+
+    function show(position) {
+      current = (position + photos.length) % photos.length;
+      img.src = photos[current];
+      img.alt = "APL cricket photo " + (current + 1);
+
+      dots.replaceChildren();
+
+      photos.forEach((photo, i) => {
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "apl-slide-dot" + (i === current ? " active" : "");
+        dot.setAttribute("aria-label", "Show photo " + (i + 1));
+        dot.setAttribute("aria-pressed", String(i === current));
+
+        dot.addEventListener("click", function () {
+          show(i);
+          restart();
+        });
+
+        dots.appendChild(dot);
+      });
+
+      const multiple = photos.length > 1;
+      prev.hidden = !multiple;
+      next.hidden = !multiple;
+      dots.hidden = !multiple;
+    }
+
+    function restart() {
+      if (timer) clearInterval(timer);
+      if (photos.length > 1) {
+        timer = setInterval(() => show(current + 1), 4500);
+      }
+    }
+
+    prev.addEventListener("click", () => {
+      show(current - 1);
+      restart();
+    });
+
+    next.addEventListener("click", () => {
+      show(current + 1);
+      restart();
+    });
+
+    container.addEventListener("mouseenter", () => {
+      if (timer) clearInterval(timer);
+    });
+
+    container.addEventListener("mouseleave", restart);
+
+    show(current);
+    restart();
+  }
+
+  async function init() {
+    const containers = document.querySelectorAll("[data-apl-slideshow]");
+    if (!containers.length) return;
+
+    const photos = await getPhotos();
+
+    containers.forEach((container, index) => {
+      setupSlideshow(container, photos, index);
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+</script>
 </body>
 </html>
