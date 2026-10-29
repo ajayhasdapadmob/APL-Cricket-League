@@ -1,148 +1,228 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>APL 2026 - Official Gallery | AJAY PREMIER LEAGUE</title>
+  <meta name="description" content="Official AJAY PREMIER LEAGUE (APL) 2026 cricket tournament photo gallery.">
+  <meta name="theme-color" content="#087f3c">
 
-<title>APL 2026 - Gallery</title>
+  <link rel="stylesheet" href="style.css">
 
-<link rel="stylesheet" href="style.css">
+  <style>
+    .gallery-box {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+      gap: 16px;
+      margin-top: 22px;
+    }
 
-<style>
+    .gallery-item {
+      display: block;
+      overflow: hidden;
+      border-radius: 12px;
+      background: #101a16;
+      border: 1px solid rgba(8, 160, 69, 0.25);
+      text-decoration: none;
+    }
 
-.gallery-box{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:15px;
-margin-top:20px;
-}
+    .gallery-item img {
+      display: block;
+      width: 100%;
+      height: 230px;
+      object-fit: cover;
+      transition: transform 0.25s ease;
+    }
 
-.gallery-box img{
-width:100%;
-height:220px;
-object-fit:cover;
-border-radius:12px;
-transition:0.3s;
-}
+    .gallery-item:hover img {
+      transform: scale(1.04);
+    }
 
-.gallery-box img:hover{
-transform:scale(1.05);
-}
+    .gallery-item:focus-visible {
+      outline: 3px solid #08a045;
+      outline-offset: 3px;
+    }
 
-.apl-logo{
-width:120px;
-margin-bottom:10px;
-}
+    .gallery-caption {
+      display: block;
+      padding: 10px 12px;
+      color: inherit;
+      text-align: center;
+      font-weight: 600;
+    }
 
-</style>
+    .gallery-status {
+      margin-top: 16px;
+      color: #888;
+      text-align: center;
+    }
 
+    .gallery-actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .gallery-actions a {
+      display: inline-block;
+      padding: 11px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .gallery-home {
+      background: #087f3c;
+      color: #fff;
+    }
+
+    .gallery-points {
+      background: #fff2e6;
+      color: #333;
+    }
+
+    .gallery-footer {
+      text-align: center;
+      margin: 30px 0 20px;
+      padding: 0 12px;
+      color: #888;
+    }
+
+    .gallery-footer p {
+      margin: 0;
+    }
+
+    @media (max-width: 480px) {
+      .gallery-box {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery-item img {
+        height: 220px;
+      }
+    }
+  </style>
 </head>
 
-
 <body>
+  <header>
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;">
+      <img
+        src="images/apl-logo.png"
+        alt="APL Logo"
+        width="45"
+        height="45"
+        style="object-fit:contain;"
+        onerror="this.style.display='none'"
+      >
+      <h1>🏏 APL 2026 Gallery</h1>
+    </div>
 
+    <p><strong>AJAY PREMIER LEAGUE (APL) 2026</strong></p>
+    <p>Organized by: <strong>AJAY HASDA</strong></p>
+    <p>📞 +91 9663116089 / +91 9353689775</p>
+    <p>✉️ ajayhasda623@gmail.com</p>
+  </header>
 
-<header>
+  <main class="container">
+    <section class="card">
+      <h2>🏏 Tournament Gallery</h2>
 
-<div style="display:flex;align-items:center;justify-content:center;gap:15px;">
+      <p>Official Photos of AJAY PREMIER LEAGUE (APL) 2026</p>
 
-<h1>
-<img src="images/apl-logo.png"
-     alt="APL Logo"
-     style="width:45px;height:45px;vertical-align:middle;">
- APL 2026 Gallery
-</h1>
-</div>
+      <div class="gallery-box" id="aplGallery">
+        <a class="gallery-item" href="images/banner.jpg" target="_blank" rel="noopener">
+          <img src="images/banner.jpg" alt="APL 2026 Tournament Banner" loading="lazy">
+          <span class="gallery-caption">APL Tournament Banner</span>
+        </a>
 
-<p><strong>AJAY PREMIER LEAGUE (APL) 2026</strong></p>
+        <a class="gallery-item" href="images/gallery1.jpg" target="_blank" rel="noopener">
+          <img src="images/gallery1.jpg" alt="APL Gallery Photo 1" loading="lazy">
+          <span class="gallery-caption">APL Photo 1</span>
+        </a>
 
-<p>Organized by: <strong>AJAY HASDA</strong></p>
+        <a class="gallery-item" href="images/gallery2.jpg" target="_blank" rel="noopener">
+          <img src="images/gallery2.jpg" alt="APL Gallery Photo 2" loading="lazy">
+          <span class="gallery-caption">APL Photo 2</span>
+        </a>
 
-<p>📞 +91 9663116089 / +91 9353689775</p>
+        <a class="gallery-item" href="images/gallery3.jpg" target="_blank" rel="noopener">
+          <img src="images/gallery3.jpg" alt="APL Gallery Photo 3" loading="lazy">
+          <span class="gallery-caption">APL Photo 3</span>
+        </a>
 
-<p>✉️ ajayhasda623@gmail.com</p>
+        <a class="gallery-item" href="images/gallery4.jpg" target="_blank" rel="noopener">
+          <img src="images/gallery4.jpg" alt="APL Gallery Photo 4" loading="lazy">
+          <span class="gallery-caption">APL Photo 4</span>
+        </a>
 
-</header>
+        <a class="gallery-item" href="images/gallery6.jpg" target="_blank" rel="noopener">
+          <img src="images/gallery6.jpg" alt="APL Gallery Photo 6" loading="lazy">
+          <span class="gallery-caption">APL Photo 6</span>
+        </a>
+      </div>
 
+      <p class="gallery-status" id="galleryStatus" role="status" aria-live="polite">
+        Loading gallery photos...
+      </p>
+    </section>
 
+    <nav class="card gallery-actions" aria-label="Gallery navigation">
+      <a class="gallery-home" href="index.html">🏠 Back to Home</a>
+      <a class="gallery-points" href="points.html">🏆 Points Table</a>
+    </nav>
+  </main>
 
-<div class="container">
+  <footer class="gallery-footer">
+    <p>© 2026 AJAY PREMIER LEAGUE (APL). All Rights Reserved.</p>
+  </footer>
 
+  <script>
+    (function () {
+      "use strict";
 
-<div class="card">
+      const gallery = document.getElementById("aplGallery");
+      const status = document.getElementById("galleryStatus");
 
+      if (!gallery || !status) return;
 
-<h2>🏏 Tournament Gallery</h2>
+      function updateGallery() {
+        const items = Array.from(gallery.querySelectorAll(".gallery-item"));
 
-<p>
-Official Photos of AJAY PREMIER LEAGUE (APL) 2026
-</p>
+        items.forEach(function (item) {
+          const img = item.querySelector("img");
+          if (!img) {
+            item.remove();
+            return;
+          }
 
+          img.addEventListener("error", function () {
+            item.remove();
 
+            const remaining = gallery.querySelectorAll(".gallery-item").length;
 
-<div class="gallery-box">
+            if (remaining === 0) {
+              status.textContent =
+                "No gallery photos found. Please check the images folder and photo filenames.";
+            } else {
+              status.textContent = remaining + " gallery photo(s) available.";
+            }
+          }, { once: true });
+        });
 
+        const visibleItems = gallery.querySelectorAll(".gallery-item").length;
 
-<a href="images/banner.jpg" target="_blank">
-<img src="images/banner.jpg" alt="APL Banner">
-</a>
+        status.textContent = visibleItems
+          ? "Gallery photos are displayed below. Select a photo to view it larger."
+          : "Checking gallery photos...";
+      }
 
-
-<a href="images/gallery1.jpg" target="_blank">
-  <img src="images/gallery1.jpg" alt="gallery 1">
-</a>
-
-
-<a href="images/gallery2.jpg" target="_blank">
-<img src="images/gallery2.jpg" alt="Gallery 2">
-</a>
-
-
-<a href="images/gallery3.jpg" target="_blank">
-<img src="images/gallery3.jpg" alt="Gallery 3">
-</a>
-
-
-<a href="images/gallery4.jpg" target="_blank">
-<img src="images/gallery4.jpg" alt="Gallery 4">
-</a>
-
-
-<a href="images/gallery6.jpg" target="_blank">
-<img src="images/gallery6.jpg" alt="Gallery 6">
-</a>
-
-
-</div>
-
-</div>
-
-<div class="card">
-  <a class="btn register" href="index.html">🏠 Back to Home</a>
-</div>
-
-<footer style="text-align:center; margin:30px 0 20px 0;">
-
-<button
-type="button"
-onclick="window.location.href='points.html'"
-style="
-padding:10px 20px;
-background:#fff2e6;
-color:white;
-border:none;
-border-radius:8px;
-font-size:16px;
-cursor:pointer;
-margin-bottom:15px;">
-
-<p style="color:#666;">
-© 2026 AJAY PREMIER LEAGUE (APL). All Rights Reserved.
-</p>
-
-</footer>
-
+      updateGallery();
+    })();
+  </script>
 </body>
 </html>
